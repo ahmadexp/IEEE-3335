@@ -49,7 +49,8 @@ def extract_pdf_to_markdown(
     pdf_path: Path, 
     output_path: Optional[Path] = None,
     extract_images: bool = True,
-    quiet: bool = False
+    quiet: bool = False,
+    use_gpu: bool = True
 ) -> Path:
     """
     Extract PDF to markdown using marker-pdf.

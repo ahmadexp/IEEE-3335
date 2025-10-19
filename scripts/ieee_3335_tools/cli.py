@@ -33,16 +33,18 @@ def _extract_single_file(
     input_file: Path, 
     output_file: Optional[Path] = None,
     extract_images: bool = True,
-    quiet: bool = False
+    quiet: bool = False,
+    use_gpu: bool = True
 ) -> Tuple[bool, str]:
     """
     Extract a single file to markdown.
-    
+
     Args:
         input_file: Path to input file
         output_file: Optional output path
         extract_images: Whether to extract images
         quiet: Whether to suppress individual file output messages
+        use_gpu: Whether to use GPU acceleration (if available)
         
     Returns:
         Tuple of (success: bool, error_message: str)
@@ -51,7 +53,7 @@ def _extract_single_file(
         suffix = input_file.suffix.lower()
         
         if suffix == '.pdf':
-            extract_pdf_to_markdown(input_file, output_file, extract_images, quiet)
+            extract_pdf_to_markdown(input_file, output_file, extract_images, quiet, use_gpu)
         elif suffix in ['.docx', '.doc']:
             if suffix == '.doc':
                 if not quiet:
@@ -255,6 +257,21 @@ def extract(
         "--text-only", "--no-media",
         help="Extract text only, skip image extraction for faster/smaller output",
     ),
+    cuda: bool = typer.Option(
+        True,
+        "--cuda", "--gpu",
+        help="Enable CUDA GPU acceleration for PDF processing (if available)",
+    ),
+    no_cuda: bool = typer.Option(
+        False,
+        "--no-cuda", "--no-gpu",
+        help="Disable CUDA GPU acceleration, use CPU only",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet", "-q",
+        help="Suppress output messages",
+    ),
 ):
     """
     [bold]Extract content from PDF, DOCX, or PPTX files and convert to markdown.[/bold]
@@ -286,6 +303,12 @@ def extract(
 
         [dim]# Directory (recursive, PPTX only, text-only mode)[/dim]
         p3335 extract ./documents/ -r -t pptx --text-only
+
+        [dim]# Enable GPU acceleration[/dim]
+        p3335 extract document.pdf --cuda
+
+        [dim]# Disable GPU acceleration[/dim]
+        p3335 extract document.pdf --no-cuda
     """
     try:
         # Validate file_type option
@@ -296,6 +319,25 @@ def extract(
         
         # Determine extract_images based on text_only flag
         extract_images = not text_only
+        use_gpu = cuda and not no_cuda
+        
+        if use_gpu:
+            # Enable GPU acceleration if CUDA is available
+            try:
+                import torch
+                if torch.cuda.is_available():
+                    os.environ["TORCH_DEVICE"] = "cuda"
+                    os.environ["VRAM_PER_TASK"] = "8"  # Adjust as needed
+                    console.print("[green]✅ CUDA GPU acceleration enabled[/green]")
+                else:
+                    console.print("[yellow]⚠️ CUDA not available, falling back to CPU[/yellow]")
+            except ImportError:
+                console.print("[yellow]⚠️ PyTorch not available for GPU check, using CPU[/yellow]")
+        elif no_cuda:
+            # Explicitly disable GPU
+            os.environ.pop("TORCH_DEVICE", None)
+            os.environ.pop("VRAM_PER_TASK", None)
+            console.print("[dim]CPU-only mode enabled[/dim]")
         
         if text_only:
             console.print("[dim]Text-only mode enabled: Images will not be extracted[/dim]")
@@ -318,7 +360,7 @@ def extract(
                 console.print("[yellow]Supported types: .pdf, .docx, .pptx[/yellow]")
                 raise typer.Exit(code=1)
             
-            success = _extract_single_file(input_path, output_file, extract_images)
+            success = _extract_single_file(input_path, output_file, extract_images, quiet, use_gpu)
             if success:
                 console.print("[green]✅ Extraction complete![/green]")
             else:
@@ -362,14 +404,14 @@ def extract(
                 for file_path in files:
                     progress.update(task, description=f"Processing {file_path.name}")
                     
-                    success, error_msg = _extract_single_file(file_path, None, extract_images, quiet=True)
-                    if success:
-                        successful += 1
-                    else:
-                        failed += 1
-                        failed_files.append((file_path, error_msg))
-                    
-                    progress.update(task, advance=1)
+            success, error_msg = _extract_single_file(file_path, None, extract_images, quiet, use_gpu)
+            if success:
+                successful += 1
+            else:
+                failed += 1
+                failed_files.append((file_path, error_msg))
+            
+            progress.update(task, advance=1)
             
             # Summary
             console.print()

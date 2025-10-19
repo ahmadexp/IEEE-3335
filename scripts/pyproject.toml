@@ -15,10 +15,15 @@ dependencies = [
     "python-pptx>=0.6.21",
     "marker-pdf>=0.2.0",
     "hatchling>=1.27.0",
-    "pillow>=10.0.0",
+    "pillow>=10.1.0,<11.0.0",
+    "torch>=2.0.0",
 ]
 readme = "README.md"
 
 [project.scripts]
 p3335 = "ieee_3335_tools.cli:main"
 ieee-3335-tools = "ieee_3335_tools.cli:main"
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
