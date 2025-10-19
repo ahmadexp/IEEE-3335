@@ -10,12 +10,17 @@ from .pdf_extractor import extract_pdf_to_markdown
 from .docx_extractor import extract_docx_to_markdown
 from .pptx_extractor import extract_pptx_to_markdown
 
+# Configure console with better width for help text
+import shutil
+terminal_width = shutil.get_terminal_size().columns
+console = Console(width=max(terminal_width, 100))  # Responsive width, min 100
+
 app = typer.Typer(
     help="IEEE-3335 Tools",
     add_completion=False,
     no_args_is_help=True,
+    rich_markup_mode="rich",  # Enable Rich markup
 )
-console = Console()
 
 
 @app.callback()
@@ -134,34 +139,34 @@ def extract(
     ),
 ):
     """
-    Extract content from PDF, DOCX, or PPTX files and convert to markdown.
-    
+    [bold]Extract content from PDF, DOCX, or PPTX files and convert to markdown.[/bold]
+
     Can process a single file or an entire directory (with --recursive flag).
-    
+
     The tool automatically detects file types and uses appropriate methods:
-    - PDF files: Uses marker-pdf for high-quality markdown conversion
-    - DOCX files: Uses python-docx to preserve formatting
-    - PPTX files: Uses python-pptx to extract slides and content
-    
-    Examples:
-        # Single file
+    • PDF files: Uses marker-pdf for high-quality markdown conversion
+    • DOCX files: Uses python-docx to preserve formatting
+    • PPTX files: Uses python-pptx to extract slides and content
+
+    [bold]Examples:[/bold]
+        [dim]# Single file[/dim]
         p3335 extract document.pdf
         p3335 extract presentation.pptx -o output.md
-        
-        # Text only (no images, faster)
+
+        [dim]# Text only (no images, faster)[/dim]
         p3335 extract document.pdf --text-only
         p3335 extract document.pdf --no-media
-        
-        # Directory (non-recursive)
+
+        [dim]# Directory (non-recursive)[/dim]
         p3335 extract ./documents/
-        
-        # Directory (recursive, all files)
+
+        [dim]# Directory (recursive, all files)[/dim]
         p3335 extract ./documents/ --recursive
-        
-        # Directory (recursive, PDFs only)
+
+        [dim]# Directory (recursive, PDFs only)[/dim]
         p3335 extract ./documents/ -r --file-type pdf
-        
-        # Directory (recursive, PPTX only, text-only mode)
+
+        [dim]# Directory (recursive, PPTX only, text-only mode)[/dim]
         p3335 extract ./documents/ -r -t pptx --text-only
     """
     try:
