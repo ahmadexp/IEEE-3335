@@ -85,7 +85,8 @@ def extract_pdf_to_markdown(
     
     # Configure converter
     config = {
-        "disable_image_extraction": not extract_images
+        "disable_image_extraction": not extract_images,
+        "output_format": "markdown"  # Explicitly set output format
     }
     config_parser = ConfigParser(config)
     
