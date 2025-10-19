@@ -2,15 +2,16 @@
 
 from pathlib import Path
 from typing import Optional
-from rich.console import Console
 
-console = Console()
+# Import shared console from package
+from . import console
 
 
 def extract_pptx_to_markdown(
     pptx_path: Path, 
     output_path: Optional[Path] = None,
-    extract_images: bool = True
+    extract_images: bool = True,
+    quiet: bool = False
 ) -> Path:
     """
     Extract PPTX to markdown using python-pptx.
@@ -19,6 +20,7 @@ def extract_pptx_to_markdown(
         pptx_path: Path to input PPTX file
         output_path: Optional output path (default: {input_name}.md)
         extract_images: Whether to extract and save images
+        quiet: Whether to suppress individual file output messages
         
     Returns:
         Path to the created markdown file
@@ -33,7 +35,8 @@ def extract_pptx_to_markdown(
     if output_path is None:
         output_path = pptx_path.with_suffix('.md')
     
-    console.print(f"[bold]Converting PPTX to Markdown:[/bold] {pptx_path}")
+    if not quiet:
+        console.print(f"[bold]Converting PPTX to Markdown:[/bold] {pptx_path}")
     
     prs = Presentation(str(pptx_path))
     markdown_lines = []
@@ -86,7 +89,8 @@ def extract_pptx_to_markdown(
                     markdown_lines.append(f"![Image {image_counter}]({relative_path})")
                     markdown_lines.append("")
                 except Exception as e:
-                    console.print(f"[yellow]Warning: Could not extract image from slide {slide_num}: {e}[/yellow]")
+                    if not quiet:
+                        console.print(f"[yellow]Warning: Could not extract image from slide {slide_num}: {e}[/yellow]")
             
             # Handle tables
             if shape.has_table:
@@ -107,9 +111,10 @@ def extract_pptx_to_markdown(
     markdown_content = "\n".join(markdown_lines)
     output_path.write_text(markdown_content, encoding='utf-8')
     
-    success_msg = f"[green]✓ Successfully converted to markdown:[/green] {output_path}"
-    if extract_images and image_counter > 0:
-        success_msg += f"\n[green]✓ Extracted {image_counter} image(s) to:[/green] {images_dir}"
-    console.print(success_msg)
+    if not quiet:
+        success_msg = f"[green]✅ Successfully converted to markdown:[/green] {output_path}"
+        if extract_images and image_counter > 0:
+            success_msg += f"\n[green]✅ Extracted {image_counter} image(s) to:[/green] {images_dir}"
+        console.print(success_msg)
     
     return output_path

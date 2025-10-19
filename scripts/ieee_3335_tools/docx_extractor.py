@@ -2,15 +2,16 @@
 
 from pathlib import Path
 from typing import Optional
-from rich.console import Console
 
-console = Console()
+# Import shared console from package
+from . import console
 
 
 def extract_docx_to_markdown(
     docx_path: Path, 
     output_path: Optional[Path] = None,
-    extract_images: bool = True
+    extract_images: bool = True,
+    quiet: bool = False
 ) -> Path:
     """
     Extract DOCX to markdown using python-docx.
@@ -19,6 +20,7 @@ def extract_docx_to_markdown(
         docx_path: Path to input DOCX file
         output_path: Optional output path (default: {input_name}.md)
         extract_images: Whether to extract and save images (currently not implemented for DOCX)
+        quiet: Whether to suppress individual file output messages
         
     Returns:
         Path to the created markdown file
@@ -33,7 +35,8 @@ def extract_docx_to_markdown(
     if output_path is None:
         output_path = docx_path.with_suffix('.md')
     
-    console.print(f"[bold]Converting DOCX to Markdown:[/bold] {docx_path}")
+    if not quiet:
+        console.print(f"[bold]Converting DOCX to Markdown:[/bold] {docx_path}")
     
     doc = Document(str(docx_path))
     markdown_lines = []
@@ -80,5 +83,6 @@ def extract_docx_to_markdown(
     markdown_content = "\n".join(markdown_lines)
     output_path.write_text(markdown_content, encoding='utf-8')
     
-    console.print(f"[green]✓ Successfully converted to markdown:[/green] {output_path}")
+    if not quiet:
+        console.print(f"[green]✅ Successfully converted to markdown:[/green] {output_path}")
     return output_path

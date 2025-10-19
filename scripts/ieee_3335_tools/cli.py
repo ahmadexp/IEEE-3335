@@ -1,19 +1,17 @@
 """CLI interface for IEEE-3335 tools."""
 
+import os
 import typer
 from pathlib import Path
-from typing import Optional, List
-from rich.console import Console
+from typing import Optional, List, Tuple
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 from .pdf_extractor import extract_pdf_to_markdown
 from .docx_extractor import extract_docx_to_markdown
 from .pptx_extractor import extract_pptx_to_markdown
 
-# Configure console with better width for help text
-import shutil
-terminal_width = shutil.get_terminal_size().columns
-console = Console(width=max(terminal_width, 100))  # Responsive width, min 100
+# Import shared console from package
+from . import console
 
 app = typer.Typer(
     help="IEEE-3335 Tools",
@@ -34,8 +32,9 @@ def callback():
 def _extract_single_file(
     input_file: Path, 
     output_file: Optional[Path] = None,
-    extract_images: bool = True
-) -> bool:
+    extract_images: bool = True,
+    quiet: bool = False
+) -> Tuple[bool, str]:
     """
     Extract a single file to markdown.
     
@@ -43,32 +42,119 @@ def _extract_single_file(
         input_file: Path to input file
         output_file: Optional output path
         extract_images: Whether to extract images
+        quiet: Whether to suppress individual file output messages
         
     Returns:
-        True if successful, False otherwise
+        Tuple of (success: bool, error_message: str)
     """
     try:
         suffix = input_file.suffix.lower()
         
         if suffix == '.pdf':
-            extract_pdf_to_markdown(input_file, output_file, extract_images)
+            extract_pdf_to_markdown(input_file, output_file, extract_images, quiet)
         elif suffix in ['.docx', '.doc']:
             if suffix == '.doc':
-                console.print("[yellow]Warning: .doc files may not be fully supported.[/yellow]")
+                if not quiet:
+                    console.print("[yellow]Warning: .doc files may not be fully supported.[/yellow]")
             extract_docx_to_markdown(input_file, output_file, extract_images)
         elif suffix in ['.pptx', '.ppt']:
             if suffix == '.ppt':
-                console.print("[yellow]Warning: .ppt files may not be fully supported. Consider converting to .pptx first.[/yellow]")
+                if not quiet:
+                    console.print("[yellow]Warning: .ppt files may not be fully supported. Consider converting to .pptx first.[/yellow]")
             extract_pptx_to_markdown(input_file, output_file, extract_images)
         else:
-            return False
+            return False, f"Unsupported file type: {suffix}"
         
-        return True
+        return True, ""
         
     except Exception as e:
         error_type = type(e).__name__
-        console.print(f"[red]Error processing {input_file.name} ({error_type}):[/red] {str(e)}")
-        return False
+        error_msg = f"{error_type}: {str(e)}"
+        if not quiet:
+            console.print(f"[red]Error processing {input_file.name}:[/red] {error_msg}")
+        return False, error_msg
+
+
+def _load_gitignore_patterns(directory: Path) -> List[str]:
+    """
+    Load .gitignore patterns from the given directory and its parents.
+    
+    Args:
+        directory: Directory to start searching for .gitignore files
+        
+    Returns:
+        List of gitignore patterns (compiled for efficiency)
+    """
+    patterns = []
+    current_dir = directory
+    
+    # Walk up the directory tree looking for .gitignore files
+    while True:
+        gitignore_path = current_dir / '.gitignore'
+        if gitignore_path.exists():
+            try:
+                with open(gitignore_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        # Skip empty lines and comments
+                        if line and not line.startswith('#'):
+                            patterns.append(line)
+            except (IOError, OSError):
+                # If we can't read the file, just continue
+                pass
+        
+        # Move to parent directory
+        parent = current_dir.parent
+        if parent == current_dir:
+            # Reached root directory
+            break
+        current_dir = parent
+    
+    return patterns
+
+
+def _should_ignore_file(file_path: Path, gitignore_patterns: List[str], base_directory: Path) -> bool:
+    """
+    Check if a file should be ignored based on gitignore patterns.
+    
+    Args:
+        file_path: Path to check
+        gitignore_patterns: List of gitignore patterns
+        base_directory: Base directory for relative path calculations
+        
+    Returns:
+        True if file should be ignored, False otherwise
+    """
+    import fnmatch
+    
+    # Get relative path from the base directory
+    try:
+        relative_path = file_path.relative_to(base_directory)
+        path_str = str(relative_path).replace('\\', '/')
+    except ValueError:
+        # If we can't make it relative, use the full path
+        path_str = str(file_path).replace('\\', '/')
+    
+    for pattern in gitignore_patterns:
+        pattern = pattern.strip()
+        if not pattern:
+            continue
+            
+        # Handle directory patterns (ending with /)
+        if pattern.endswith('/'):
+            dir_pattern = pattern[:-1]
+            # Check if this file is in an ignored directory
+            if path_str.startswith(dir_pattern + '/'):
+                return True
+        else:
+            # Simple filename pattern matching
+            if fnmatch.fnmatch(path_str, pattern):
+                return True
+            # Also check just the filename
+            if fnmatch.fnmatch(file_path.name, pattern):
+                return True
+    
+    return False
 
 
 def _collect_files(
@@ -77,7 +163,7 @@ def _collect_files(
     file_type: str
 ) -> List[Path]:
     """
-    Collect files from directory based on criteria.
+    Collect files from directory based on criteria, respecting .gitignore.
     
     Args:
         directory: Directory to search
@@ -85,9 +171,12 @@ def _collect_files(
         file_type: Filter by type ('all', 'pdf', 'docx', 'pptx')
         
     Returns:
-        List of matching file paths
+        List of matching file paths (filtered by gitignore)
     """
     files = []
+    
+    # Load gitignore patterns from this directory and parents
+    gitignore_patterns = _load_gitignore_patterns(directory)
     
     # Define extensions to search for
     if file_type == 'pdf':
@@ -101,11 +190,40 @@ def _collect_files(
     
     # Collect files
     if recursive:
-        for ext in extensions:
-            files.extend(directory.rglob(f'*{ext}'))
+        # For recursive search, we need to check each file against gitignore
+        for root, dirs, filenames in os.walk(directory):
+            root_path = Path(root)
+            
+            # Filter directories based on gitignore patterns
+            dirs_to_remove = []
+            for d in dirs:
+                dir_path = root_path / d
+                if _should_ignore_file(dir_path, gitignore_patterns, directory):
+                    dirs_to_remove.append(d)
+            
+            # Remove ignored directories
+            for d in dirs_to_remove:
+                dirs.remove(d)
+            
+            # Check files in this directory
+            for filename in filenames:
+                file_path = root_path / filename
+                
+                # Skip if file matches gitignore patterns
+                if _should_ignore_file(file_path, gitignore_patterns, directory):
+                    continue
+                
+                # Check if file has desired extension
+                if file_path.suffix.lower() in extensions:
+                    files.append(file_path)
     else:
+        # Non-recursive search
         for ext in extensions:
-            files.extend(directory.glob(f'*{ext}'))
+            for file_path in directory.glob(f'*{ext}'):
+                # Skip if file matches gitignore patterns
+                if _should_ignore_file(file_path, gitignore_patterns, directory):
+                    continue
+                files.append(file_path)
     
     return sorted(files)
 
@@ -202,7 +320,7 @@ def extract(
             
             success = _extract_single_file(input_path, output_file, extract_images)
             if success:
-                console.print("[green]✓ Extraction complete![/green]")
+                console.print("[green]✅ Extraction complete![/green]")
             else:
                 raise typer.Exit(code=1)
                 
@@ -229,6 +347,7 @@ def extract(
             successful = 0
             failed = 0
             skipped = 0
+            failed_files = []  # Track failed files with their error messages
             
             with Progress(
                 SpinnerColumn(),
@@ -236,32 +355,39 @@ def extract(
                 BarColumn(),
                 TextColumn("[progress.percentage]{task.completed}/{task.total}"),
                 console=console,
+                transient=True,  # Clear progress bar after completion
             ) as progress:
                 task = progress.add_task("Processing files...", total=len(files))
                 
                 for file_path in files:
                     progress.update(task, description=f"Processing {file_path.name}")
                     
-                    success = _extract_single_file(file_path, None, extract_images)
+                    success, error_msg = _extract_single_file(file_path, None, extract_images, quiet=True)
                     if success:
                         successful += 1
                     else:
                         failed += 1
+                        failed_files.append((file_path, error_msg))
                     
                     progress.update(task, advance=1)
             
             # Summary
             console.print()
             console.print("[bold]Summary:[/bold]")
-            console.print(f"  [green]✓ Successful:[/green] {successful}")
+            console.print(f"[green]✅ Successful:[/green] {successful}")
             if failed > 0:
-                console.print(f"  [red]✗ Failed:[/red] {failed}")
+                console.print(f"[red]❌ Failed:[/red] {failed}")
+                if failed_files:
+                    console.print()
+                    console.print("[red][bold]❌ Failed files:[/bold][/red]")
+                    for file_path, error_msg in failed_files:
+                        console.print(f"  [red]• {file_path.name}:[/red] {error_msg}")
             if skipped > 0:
-                console.print(f"  [yellow]⊘ Skipped:[/yellow] {skipped}")
+                console.print(f"  [yellow]⏭️ Skipped:[/yellow] {skipped}")
             
             if failed == 0:
                 console.print()
-                console.print("[green]✓ All files processed successfully![/green]")
+                console.print("[green]✅ All files processed successfully![/green]")
             else:
                 raise typer.Exit(code=1)
         else:

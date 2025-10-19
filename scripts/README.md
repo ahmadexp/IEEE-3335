@@ -151,10 +151,10 @@ uv run p3335 extract ./documents/ -r --text-only
 ```
 
 **Benefits of Text-Only Mode:**
-- ⚡ **Faster processing**: Skip image extraction and encoding
-- 💾 **Smaller output**: No image files or directories created
-- 📄 **Pure text**: Focus on textual content only
-- 🔄 **Batch friendly**: Process large directories more quickly
+- **⚡ Faster processing**: Skip image extraction and encoding
+- **💾 Smaller output**: No image files or directories created
+- **📄 Pure text**: Focus on textual content only
+- **🔄 Batch friendly**: Process large directories more quickly
 
 #### Extract Directory (Batch Processing)
 
@@ -170,6 +170,8 @@ uv run p3335 extract ./documents/ --recursive
 # Short form
 uv run p3335 extract ./documents/ -r
 ```
+
+**🔍 Gitignore Awareness:** The tool automatically respects `.gitignore` files found in the search directory and its parent directories. Files and directories matching gitignore patterns will be excluded from processing.
 
 ##### Filter by File Type
 
@@ -281,14 +283,15 @@ These are cached in `~/.cache/huggingface/` and reused for all future conversion
 
 ## Notes
 
-- **First PDF conversion**: Expect 2-5 minute delay for model downloads (~1-1.5GB). This only happens once.
-- **Subsequent conversions**: Start immediately using cached models.
-- **DOCX/PPTX conversion**: Fast, no model download required.
-- **.doc files**: Limited support. Convert to .docx first for best results.
-- **.ppt files**: Limited support. Convert to .pptx first for best results.
-- **Image extraction**: Images saved to `{filename}_images/` directory by default.
-- **Text-only mode**: Use `--text-only` or `--no-media` to skip images for faster processing.
-- **Output location**: Defaults to same directory and name as input with .md extension.
-- **GPU acceleration**: Automatically detected and used if available (CUDA, MPS).
-- **Batch processing**: Process entire directories recursively with `--recursive` flag.
-- **File filtering**: Use `--file-type` to process only PDFs, DOCX, or PPTX files.
+- **🕐 First PDF conversion**: Expect 2-5 minute delay for model downloads (~1-1.5GB). This only happens once.
+- **💾 Subsequent conversions**: Start immediately using cached models.
+- **⚡ DOCX/PPTX conversion**: Fast, no model download required.
+- **📄 .doc files**: Limited support. Convert to .docx first for best results.
+- **📄 .ppt files**: Limited support. Convert to .pptx first for best results.
+- **🖼️ Image extraction**: Images saved to `{filename}_images/` directory by default.
+- **📝 Text-only mode**: Use `--text-only` or `--no-media` to skip images for faster processing.
+- **📁 Output location**: Defaults to same directory and name as input with .md extension.
+- **🖥️ GPU acceleration**: Automatically detected and used if available (CUDA, MPS).
+- **📂 Batch processing**: Process entire directories recursively with `--recursive` flag.
+- **🔍 File filtering**: Use `--file-type` to process only PDFs, DOCX, or PPTX files.
+- **🔍 Gitignore awareness**: Automatically respects `.gitignore` files in search paths - ignored files are excluded from processing.
