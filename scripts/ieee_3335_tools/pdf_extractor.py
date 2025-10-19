@@ -1,7 +1,10 @@
 """PDF extraction and conversion utilities."""
 
+import io
 from pathlib import Path
 from typing import Optional
+
+from PIL import Image
 
 # Import shared console from package
 from . import console
@@ -49,8 +52,7 @@ def extract_pdf_to_markdown(
     pdf_path: Path, 
     output_path: Optional[Path] = None,
     extract_images: bool = True,
-    quiet: bool = False,
-    use_gpu: bool = True
+    quiet: bool = False
 ) -> Path:
     """
     Extract PDF to markdown using marker-pdf.
@@ -65,9 +67,9 @@ def extract_pdf_to_markdown(
         Path to the created markdown file
     """
     try:
+        from marker.config.parser import ConfigParser
         from marker.converters.pdf import PdfConverter
         from marker.output import text_from_rendered
-        from marker.config.parser import ConfigParser
     except ImportError as e:
         raise ImportError(
             f"marker-pdf is not installed correctly: {e}\nPlease install it with: uv add marker-pdf"
@@ -81,7 +83,7 @@ def extract_pdf_to_markdown(
         if not extract_images:
             console.print("[dim]Text-only mode: Images will not be extracted[/dim]")
     
-    # Get cached models (loads only once globally)
+    # Get cached models (loads only once globally per process)
     models = _get_models()
     
     # Configure converter
@@ -106,6 +108,8 @@ def extract_pdf_to_markdown(
     
     # Write output
     output_path.write_text(text, encoding='utf-8')
+    if not quiet:
+        console.print(f"[green]✅ Successfully converted to markdown:[/green] {output_path}")
     
     # Save images if extracted
     if extract_images and images:
@@ -113,15 +117,37 @@ def extract_pdf_to_markdown(
         images_dir.mkdir(exist_ok=True)
         
         image_count = 0
+        failed_images = []
+        
         for filename, image_data in images.items():
-            image_path = images_dir / filename
-            image_path.write_bytes(image_data)
-            image_count += 1
+            try:
+                image_path = images_dir / filename
+                
+                # Handle both PIL Images and bytes
+                if isinstance(image_data, Image.Image):
+                    # Convert PIL Image to bytes
+                    buffer = io.BytesIO()
+                    # Determine format from filename extension
+                    image_format = image_path.suffix[1:].upper()
+                    if image_format == 'JPG':
+                        image_format = 'JPEG'
+                    image_data.save(buffer, format=image_format)
+                    image_bytes = buffer.getvalue()
+                    image_path.write_bytes(image_bytes)
+                else:
+                    # Assume it's already bytes
+                    image_path.write_bytes(image_data)
+                
+                image_count += 1
+            except Exception as e:
+                failed_images.append((filename, str(e)))
+                if not quiet:
+                    console.print(f"[yellow]⚠️  Failed to save image {filename}: {e}[/yellow]")
         
         if not quiet:
-            console.print(f"[green]✅ Successfully converted to markdown:[/green] {output_path}")
-            console.print(f"[green]✅ Extracted {image_count} image(s) to:[/green] {images_dir}")
-    elif not quiet:
-        console.print(f"[green]✅ Successfully converted to markdown:[/green] {output_path}")
+            if image_count > 0:
+                console.print(f"[green]✅ Extracted {image_count} image(s) to:[/green] {images_dir}")
+            if failed_images:
+                console.print(f"[yellow]⚠️  Failed to extract {len(failed_images)} image(s)[/yellow]")
     
     return output_path
