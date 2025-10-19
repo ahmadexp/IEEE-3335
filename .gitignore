@@ -316,3 +316,5 @@ pip-selfcheck.json
 cython_debug/
 
 uv.lock
+
+.obsidian/

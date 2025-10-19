@@ -1,164 +1,117 @@
-# Slide 1
+# Precision Time Synchronization in Data Centers
 
-## Precision Time Synchronization in Data Centers
+Research Scientist, Meta Ahmad Byagowi
 
-Research Scientist, Meta Ahmad Byagowi
+*Why* to have precision time synchronization in Data Centers?
 
----
-
-# Slide 2
-
-Why to have precision time synchronization in Data Centers?
-
-How to have precision time synchronization in Data Centers?
-
----
-
-# Slide 3
+*How* to have precision time synchronization in Data Centers?
 
 ## Background
 
-Speed of light and speed of electricity are finite!
-Speed of Light is slower in fiber (2.14 x 10^8m/s) than in vacuum (2.99 x 10^8m/s)
-Latency in data transfer over the network
-Hyperscale cloud services serve people across the globe
-Geographical distribution of customers
-Necessity of distribution due to safety, robustness and regulations
-The demand for hardware resources is always increasing
-Increase in users, data and multi dimensional contents
-Interactivity with the data like multi-user and VR
-Big data and AI
-
----
-
-# Slide 4
+- Speed of light and speed of electricity are finite!
+  - Speed of Light is slower in fiber (2.14 x 10^8m/s) than in vacuum (2.99 x 10^8m/s)
+  - Latency in data transfer over the network
+- Hyperscale cloud services serve people across the globe
+  - Geographical distribution of customers
+  - Necessity of distribution due to safety, robustness and regulations
+- The demand for hardware resources is always increasing
+  - Increase in users, data and multi dimensional contents
+  - Interactivity with the data like multi-user and VR
+  - Big data and AI
 
 ## Solution to Address the Hyperscale Demand
 
-Geographical expansion
-Reduction of latency
+- Horizontal Scaling
+  - Expansion of resources
 
-Horizontal Scaling
-Expansion of resources
+![](_page_3_Picture_3.jpeg)
 
-![Image 1](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_4_image_1.jpg)
+- Geographical expansion
+  - Reduction of latency
 
-![Image 2](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_4_image_2.png)
-
----
-
-# Slide 5
+![](_page_3_Figure_6.jpeg)
 
 ## Challenges with Expansion
 
-Distributed Systems
-Consistency vs Availability
-Propagation of Information
-Need for Redundancy
-Distribution of Clock
-A common reference between all machines
-Latency vs Clock Skewness
-
----
-
-# Slide 6
+- Distributed Systems
+  - Consistency vs Availability
+  - Propagation of Information
+  - Need for Redundancy
+- Distribution of Clock
+  - A common reference between all machines
+  - Latency vs Clock Skewness
 
 ## Categories of use cases
 
-Use cases of Precision Time Sync in Distributed Systems:
-Synchronization (Phase)
-Active (1)
-Running Events at specific time
-Sync or desync
-Reactive (2)
-Measure latency, time or intervals
-Syntonization (Frequency)
-Active (3)
-Calibrate speed and align runtime to reduce tail latency
-Reactive (4)
-Measure heterogeneity or provide binning
+#### Use cases of Precision Time Sync in Distributed Systems:
 
+- Synchronization (Phase)
+  - Active (1)
+    - Running Events at specific time
+      - Sync or desync
+  - Reactive (2)
+    - Measure latency, time or intervals
+- Syntonization (Frequency)
+  - Active (3)
+    - Calibrate speed and align runtime to reduce tail latency
+  - Reactive (4)
+    - Measure heterogeneity or provide binning
 
-|  | Phase | Frequency |
-| --- | --- | --- |
-| Active | 1 | 2 |
-| Reactive | 3 | 4 |
-
----
-
-# Slide 7
+|          | Phase | Frequency |
+|----------|-------|-----------|
+| Active   | 1     | 2         |
+| Reactive | 3     | 4         |
 
 ## Associate Events Between Multiple Machines
 
----
-
-# Slide 8
+![](_page_6_Figure_1.jpeg)
 
 ## Precision Requirement
 
-CPU level
-OS (Kernel) level
-Distributed System level
-
----
-
-# Slide 9
+- CPU level
+- OS (Kernel) level
+- Distributed System level
 
 ## Precision Requirement at CPU level
 
-Nyquist sampling theorem
-Sampling interval required to avoid aliasing
-Sampling frequency should be at least twice the highest frequency contained in the signal
-Frequency in event occurrence
-Instruction Latency
-Instruction Throughput
+- Nyquist sampling theorem
+  - Sampling interval required to avoid aliasing
+  - Sampling frequency should be at least twice the highest frequency contained in the signal
+- Frequency in event occurrence
+  - Instruction Latency
+  - Instruction Throughput
+
+```
 // mov = 1 CPU cycle 
 // xchg = 3 CPU cycles
 // rdtsc = 1 CPU cycle
-
-A CPU with a clock speed of 3.2 GHz executes 3.2 billion cycles per second
-That is a period of about 310ps
-
----
-
-# Slide 10
+```
 
 ## Precision Requirement at OS level
 
-dmesg
+#### • dmesg
 
-System Logging is based on clock_boottime (clock_minotone_RAW) with a quanta on 1us
-Events occur faster than the quanta of 1us (aliasing)
-
-![Image 3](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_10_image_3.png)
-
----
-
-# Slide 11
+System Logging is based on clock\_boottime (clock\_minotone\_RAW) with a quanta on 1us Events occur faster than the quanta of 1us (aliasing)
 
 ## Challenges and the Precision Requirement
 
-![Image 4](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_11_image_4.gif)
+• Vernier acuity
 
----
+![](_page_10_Picture_2.jpeg)
 
-# Slide 12
+• Compounding of Events
+
+$$1^n = 1$$
+
+![](_page_10_Picture_5.jpeg)
 
 ## Precision Requirement for Distributed Systems
 
-1
-
----
-
-# Slide 13
+![](_page_11_Picture_1.jpeg)
 
 ## What comes out of Precision Time Sync?
 
-Pseudo Entanglement
-
-Machine X
-
-Machine Y
+![](_page_12_Picture_1.jpeg)
 
 Machine X and Y are any two machines across the globe or inside a local network
 
@@ -166,644 +119,132 @@ Pseudo Entanglement: Probabilistic Entanglement of two Registers (Machine Y and 
 
 Window of Uncertainty: An ongoing estimation of a time interval that UTC (or TAI) sits inside it (with a given probability)
 
-UTC of TAI
-
-WOU
-
-Time
-
----
-
-# Slide 14
+![](_page_12_Picture_5.jpeg)
 
 ## Tangle
 
-Event 1234
-Event 1235
-Event 1236
-Event 1237
-Event 1238
-Event 1239
-Event 1240
+![](_page_13_Figure_1.jpeg)
 
-Event 1282
-Event 1283
-Event 1284
+![](_page_14_Figure_0.jpeg)
 
-Machine A
+#### **Functions**
 
-Machine Local Time
-
-NIC
-
-CPU
-
-ART
-
-PTM
-
-PTP
-
-Network
-
-OTS
-
-![Image 5](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_14_image_5.png)
-
-![Image 6](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_14_image_6.png)
-
-![Image 7](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_14_image_7.png)
-
-PTP
-
-GNSS
-
-UTC
-
-Local OSC
-
-m(UTC)
- c(UTC)
-
-Tangle
-
-Local Time
-
-Circular Buffers
-
-PHC
-
-Window of Uncertainty
-
-WOU(UTC)
-
-Query Engine
-
-RDTSC
-
----
-
-# Slide 15
-
-## Multiple Systems
-
-Event 1234
-Event 1235
-Event 1236
-Event 1237
-Event 1238
-Event 1239
-Event 1240
-
-Event 1282
-Event 1283
-Event 1284
-
-Event 2044
-Event 2045
-Event 2046
-Event 2047
-Event 2048
-Event 2049
-Event 2050
-Event 2051
-
-Event 2077
-Event 2078
-
-Machine A
-
-Machine B
-
-Machine Local Time
-
-Machine Local Time
-
-Tangle
-
-Tangle
-
-…
-
-2:00pm
-
-2:00pm
-
-2:00pm
-
----
-
-# Slide 16
-
-## Functions
-
-Identify concurrent event in another machine[s]
-Find the timestamp of an event in another machine[s]
-Chronologically Rank a given event across machines
-Measure the one-way-latency between machines
-Identify concurrent events with one-way-latency consideration
-Trace chronological order for sequence of events
-Benchmark machines by precise runtime measurement
-Directly utilize RDTSC for maximum precision in event timestamping
-
----
-
-# Slide 17
+- Identify concurrent event in another machine[s]
+- Find the timestamp of an event in another machine[s]
+- Chronologically Rank a given event across machines
+- Measure the one-way-latency between machines
+- Identify concurrent events with one-way-latency consideration
+- Trace chronological order for sequence of events
+- Benchmark machines by precise runtime measurement
+- Directly utilize RDTSC for maximum precision in event timestamping
 
 ## Runtime Difference in a Pipeline
 
-Machine A
-
-Time Axis
-
-Machine B
-
-Machine C
-
-Machine D
-
-Epoch #1
-
-Pipelines
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Epoch #2
-
-Epoch #3
-
-Epoch #4
-
----
-
-# Slide 18
+![](_page_16_Figure_1.jpeg)
 
 ## Runtime Difference in a Pipeline
 
-Machine A
-
-Time Axis
-
-Machine B
-
-Machine C
-
-Machine D
-
-Pipelines
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Epoch #1
-
-Epoch #2
-
-Epoch #3
-
-Epoch #4
-
----
-
-# Slide 19
+![](_page_17_Figure_1.jpeg)
 
 ## Align and Calibrate Machines in a Pipeline
 
-Machine A
-
-Time Axis
-
-Machine B
-
-Machine C
-
-Machine D
-
-Pipelines
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Machine A
-
-Machine B
-
-Machine C
-
-Machine D
-
-Epoch #1
-
-Epoch #2
-
-Epoch #3
-
-Epoch #4
-
----
-
-# Slide 20
+![](_page_18_Figure_1.jpeg)
 
 ## Precision Time Sync Across Different Domains
 
-![Image 8](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_8.png)
+![](_page_19_Picture_1.jpeg)
 
-Data Center
+![](_page_19_Picture_2.jpeg)
 
-![Image 9](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_9.png)
-
-PTM
-
-Global
-
-Local Network
-
-Inside Machines
-
-IEEE P3335
-
-IEEE 1588
-
-![Image 10](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_10.png)
-
-![Image 11](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_11.png)
-
-![Image 12](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_12.png)
-
-![Image 13](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_13.png)
-
-RDTSC
-
-![Image 14](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_20_image_14.png)
-
-TPAUSE
-
-CPU’s
-TSC
-
----
-
-# Slide 21
+![](_page_19_Picture_3.jpeg)
 
 ## Time Precision and Applications
 
-WR
+![](_page_20_Figure_1.jpeg)
 
-PTP+PTM
+## Open Time Server
 
-NTP
+How to sync a Datacenter?
 
-Industry Standard Physical Clocks
+![](_page_21_Figure_2.jpeg)
 
-UserlandOS
+![](_page_22_Picture_0.jpeg)
 
-Packet Latency (Globally)
-
-Disk Operations
-
-PTP+PTM
-
-Real Time Linux
-
-1ns
-
-PTP w/o PTM
-
-100ps
-
-10ps
-
-1ps
-
-100ms
-
-20ms
-
-2ms
-
-1ms
-
-500us
-
-250us
-
-100us
-
-50us
-
-20us
-
-5us
-
-1us
-
-100ns
-
-500ns
-
-500ms
-
-10ns
-
-One way Latency (P2P)
-
-WR+PTM
-
-NTP
-
-INT
-
-MMU
-
-DC like a PC
-
-DDP
-
-CCP
-
-PTP
-
-Tangle
-
----
-
-# Slide 22
-
-## Open Time ServerHow to sync a Datacenter?
-
-Software
-
-Time Appliance
-
-![Image 15](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_22_image_15.png)
-
-Open Time Server
-
-Traditional
-
-COTS Server
-
-Monitoring
-
-Drivers
-
-Time Card
-
-NIC
-
-Mgmt.
-
-Tools
-
-![Image 16](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_22_image_16.png)
-
----
-
-# Slide 23
-
-![Image 17](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_23_image_17.jpg)
-
-![Image 18](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_23_image_18.jpg)
-
----
-
-# Slide 24
+![](_page_22_Picture_1.jpeg)
 
 ## Time Card
 
-Concept (2020)
-First Prototype (2021)
-Industry Adoption (2022)
+- Concept (2020)
+- First Prototype (2021)
+- Industry Adoption (2022)
 
-![Image 19](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_24_image_19.png)
+![](_page_23_Picture_4.jpeg)
 
-![Image 20](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_24_image_20.png)
+![](_page_23_Picture_5.jpeg)
 
-![Image 21](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_24_image_21.png)
-
----
-
-# Slide 25
+![](_page_23_Picture_6.jpeg)
 
 ## Time Card Family
 
-![Image 22](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_22.png)
+![](_page_24_Picture_1.jpeg)
 
-![Image 23](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_23.png)
+![](_page_24_Picture_2.jpeg)
 
-![Image 24](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_24.png)
+![](_page_24_Picture_3.jpeg)
 
-![Image 25](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_25.png)
+![](_page_24_Picture_4.jpeg)
 
-![Image 26](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_26.png)
+![](_page_24_Picture_5.jpeg)
 
-Broadcom’s Time Card
-
-ADVA’s Time Card
-
-![Image 27](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_25_image_27.png)
-
-Celestica’s Time Card
-
----
-
-# Slide 26
+![](_page_24_Picture_6.jpeg)
 
 ## Latest Time Card
 
-![Image 28](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_26_image_28.jpg)
-
----
-
-# Slide 27
+![](_page_25_Picture_1.jpeg)
 
 ## Simplified Objectives for P3335
 
 Produce a guide to improve interoperability, compatibility and comparability between Time Cards manufactured by different vendors.
-Set a structure to define various sub systems
-Set some sub standards for plug-in modules (like GNSS and OSC)
-Define interfaces (hardware: memory addresses, drivers …)
-Suggest testing methods and comparable benchmark metrics
-Provide blueprints to assist further development of Time Cards
-Do all this work in a structure that maximizes people’s engagement
 
----
-
-# Slide 28
+- Set a structure to define various sub systems
+- Set some sub standards for plug-in modules (like GNSS and OSC)
+- Define interfaces (hardware: memory addresses, drivers …)
+- Suggest testing methods and comparable benchmark metrics
+- Provide blueprints to assist further development of Time Cards
+- Do all this work in a structure that maximizes people's engagement
 
 ## Proposed Approach
 
-We already have something that works (various Time Cards)
-Turn the Time Card to a general case
-Study the general case
-Dissect the work in subgroups (Diverge)
-Work in parallel
-Bring things together (Converge)
-Combing through the work (coherence)
+- We already have something that works (various Time Cards)
+- Turn the Time Card to a general case
+- Study the general case
+- Dissect the work in subgroups (Diverge)
+- Work in parallel
+- Bring things together (Converge)
+- Combing through the work (coherence)
+
+![](_page_27_Picture_8.jpeg)
 
 Goal: Embrace Diversity, Ensure Interoperability
 
-![Image 29](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_29.png)
-
-![Image 30](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_30.png)
-
-![Image 31](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_31.png)
-
-![Image 32](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_32.png)
-
-![Image 33](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_33.png)
-
-![Image 34](Precise Time Sync in Data Centers (Sep 5, 23)_images/slide_28_image_34.png)
-
----
-
-# Slide 29
-
 ## Current Time Card
 
-Dual GNSS PCIe card with a MAC
+• Dual GNSS PCIe card with a MAC
 
-PCIe
-
-SMA
-
-GNSS1
-
-GNSS2
-
-Time Engine
-
-MAC
-
----
-
-# Slide 30
+![](_page_28_Picture_2.jpeg)
 
 ## Time Card Concept
 
-All possible pathways
+• All possible pathways
 
-PCIe
-
-SMA
-
-GNSS1
-
-GNSS2
-
-Time Engine
-
-MAC
-
-1
-
-2
-
-3
-
-4
-
-5
-
----
-
-# Slide 31
+![](_page_29_Figure_2.jpeg)
 
 ## Focus Areas
 
-Time Engine
-
-Local Oscillator
-
-Physical Interface
-
-Host Interface
-
-Receiver
-
-1
-
-2
-
-3
-
-4
-
-5
-
-7
-
-6
-
-Metrics and Performance
-
----
-
-# Slide 32
+![](_page_30_Figure_1.jpeg)
 
 ## Thank you
 
-Find out more on:
+#### Find out more on:
 
-www.ocptap.com
-www.timecard.ch
-www.timingcard.com
-www.opentimeserver.com
-
----
+[www.ocptap.com](http://www.ocptap.com/) [www.timecard.ch](http://www.timecard.ch/) [www.timingcard.com](http://www.timingcard.com/) [www.opentimeserver.com](http://www.opentimeserver.com/)
