@@ -59,12 +59,17 @@ def extract_pptx_to_markdown(
             if hasattr(shape, "text") and shape.text.strip():
                 text = shape.text.strip()
                 
-                # Try to detect if it's a title
-                if hasattr(shape, "placeholder_format"):
-                    if shape.placeholder_format.type in [1, 3]:  # Title or Center Title
-                        markdown_lines.append(f"## {text}")
-                    else:
-                        markdown_lines.append(text)
+                # Try to detect if it's a title (only for placeholders)
+                is_title = False
+                if hasattr(shape, "is_placeholder") and shape.is_placeholder:
+                    try:
+                        if shape.placeholder_format.type in [1, 3]:  # Title or Center Title
+                            is_title = True
+                    except (AttributeError, Exception):
+                        pass
+                
+                if is_title:
+                    markdown_lines.append(f"## {text}")
                 else:
                     markdown_lines.append(text)
                 markdown_lines.append("")

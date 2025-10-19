@@ -4,6 +4,7 @@ import os
 import typer
 from pathlib import Path
 from typing import Optional, List, Tuple
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 from .pdf_extractor import extract_pdf_to_markdown
@@ -267,6 +268,12 @@ def extract(
         "--no-cuda", "--no-gpu",
         help="Disable CUDA GPU acceleration, use CPU only",
     ),
+    workers: int = typer.Option(
+        1,
+        "--workers", "-w",
+        help="Number of parallel workers for processing multiple files (default: 1, sequential)",
+        min=1,
+    ),
     quiet: bool = typer.Option(
         False,
         "--quiet", "-q",
@@ -303,6 +310,10 @@ def extract(
 
         [dim]# Directory (recursive, PPTX only, text-only mode)[/dim]
         p3335 extract ./documents/ -r -t pptx --text-only
+
+        [dim]# Parallel processing with 4 workers[/dim]
+        p3335 extract ./documents/ -r --workers 4
+        p3335 extract ./documents/ -r -w 4
 
         [dim]# Enable GPU acceleration[/dim]
         p3335 extract document.pdf --cuda
@@ -383,6 +394,8 @@ def extract(
                 raise typer.Exit(code=0)
             
             console.print(f"[bold]Found {len(files)} file(s) to process[/bold]")
+            if workers > 1:
+                console.print(f"[dim]Using {workers} parallel workers[/dim]")
             console.print()
             
             # Process files with progress tracking
@@ -401,17 +414,51 @@ def extract(
             ) as progress:
                 task = progress.add_task("Processing files...", total=len(files))
                 
-                for file_path in files:
-                    progress.update(task, description=f"Processing {file_path.name}")
-                    
-            success, error_msg = _extract_single_file(file_path, None, extract_images, quiet, use_gpu)
-            if success:
-                successful += 1
-            else:
-                failed += 1
-                failed_files.append((file_path, error_msg))
-            
-            progress.update(task, advance=1)
+                if workers == 1:
+                    # Sequential processing (original behavior)
+                    for file_path in files:
+                        progress.update(task, description=f"Processing {file_path.name}")
+                        
+                        success, error_msg = _extract_single_file(file_path, None, extract_images, quiet, use_gpu)
+                        if success:
+                            successful += 1
+                        else:
+                            failed += 1
+                            failed_files.append((file_path, error_msg))
+                        
+                        progress.update(task, advance=1)
+                else:
+                    # Parallel processing
+                    with ProcessPoolExecutor(max_workers=workers) as executor:
+                        # Submit all tasks
+                        future_to_file = {
+                            executor.submit(
+                                _extract_single_file, 
+                                file_path, 
+                                None, 
+                                extract_images, 
+                                True,  # Force quiet mode for parallel to avoid output collisions
+                                use_gpu
+                            ): file_path
+                            for file_path in files
+                        }
+                        
+                        # Process completed tasks
+                        for future in as_completed(future_to_file):
+                            file_path = future_to_file[future]
+                            try:
+                                success, error_msg = future.result()
+                                if success:
+                                    successful += 1
+                                else:
+                                    failed += 1
+                                    failed_files.append((file_path, error_msg))
+                            except Exception as e:
+                                failed += 1
+                                error_msg = f"{type(e).__name__}: {str(e)}"
+                                failed_files.append((file_path, error_msg))
+                            
+                            progress.update(task, advance=1)
             
             # Summary
             console.print()
