@@ -48,7 +48,7 @@
 | **WiWi** | Wireless Wireline Synchronization Protocol (IEEE 802.1AS extensions). |
 | **WWVB** | Low-frequency U.S. national time broadcast from NIST. |
 | **PPS** | Pulse Per Second; 1 Hz reference pulse marking second boundaries. |
-| **PTM** | Precision Time Measurement feature of PCI Express (PCIe 5.0+). |
+| **PTM** | Precision Time Measurement feature of PCI Express. |
 | **PCIe** | Peripheral Component Interconnect Express bus standard. |
 | **SMBus** | System Management Bus, based on I²C protocol. |
 | **IPMI** | Intelligent Platform Management Interface for out-of-band management. |
