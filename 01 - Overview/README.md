@@ -77,7 +77,7 @@ The TimeCard Specification is organized as follows:
 | Chapter | Description |
 |----------|--------------|
 | **Overview** | Provides the motivation, scope, and structure of this document. |
-| **Normative References** | Normative References and Normative Designs|
+| **Normative References** | Normative References and Informative References|
 | **Conformance** | defines the procedures for verifying that a TimeCard implementation |
 | **Architecture** | Defines the TimeCard subsystem architecture, including oscillator, receive, and provide interfaces. |
 | **Performance Specifications** | Details measurable timing metrics, limits, and methodologies. |
