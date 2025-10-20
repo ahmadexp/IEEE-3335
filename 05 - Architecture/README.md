@@ -1,6 +1,8 @@
-## 4 TimeCard Architecture (Normative)
+## Architecture
 
-A TimeCard is a set of functions, interface definitions1 , and TimeCard behaviors, not necessarily
+A TimeCard is a subsystem to a bigger system with a standardized interface to the system.  to provide time and frequency. 
+
+set of functions, interface definitions1 , and TimeCard behaviors, not necessarily
 implemented as a tangible physical object. For instance, a TimeCard may be implemented as a
 function of some kind within an FPGA, ASIC, or SoC in a system that requires a time reference
 but is not itself a time reference or clock.
