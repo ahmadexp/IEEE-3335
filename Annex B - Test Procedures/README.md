@@ -1,217 +1,146 @@
-This appendix provides example workflows, command snippets, and pseudo-scripts to facilitate repeatable testing and automation of TimeCard devices.
-All commands and examples are illustrative; implementers may substitute equivalent utilities or frameworks as appropriate.
+# Annex B: Test Procedures (Informative)
 
-A.1 Environment Setup and Prerequisites
+This annex provides standardized test procedures for evaluating the functional and performance characteristics of TimeCard implementations. These procedures are designed to ensure repeatability, comparability, and traceability of measurement results across vendors, laboratories, and deployment environments.
 
-Host Requirements:
+---
 
-Linux kernel 6.0 or later (PTP/PTM support enabled)
+## B.1 Overview
 
-Root or elevated permissions for hardware access
+Testing of TimeCards encompasses three primary domains:
 
-Installed packages:
+1. **Functional Verification** — ensuring compliance with interface and control requirements.  
+2. **Performance Validation** — verifying timing accuracy, frequency stability, and jitter metrics.  
+3. **Environmental and Reliability Qualification** — assessing performance consistency under stress conditions.
 
-sudo apt install linuxptp hwclock i2c-tools lm-sensors python3-numpy python3-matplotlib
+All tests should be conducted using calibrated, traceable instruments and documented per the guidelines in this annex.
 
+---
 
-Instrument Connectivity:
+## B.2 General Test Conditions
 
-SCPI-capable phase noise analyzer and time-interval counter connected via USB or LAN
+### B.2.1 Environmental Setup
+- Tests **SHALL** be conducted under nominal laboratory conditions unless otherwise stated:  
+  - Temperature: 23 ± 3 °C  
+  - Humidity: 30–70% non-condensing  
+  - Atmospheric pressure: 86–106 kPa
+- The device under test (DUT) **SHALL** reach thermal equilibrium prior to measurement.  
+- GNSS antennas, PTP connections, or reference signals **MUST** meet vendor specifications for level and impedance.
 
-Serial, USB, or network access to TimeCard management interface
+### B.2.2 Power and Initialization
+- Apply host or auxiliary power within the rated voltage tolerance (±5%).  
+- Verify startup sequence and measure oscillator warm-up time.  
+- Record steady-state power consumption at idle and during synchronization.
 
-A.2 Basic TimeCard Discovery and Initialization
-1. PCIe Bus Enumeration
-lspci | grep -i time
-# Example output:
-# 02:00.0 Precision TimeCard Controller: Turba Inc. Model TC-100 (rev 01)
+### B.2.3 Measurement Equipment
+All instruments used in testing **MUST** be traceable to national metrology standards (e.g., NIST, PTB, NPL).  
+Recommended accuracy ratios:
+- Frequency counter: 10× better than DUT precision.  
+- Time interval counter: 10 ps or better resolution.  
+- PN analyzer: 10 dB lower noise floor than DUT.
 
-2. Read PCIe PTM Capability (if supported)
-sudo lspci -vvv -s 02:00.0 | grep -A5 "PTM"
+---
 
-3. I²C/SMBus Telemetry (for power, temperature, oscillator status)
-sudo i2cdetect -y 1
-sudo i2cget -y 1 0x68 0x10 w  # Example register read for oscillator status
+## B.3 Functional Tests
 
-A.3 GNSS Receiver Validation
-1. GNSS Lock Detection
-sudo cat /dev/ttyACM0 | grep -E "GPGGA|GPRMC"
-# Look for valid fix (GGA with nonzero quality) and UTC time output.
+### B.3.1 Receive Interface
+| Test | Description | Pass Criteria |
+|------|--------------|---------------|
+| Reference Detection | Apply GNSS/PTP/PPS and verify detection | Detected within vendor acquisition time |
+| Lock Indication | Observe management telemetry | Status transitions to "Locked" |
+| Failover Response | Disconnect reference input | TimeCard enters Holdover within 1 s |
 
-2. PPS Verification
-sudo ppstest /dev/pps0
-# Observe timestamps and verify steady 1 Hz output, <50 ns jitter preferred.
+### B.3.2 Providing Interface
+| Test | Description | Pass Criteria |
+|------|--------------|---------------|
+| PPS Output | Measure amplitude, polarity, and timing | Within vendor spec |
+| Frequency Output | Measure 10 MHz amplitude and stability | <±1×10⁻⁹ deviation |
+| PTM Timestamp | Compare PCIe timestamps to reference | Within ±100 ps RMS |
 
-3. GNSS Lock/Unlock Cycle
-# Simulate antenna disconnect
-sudo ip link set eth0 down   # If GNSS via network-fed PTP
-# Or physically disconnect antenna
+### B.3.3 Management and Control Interface
+| Test | Description | Pass Criteria |
+|------|--------------|---------------|
+| Register Read/Write | Access control registers | Expected values read/write OK |
+| Telemetry Accuracy | Cross-check frequency offset readings | ±5% of independent measurement |
+| Firmware Update | Perform signed update | Version change validated |
 
+---
 
-Monitor TimeCard telemetry for “Holdover” state transition:
+## B.4 Performance Tests
 
-sudo i2cget -y 1 0x68 0x22
-# Expected: Bit flag changes from LOCKED (0x01) to HOLDOVER (0x02)
+### B.4.1 Frequency Stability (ADEV/TDEV)
+- Record frequency samples over multiple averaging times (τ = 1 s, 10 s, 100 s, 1000 s).  
+- Compute Allan deviation (ADEV) and Time deviation (TDEV) using ITU-T G.810 methodology.  
+- Verify values against vendor data.
 
-A.4 PTP/PTM Host Synchronization
-1. Enable PTP Service
-sudo systemctl stop chronyd
-sudo ptp4l -i enp5s0f0 -m -S -2 &
+### B.4.2 Phase Noise (PN)
+- Measure PN spectrum at offset frequencies: 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz.  
+- Compare to vendor PN mask.  
+- Phase noise **SHOULD** remain within ±3 dB of specification.
 
-2. Query Offset and Delay Statistics
-phc2sys -s CLOCK_REALTIME -c /dev/ptp0 -O 0 -m
-# Observe phase offset convergence to <100 ns steady-state.
+### B.4.3 PPS Jitter
+- Capture 1×10⁶ PPS pulses using a calibrated TIC.  
+- Compute RMS and peak-to-peak jitter.  
+- Verify that RMS jitter ≤ 50 ps (OCXO) or ≤ 1 ns (GNSS-disciplined).
 
-3. PTM Measurement (PCIe Time Measurement)
-sudo cat /sys/kernel/debug/ptm/ptm_report
-# Example fields: Local_Timestamp, Remote_Timestamp, Delta_ps
+### B.4.4 Holdover and MTIE
+- Lock DUT to external reference. Disconnect reference and record time error for declared holdover duration.  
+- Compute MTIE per ITU-T G.8260 Appendix II.5.  
+- MTIE **MUST** remain within vendor-declared limit.
 
-A.5 PPS and 10 MHz Phase Alignment Measurement
-1. Using Time Interval Counter (SCPI)
-# Measure PPS-to-PPS offset between two TimeCards
-:MEAS:TINT? CH1,CH2
-# Repeat 1e6 times and compute mean ± RMS jitter
+### B.4.5 Ensemble Synchronization
+- Connect multiple TimeCards with two or more reference inputs.  
+- Intentionally offset one reference by ±100 ns.  
+- Measure ensemble output convergence and verify correct weighting behavior.
 
-2. Using Oscilloscope (Python/SCPI Automation)
-import pyvisa, numpy as np
-rm = pyvisa.ResourceManager()
-scope = rm.open_resource('TCPIP0::192.168.1.100::inst0::INSTR')
-scope.write(":ACQ:MODE SAM")
-scope.write(":MEAS:DEL? CH1,CH2")
-delay = float(scope.read())
-print(f"PPS phase offset = {delay*1e9:.2f} ns")
+---
 
-3. Continuous Logging
-for i in {1..10000}; do
-  echo "$(date +%s),$(sudo cat /sys/class/pps/pps0/assert)"
-  sleep 1
-done > pps_log.csv
+## B.5 Environmental and Stress Tests
 
-A.6 Frequency Stability (ADEV/TDEV) Analysis
-1. Collect Frequency Samples
-sudo chronyc tracking | grep "Last offset"
-# Or capture oscillator output using counter and export timestamps.
+### B.5.1 Thermal Cycling
+- Cycle DUT between minimum and maximum operating temperatures (e.g., −40°C to +85°C).  
+- Record frequency drift and recovery upon returning to nominal temperature.
 
-2. Compute ADEV using Python
-import allantools as at, numpy as np
-data = np.loadtxt("freq_data.txt")
-tau, adev, adev_err, _ = at.adev(data, rate=1.0, data_type='freq')
-for t,a in zip(tau, adev):
-    print(f"{t:.1f} s : {a:.3e}")
+### B.5.2 Power Interruption
+- Interrupt power for 1 s, 10 s, and 60 s intervals.  
+- Verify that holdover continues within specification and recovery occurs without phase discontinuity.
 
-A.7 Holdover and MTIE Testing
-1. Enter Holdover
+### B.5.3 Vibration and Shock
+- Apply mechanical vibration (5–500 Hz, 1 g RMS).  
+- Apply shock per IEC 60068-2-27.  
+- Observe frequency deviation ≤ ±5×10⁻¹¹ per g RMS.
 
-Disconnect all references (GNSS/PTP). Wait for status flag:
+### B.5.4 ESD and EMC Tests
+- Perform ESD testing per IEC 61000-4-2 (contact ±6 kV, air ±8 kV).  
+- Conduct EMC emission/immunity tests per EN 55032 / EN 55035.  
+- Verify that no functional or timing anomalies occur.
 
-sudo i2cget -y 1 0x68 0x22  # HOLDOVER = 0x02
+---
 
-2. Log Phase Deviation Over Time
-while true; do
-  echo "$(date +%s),$(sudo phc_ctl /dev/ptp0 get | grep 'offset')"
-  sleep 60
-done > holdover_phase.csv
+## B.6 Reporting
 
-3. Compute MTIE (ITU-T G.8260)
-import allantools as at
-phase = np.loadtxt("holdover_phase.csv", delimiter=",")[:,1]
-tau, mtie = at.mtie(phase, rate=1)
+Each conformance test report **SHALL** include:
+- Test setup diagram and instrumentation list.  
+- Firmware/hardware versions.  
+- Environmental conditions and calibration traceability.  
+- Measurement plots (ADEV, TDEV, PN, MTIE).  
+- Uncertainty analysis and result interpretation.  
+- Declaration of pass/fail for each test.
 
-A.8 Ensemble Reference Validation
-1. Configure Dual References
+---
 
-Reference A: GNSS PPS
+## B.7 Automation and Continuous Testing
 
-Reference B: PTP Grandmaster
+### B.7.1 Automated Scripts
+- Automated scripts **SHOULD** be developed in Python or Robot Framework for repeatable test execution.  
+- Data **MUST** be logged in machine-readable formats (CSV, JSON).
 
-2. Apply Offset and Observe Convergence
-sudo ptp4l -i enp5s0f1 -m -S -2 --offset 100ns &
-# Monitor ensemble source weights:
-sudo i2cget -y 1 0x68 0x40 w
+### B.7.2 Continuous Integration (CI)
+- Integrate TimeCard testing with CI pipelines (e.g., Jenkins, GitLab CI).  
+- Perform nightly regression tests for firmware and driver updates.  
+- Compare results against historical baselines for deviation detection.
 
+---
 
-Expected: Ensemble output converges within nominal stability (<20 ns) after re-weighting.
+## B.8 Summary
 
-A.9 Management Telemetry via REST/gRPC
-Example REST Query
-curl -X GET http://192.168.1.10:8080/api/v1/timecard/status
-# Returns:
-# {
-#   "sync_source": "GNSS",
-#   "lock_state": "LOCKED",
-#   "discipline_mode": "AUTO",
-#   "phase_offset_ns": 0.7,
-#   "temperature_C": 42.3,
-#   "firmware_version": "1.2.3"
-# }
-
-Example gRPC Client (Python)
-import grpc, timecard_pb2, timecard_pb2_grpc
-channel = grpc.insecure_channel('192.168.1.10:50051')
-stub = timecard_pb2_grpc.TimeCardStub(channel)
-status = stub.GetStatus(timecard_pb2.StatusRequest())
-print(status)
-
-A.10 Automated Regression Example (Shell)
-
-A minimal nightly validation loop for CI/CD environments:
-
-#!/bin/bash
-LOG=nightly_test_$(date +%F).log
-echo "=== TimeCard Nightly Test ===" > $LOG
-
-# GNSS lock test
-gnss_fix=$(grep -c "GPGGA" /dev/ttyACM0)
-[[ $gnss_fix -gt 0 ]] && echo "GNSS OK" >> $LOG || echo "GNSS FAIL" >> $LOG
-
-# PPS jitter check
-rms=$(sudo ppstest /dev/pps0 | awk '{sum+=$7; n++} END {print sqrt(sum/n)}')
-echo "PPS RMS jitter: $rms ns" >> $LOG
-
-# ADEV computation
-python3 compute_adev.py >> $LOG
-
-# Push logs to CI server
-scp $LOG ci@lab-server:/results/
-
-A.11 Example Lab Instrument SCPI Summary
-Function	Example SCPI Command	Notes
-Start measurement	:INIT:IMM	Begins immediate measurement
-Read time interval	:MEAS:TINT? CH1,CH2	Returns time delta in seconds
-Measure frequency	:MEAS:FREQ? CH1	Frequency in Hz
-Get phase noise	:CALC:MARK1:Y?	Read marker value (dBc/Hz)
-Reset	*RST	Reset instrument
-Identify	*IDN?	Device identity
-A.12 Data Normalization and Reporting
-
-After measurements:
-
-Convert all timestamps to TAI or UTC reference.
-
-Store results in JSON/CSV format:
-
-{
-  "device": "Turba TC-100",
-  "firmware": "1.2.3",
-  "ADEV": {"tau_s": [1,10,100], "adev": [1e-10, 2e-11, 6e-12]},
-  "Holdover_MTIE_ns": 150,
-  "PPS_Jitter_ns": 0.8
-}
-
-
-Use a unified schema across all test runs for easy ingestion by dashboards (Grafana, Elastic, etc.).
-
-Publish datasets to OCP TAP Interoperability Database (recommended format: CSV + metadata JSON).
-
-A.13 Suggested Automation Frameworks
-Framework	Use Case	Integration Example
-Robot Framework	Structured regression suites	robot --variable HOST:192.168.1.10 tests/
-PyTest	Unit-level API validation	pytest tests/test_timecard_api.py
-Jenkins/GitLab CI	Continuous integration	Nightly ADEV, jitter, holdover tests
-Prometheus + Grafana	Live telemetry visualization	REST scraping of /status endpoints
-Ansible	Multi-device orchestration	Apply config and collect logs from multiple hosts
-A.14 Summary
-
-This appendix provides practical command-line and scripting examples to support consistent, traceable, and automatable testing of TimeCard devices.
-By leveraging standard Linux utilities, SCPI-capable instruments, and open-source analysis tools, laboratories and vendors can ensure that all performance metrics—ADEV, MTIE, PN, jitter, and alignment—are reproducible and comparable across implementations.
-These procedures form the backbone of OCP-TAP continuous conformance verification, ensuring ongoing interoperability, transparency, and confidence in the TimeCard ecosystem.
+These test procedures provide a structured and traceable framework for evaluating TimeCard implementations. By following these methodologies, vendors and operators can validate compliance, benchmark performance, and ensure interoperability across the OCP Time Appliances Project ecosystem.
