@@ -4,16 +4,16 @@
 
 • An alternative to the sysfs interface
 
-- First introduced in version 6.7 and continuously updated to provide more capabilities
-  - Available at [kernel.org &](https://www.kernel.org/) on RHEL 9.4, CentOS Stream 9, OCP 4.14
-- Further patches are expected by end of year
-- It's strongly suggested to use latest available kernel release
+First introduced in version 6.7 and continuously updated to provide more capabilities
+  Available at [kernel.org &](https://www.kernel.org/) on RHEL 9.4, CentOS Stream 9, OCP 4.14
+Further patches are expected by end of year
+It's strongly suggested to use latest available kernel release
 
 ### How does it work?
 
-- Uses a general purpose YNL utility to encode & decode netlink messages
-- Bases these messages on a DPLL YAML specification passed in as a parameter
-- Can then pass in request to dump/edit info with --dump & -do flags
+Uses a general purpose YNL utility to encode & decode netlink messages
+Bases these messages on a DPLL YAML specification passed in as a parameter
+Can then pass in request to dump/edit info with --dump & -do flags
 
 ```
 python3 ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/dpll.yaml

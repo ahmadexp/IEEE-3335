@@ -4,31 +4,31 @@ Magnus Danielson – Net Insight
 
 ## Re-occurring problems
 
-- Traditionally dedicated hardware have been developed for specific uses, enables tailor made designs, but comes at a hard start cost
-- More designs builds upon Commercially Of The Shelfs (COTS) producs, standard platforms onto which designs is adapted, cheaper base price, but may lack key features
-- For many synchronization and timing needs, COTS servers does neither have good clocks or good interfaces
-- To enable better performance, adding missing key features is needed
-- To enable COTS to be used in certain applications, it is a needed capability
+Traditionally dedicated hardware have been developed for specific uses, enables tailor made designs, but comes at a hard start cost
+More designs builds upon Commercially Of The Shelfs (COTS) producs, standard platforms onto which designs is adapted, cheaper base price, but may lack key features
+For many synchronization and timing needs, COTS servers does neither have good clocks or good interfaces
+To enable better performance, adding missing key features is needed
+To enable COTS to be used in certain applications, it is a needed capability
 
 ## Usage scenario 1 – timing source to network
 
-- For a network to have good time, it needs one or more timing sources that take time, and is able to convey it
-- Need for timing input interfaces
-- Need for good hold-over performance to increase resilience to disturbances
-- Need for timing output interfaces
-- Need for monitoring port to validate time accuracy
-- Need for management interface to monitor, steer and maintain behaviours
-- => Looks very much like TimeCards we seen
+For a network to have good time, it needs one or more timing sources that take time, and is able to convey it
+Need for timing input interfaces
+Need for good hold-over performance to increase resilience to disturbances
+Need for timing output interfaces
+Need for monitoring port to validate time accuracy
+Need for management interface to monitor, steer and maintain behaviours
+=> Looks very much like TimeCards we seen
 
 ## Usage scenario 2 – timing network distributor and consumer
 
-- To build a network one not only input time, but distribute time and have receivers of time
-- A distributor receives time, but also conveys it
-- A receiver of time just do not happen to distribute it further in network
-- Performance of received time depends on quality of clock in receiver
-- Holdover performance increase resilience and performance for network events like re-routes, losses, re-selection of source etc
-- Much the same ability to monitor, steer and I/O remains
-- External time input can be benefit for monitoring, but not always practical to achieve
+To build a network one not only input time, but distribute time and have receivers of time
+A distributor receives time, but also conveys it
+A receiver of time just do not happen to distribute it further in network
+Performance of received time depends on quality of clock in receiver
+Holdover performance increase resilience and performance for network events like re-routes, losses, re-selection of source etc
+Much the same ability to monitor, steer and I/O remains
+External time input can be benefit for monitoring, but not always practical to achieve
 
 ## Usage scenario 3 – Mobile base-station
 

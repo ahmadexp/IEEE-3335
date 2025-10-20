@@ -1,108 +1,108 @@
 - Title Page
 - TOC
 
-- 1 Scope
-- 1.1 Identification
-- Extracted from the P3335 PAR (Approved December 2022), and edited for clarity in context:
-- This standard [P3335] defines the basic building blocks of the Time Card and their interfaces to
-- allow modularization. The main building blocks include time source, local oscillator, and time
-- processor.
-- Additionally, this standard defines interfaces between the Time Card and other systems. This
-- includes physical interfaces that allow input and output of time-related signals. This also includes
-- logical interfaces that are compatible with the Portable Operating System Interface for UNIX
-- (POSIX) and include for example an interface to share a Physical Hardware Clock (PHC). This
-- allows sharing the time of day with other systems and providing means for diagnostic and
-- configuration. The definition of logical interfaces allows for a variety of Time Card's form
-- factors (e.g. Peripheral Component Interconnect Express (PCIe)) while ensuring uniform support
-- from the operating system.
-- From a prior TimeCard presentation, "Time-Card Concept All Possible Pathways", updated.
+1 Scope
+1.1 Identification
+Extracted from the P3335 PAR (Approved December 2022), and edited for clarity in context:
+This standard [P3335] defines the basic building blocks of the Time Card and their interfaces to
+allow modularization. The main building blocks include time source, local oscillator, and time
+processor.
+Additionally, this standard defines interfaces between the Time Card and other systems. This
+includes physical interfaces that allow input and output of time-related signals. This also includes
+logical interfaces that are compatible with the Portable Operating System Interface for UNIX
+(POSIX) and include for example an interface to share a Physical Hardware Clock (PHC). This
+allows sharing the time of day with other systems and providing means for diagnostic and
+configuration. The definition of logical interfaces allows for a variety of Time Card's form
+factors (e.g. Peripheral Component Interconnect Express (PCIe)) while ensuring uniform support
+from the operating system.
+From a prior TimeCard presentation, "Time-Card Concept All Possible Pathways", updated.
 
 ![](_page_0_Figure_20.jpeg)
 
 *Figure 1 - All Possible Pathways Within a Time Card*
 
-- 1.2 System Overview
-- In *Figure 1 (All Possible Pathways Within a Time Card)*, there are five blocks. The pathways
-- (shown as double-headed-arrows) between these five blocks are discussed in Section 3 herein,
-- pathways being identified by the endpoint block numbers. Missing pathways are also discussed.
-- *Block 1* contains the hardware to receive and process external reference time sources, with GNSS
-- units shown as an example only. The connectors are included because different time source
-- kinds (like copper versus optical fiber) require different incompatible connector types. Only
-- widely used commodity connector types are considered. (Time Source.)
-- *Block 2* is the Time Engine, which performs the conversions and runs the show. (Time
-- Processor.)
-- *Block 3* is the internal master clock, and may be anything from a commodity wristwatch crystal
-- oscillator to a fancy atomic clock. (PHC, Local Clock).
-- *Block 4* contains the interfaces to cables that deliver the TimeCard's output reference signals.
-- Although shown here as SMA connectors, this will vary with the kind of reference signal being
-- generated and provided.
-- *Block 5* is the PCIe bus interface to the computer platform housing the Time-Card.
-- 1.3 Document Overview
-- The present document is written in accordance with the [IRS\_DID].
-- Need a section on Nomenclature and Definitions §2, [B3].
-- 2 Referenced Documents (Normative)
-- [IEEE 1139-2022] "IEEE Standard Definitions of Physical Quantities for Fundamental
-- Frequency and Time Metrology–Random Instabilities".
-- [IEEE 1193-2022] "IEEE Guide for Measurement of Environmental Sensitivities of Standard
-- Frequency Generators".
-- [IEEE 1588-2019] "IEEE Standard for a Precision Clock Synchronization Protocol for
-- Networked Measurement and Control Systems". << As amended? >>
-- [IRS\_DID] DI-IPSC-81434A, "Interface Requirements Specification Data Item Description",
-- approved 1999-12-15, 20 pages.
-- 3 Requirements
-- List of general requirements that apply to all the listed interfaces goes here.
-- Pathways are depicted as sets of double-headed arrow lines of varying color, where the color
-- indicates the general kind of signal being carried. Pathways are not limited to the three shown
-- here.
-- << Few shalls so far details need to clarify a bit. >>
+1.2 System Overview
+In *Figure 1 (All Possible Pathways Within a Time Card)*, there are five blocks. The pathways
+(shown as double-headed-arrows) between these five blocks are discussed in Section 3 herein,
+pathways being identified by the endpoint block numbers. Missing pathways are also discussed.
+*Block 1* contains the hardware to receive and process external reference time sources, with GNSS
+units shown as an example only. The connectors are included because different time source
+kinds (like copper versus optical fiber) require different incompatible connector types. Only
+widely used commodity connector types are considered. (Time Source.)
+*Block 2* is the Time Engine, which performs the conversions and runs the show. (Time
+Processor.)
+*Block 3* is the internal master clock, and may be anything from a commodity wristwatch crystal
+oscillator to a fancy atomic clock. (PHC, Local Clock).
+*Block 4* contains the interfaces to cables that deliver the TimeCard's output reference signals.
+Although shown here as SMA connectors, this will vary with the kind of reference signal being
+generated and provided.
+*Block 5* is the PCIe bus interface to the computer platform housing the Time-Card.
+1.3 Document Overview
+The present document is written in accordance with the [IRS\_DID].
+Need a section on Nomenclature and Definitions §2, [B3].
+2 Referenced Documents (Normative)
+[IEEE 1139-2022] "IEEE Standard Definitions of Physical Quantities for Fundamental
+Frequency and Time Metrology–Random Instabilities".
+[IEEE 1193-2022] "IEEE Guide for Measurement of Environmental Sensitivities of Standard
+Frequency Generators".
+[IEEE 1588-2019] "IEEE Standard for a Precision Clock Synchronization Protocol for
+Networked Measurement and Control Systems". << As amended? >>
+[IRS\_DID] DI-IPSC-81434A, "Interface Requirements Specification Data Item Description",
+approved 1999-12-15, 20 pages.
+3 Requirements
+List of general requirements that apply to all the listed interfaces goes here.
+Pathways are depicted as sets of double-headed arrow lines of varying color, where the color
+indicates the general kind of signal being carried. Pathways are not limited to the three shown
+here.
+<< Few shalls so far details need to clarify a bit. >>
 
-- 3.1 Block 1 to Block 2
-- The Time Engine controls the time reference source receivers and distributes the received
-- references within the TimeCard.
-- Required signals include at least the three shown, 10 MHz, 1PPS, and Data.
-- GNSS Data should include at least the identity of the current SI Second and the geodetic
-- locations of the various GNSS antennas. Data also includes control and status data for the GNSS
-- hardware.
-- <<Flesh out the other options for Block 1. No such list can be complete; must provide for future
-- additions. >>
-- 3.2 Block 1 to Block 3 (Missing)
-- To handle the most stable of clocks, a direct hardware interface between the reference source and
-- clock is required. In many current fielded legacy implementations, Block 1 and Block 3 are
-- merged into a single block, call it "Block 13".
-- There cannot be any exposed pathways between Block 1 and Block 3, because the internal
-- hardware interfaces are too complex and technology-dependent to form a reasonable modular
-- interface boundary. There are no externally visible pathways within a block.
-- 3.3 Block 2 to Block 3
-- The Time Engine controls the local master clock.
-- Required signals include at least the three shown, 10 MHz, 1PPS, and Data. If Block 1 and
-- Block 3 are merged, the pathway between Block 2 and Block 3 vanishes.
-- 3.4 Block 2 to Block 4
-- The Time Engine generates the reference outputs provided to the customers of the TimeCard.
-- Block 4 contains four connectors, usually but not necessarily all copper. The copper paths may
-- be coaxial cable or twisted pair, or even single conductors, etc. These four paths must carry
-- signals and data as appropriate for the kind of output being implemented.
-- 3.5 Block 2 to Block 5
-- The Time Engine accepts control and provides time via PCIe, including memory-resident I/O
-- registers of some kind [B1] [B2] [B4].
-- This is the portal to the software running in the computer platform hosting the present PCIe
-- TimeCard, both for data transfer and for implementation of memory-mapped registers and the
-- like [B1] [B2] [B4].
-- Both interrupts and memory access must be supported, in both directions.
-- 4 Qualification Provisions
-- Only cite tests formally defined in 1588 or ITU, and do not define test details herein except to
-- choose a method and/or define parameters if needed, unless otherwise stated herein.
+3.1 Block 1 to Block 2
+The Time Engine controls the time reference source receivers and distributes the received
+references within the TimeCard.
+Required signals include at least the three shown, 10 MHz, 1PPS, and Data.
+GNSS Data should include at least the identity of the current SI Second and the geodetic
+locations of the various GNSS antennas. Data also includes control and status data for the GNSS
+hardware.
+<<Flesh out the other options for Block 1. No such list can be complete; must provide for future
+additions. >>
+3.2 Block 1 to Block 3 (Missing)
+To handle the most stable of clocks, a direct hardware interface between the reference source and
+clock is required. In many current fielded legacy implementations, Block 1 and Block 3 are
+merged into a single block, call it "Block 13".
+There cannot be any exposed pathways between Block 1 and Block 3, because the internal
+hardware interfaces are too complex and technology-dependent to form a reasonable modular
+interface boundary. There are no externally visible pathways within a block.
+3.3 Block 2 to Block 3
+The Time Engine controls the local master clock.
+Required signals include at least the three shown, 10 MHz, 1PPS, and Data. If Block 1 and
+Block 3 are merged, the pathway between Block 2 and Block 3 vanishes.
+3.4 Block 2 to Block 4
+The Time Engine generates the reference outputs provided to the customers of the TimeCard.
+Block 4 contains four connectors, usually but not necessarily all copper. The copper paths may
+be coaxial cable or twisted pair, or even single conductors, etc. These four paths must carry
+signals and data as appropriate for the kind of output being implemented.
+3.5 Block 2 to Block 5
+The Time Engine accepts control and provides time via PCIe, including memory-resident I/O
+registers of some kind [B1] [B2] [B4].
+This is the portal to the software running in the computer platform hosting the present PCIe
+TimeCard, both for data transfer and for implementation of memory-mapped registers and the
+like [B1] [B2] [B4].
+Both interrupts and memory access must be supported, in both directions.
+4 Qualification Provisions
+Only cite tests formally defined in 1588 or ITU, and do not define test details herein except to
+choose a method and/or define parameters if needed, unless otherwise stated herein.
 
-- 5 Requirements Traceability
-- P3335 defines a standard, and so need not be traceable to anything. What traceability there is
-- must be explicitly levied in Section 3 herein.
-- 6 Notes
-- Created on 13 February 2024 for the P3335 Architecture Working Group.
-- 7 Appendixes
-- 7.1 Bibliography (Informational)
-- [B1] "MILS-to-POSIX Mapping 1.pdf".
-- [B2] "Notes on Discrete and Clock Signals (20231016).pdf".
-- [B3] "P3335 Time-Card Use Case Summary (20230717).pdf". Has definitions.
-- [B4] "Sept 2023 P3335 Plenary Random Notes (20231001).pdf". Has details of various kinds
-- of computer interfaces.
-- 7.2 Glossary
-- 1PPS, 10 MHz, DID, GNSS, IRS, ITU, MAC, PAR, PCIe, PHC, POSIX, RF, SI, SMA, UNIX
+5 Requirements Traceability
+P3335 defines a standard, and so need not be traceable to anything. What traceability there is
+must be explicitly levied in Section 3 herein.
+6 Notes
+Created on 13 February 2024 for the P3335 Architecture Working Group.
+7 Appendixes
+7.1 Bibliography (Informational)
+[B1] "MILS-to-POSIX Mapping 1.pdf".
+[B2] "Notes on Discrete and Clock Signals (20231016).pdf".
+[B3] "P3335 Time-Card Use Case Summary (20230717).pdf". Has definitions.
+[B4] "Sept 2023 P3335 Plenary Random Notes (20231001).pdf". Has details of various kinds
+of computer interfaces.
+7.2 Glossary
+1PPS, 10 MHz, DID, GNSS, IRS, ITU, MAC, PAR, PCIe, PHC, POSIX, RF, SI, SMA, UNIX
