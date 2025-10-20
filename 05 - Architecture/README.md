@@ -1,96 +1,45 @@
 ## Architecture
 
-A TimeCard is a subsystem to a bigger system with a standardized interface to the system.  to provide time and frequency. 
+A TimeCard is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary function is to deliver a stable, accurate, and reliable source of time, whether in the form of phase, frequency, or both, to the host platform.
 
-set of functions, interface definitions1 , and TimeCard behaviors, not necessarily
-implemented as a tangible physical object. For instance, a TimeCard may be implemented as a
-function of some kind within an FPGA, ASIC, or SoC in a system that requires a time reference
-but is not itself a time reference or clock.
+The establishment of a standard architecture for TimeCards serves a critical role in ensuring interoperability among diverse implementations. By defining a common framework, different vendors can develop TimeCards with varying features, performance levels, and technologies, while still maintaining compatibility with any compliant host system.
+
+At its core, a TimeCard is built around a high-stability oscillator that serves as the fundamental source of precise timing. This oscillator is coupled with one or more interfaces that enable the TimeCard to both receive and distribute time and frequency information to the host system.
+
+The receive interface may take many forms depending on the deployment environment and required accuracy. Common options include Global Navigation Satellite System (GNSS) receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision time synchronization mechanisms such as Precision Time Protocol (PTP), Network Time Protocol (NTP), White Rabbit (WR), WiWi, WWVB, or Pulse-Per-Second (PPS) inputs. These interfaces allow the TimeCard to discipline its oscillator and maintain alignment with an external reference clock.
+
+In some configurations, a TimeCard may operate without an external timing input—designated as “NONE” for its receive interface. In this case, the device functions in holdover mode, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are useful in environments where external signals are unavailable, intermittent, or intentionally excluded for security or operational reasons.
+
+This flexible architecture enables TimeCards to support a wide range of applications—from GNSS-disciplined primary time sources to autonomous holdover systems, while maintaining a consistent and standardized interface to the host platform. While the receive interface enables the TimeCard to synchronize with an external reference, the providing interface ensures that the synchronized time and frequency are accurately distributed to the host system.
+
+A providing interface is an essential and mandatory component of every TimeCard. It defines the mechanism through which the TimeCard delivers precise time, frequency, or both to the host. In practice, this interface forms the primary communication and synchronization channel between the TimeCard and the host platform.
+
+Depending on system requirements, the providing interface may consist of a single interface or a combination of multiple interfaces operating simultaneously. Typical examples include system bus interfaces such as ISA, MCA, PCI, and PCI Express (PCIe), as well as peripheral and communication interfaces such as Serial Bus, USB, SCSI, PCMCIA or LPT. The selection of interface type directly impacts both the data transfer characteristics and the temporal precision achievable in the host system.
+
+To ensure the conservation of timing precision and mitigate latency uncertainty, it is strongly recommended that the providing interface support hardware-based timestamping. Hardware timestamping allows the timing information to be captured or generated directly at the hardware level, eliminating variations introduced by software stacks or interrupt handling.
+
+Timestamping may be realized through dedicated physical signals, such as a Pulse-Per-Second (PPS) output, or through in-bus implementations such as Precision Time Measurement (PTM) in PCIe architectures. These mechanisms enable deterministic, high-accuracy time delivery and foster interoperability across diverse TimeCard and host system implementations.  
+
+In addition to the receive and providing interfaces, it is recommended that a TimeCard include one or more management and control interfaces. These interfaces enable configuration, monitoring, firmware management, diagnostics, and status reporting between the TimeCard and the host system. A TimeCard without a managment interface is still accepted if the functionality is predetermined and no monitoring is needed. 
+
+The management interface serves as the control plane of the TimeCard, distinct from the data plane functions that deliver timing and frequency. Through this interface, the host can read and modify operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover performance, temperature compensation, and alarm or fault conditions.
+
+Common examples of management and control interfaces include: SMBus or I²C, typically used for basic configuration and telemetry access in hardware environments. IPMI (Intelligent Platform Management Interface), often employed in server-class systems for out-of-band monitoring and control. PCIe Configuration Space Registers, which may expose time-related status and configuration parameters directly over the host bus. Serial or USB interfaces, for more advanced interaction, firmware updates, or detailed telemetry collection via vendor-supplied tools. Network-based interfaces such as REST, gRPC, or SNMP, when the TimeCard is part of a larger distributed or remote-managed timing infrastructure.
+
+To promote interoperability and cross-vendor compatibility, it is recommended that all TimeCards expose a minimum common set of registers and attributes in a standardized format. This may include fields for:
+
+- Current synchronization source and state
+- Clock disciplining status
+- Phase and frequency offset statistics
+- Holdover duration and expected drift
+- Alarm or fault codes
+- Firmware version and build metadata
+
+Furthermore, the management interface should support secure firmware update and integrity verification mechanisms to ensure reliability and prevent unauthorized modification. Together, these management and control capabilities provide the operational transparency necessary for effective integration, remote management, and lifecycle maintenance of TimeCards in large-scale deployments, such as data centers, telecom infrastructure, or AI back-end clusters.
 
 #### 4.1 Architectural Principles (Normative)
 
-Qualities sought include *adequately* high stability (quantified using ADEV or TDEV or MTIE as
-appropriate), low phase noise, high accuracy, high precision, fine granularity, high resolution,
-ability to synchronize TimeCard instances over a specified large physical extent while meeting
-some pre-specified performance requirements, ability to create Ensemble clocks from multiple
-time reference inputs, et al. The definition of *adequately* depends on the relevant use cases.
-A TimeCard generates a single unified timescale and may publish this simultaneously in multiple
-forms. There is exactly one timescale, not one per reference signal output.
-All outputs **shall** publish the single *unified* timescale, approximating the timescale's ideal to fit
-the capabilities of the output media. A major implication is that the boundaries between seconds
-seen on the various output media from the same TimeCard instance always align exactly.
-In addition to stability requirements, there are often maximum Phase Noise (PN) requirements.
-PN is very weak amplitude (AM) and/or phase modulation (PM) of a periodic carrier whose
 
- If not defined within the present standard, interface definitions are usually incorporated by normatively citing a set of formally approved IDDs standards. This is needed for interoperability spanning various TimeCard makes and models.
-
-frequency exceeds about one megahertz. While PN is not defined for slow pulse trains like
-1PPS, time jitter is defined. PN is specified as a pair of power spectra of some kind (covering
-AM and PM, if both are important) versus offset frequency. Each reference signal output will
-likely have its own PN spectrum.
-Low SWaP and cost (either absolute or relative to the host system being served, as appropriate
-for specific use cases).
-Manufacturers will be required to measure and publish their guaranteed maximum holdover
-errors as a function of holdover time, along with required minimum warmup conditions and
-times, et al. Holdover requirements apply only to 1PPS outputs and assume that the chosen
-incoming reference is perfect. MTIE is widely used
-The ITU G810 Appendix II.5 definition [G8260] of MTIE **shall** be the holdover metric for
-TimeCards.
-Alternately, multiple independent incoming time-reference signals may be combined into a
-single unified *ensemble* time-reference signal that may be chosen as an incoming time reference.
-TimeCard implementations **shall** be capable of combining multiple incoming reference signals
-into a single unified *Ensemble* reference signal that may be used in the same manner as an
-individual reference signal.
-4.2 What's Common to all Implementations (Informative)
-The architecture, constraints, and interfaces are common to all TimeCard implementations; all
-else can vary. TimeCard implementations need not support all architecture objectives and/or
-constraints. Manufacturers will specify exactly what they do and do not offer, and customers
-will choose those offerings that best suit their specific application use case or cases.
-In some use cases, the sole purpose of the TimeCard is to provide a standard interface to provide
-a time reference to bespoke hardware, often with minimal to no technical requirements.
-Cost sensitivity varies by orders of magnitude. One size does not fit all. So, numerical
-performance requirements are explicitly defined as *unspecified* in the standard, meaning that the
-WG deliberated and decided to leave this issue to the market to segment and settle2 .
-Although we usually think of an oscillator as being a physical object perhaps containing a very
-good resonator of some kind, this is not necessarily true in a TimeCard. For some use cases, a
-DDS implemented in FPGA firmware controlled by a low-end commodity digital logic clock or
-a wristwatch crystal oscillator or the like suffices.
-TimeCards are a kind of PTP "Ordinary Clock".
-4.3 Time-Flow Narrative (Informative)
-The following is an informative traversal narrative, proceeding from the time-inputs to the time-
-outputs in the direction of reference-time flow:
-There is at least one input time reference signal available, and there may be multiple
-simultaneously connected and available time references. If more than one signal is available,
-there will be a pre-configured scheme to select which signal to use, what to do if and when the
-
-*Unspecified* will be formally defined in the Nomenclature section of the P3335 standard. Also, officially define "out of scope", and update the definition of Traceable and Optional (conditional) Shall.
-
-chosen reference signal degrades or ceases, and just how fussy and impatient to be in this
-decision.
-A TimeCard may have its own integral or dedicated Primary Reference Clock oscillator and
-have no need of any incoming time reference, so the earlier rule would change to zero or more
-incoming time reference signals. More commonly, there could be an ensemble clock
-implemented where the local Primary Reference provides phase and frequency, plus external
-incoming reference signals that define the boundaries between adjacent SI Seconds and label
-those seconds according to TAI or UTC or some other time scale.
-The TimeCard's internal Hardware Clock is steered into synchronism with the chosen incoming
-time reference signal using a PLL of some kind; details vary, as does how tightly the PLL
-synchronizes to the chosen incoming time reference, and the specific PLL type and loop
-bandwidth. Knowledge of the specific PLL Type and Loop Bandwidth is necessary for the
-design of the embedding system. Loop bandwidths range from millihertz (very loose
-synchronization) to tens of kilohertz (very tight synchronization).
-
-#### 5 Documentation Requirements (Normative)
-
-Many Architectural Principles and Constraints are optional, which ones to support being left to
-the market on the theory that customers will choose what's best for them. This implies that the
-necessary data for publicly available products must be freely available to the public.
-Manufacturers **shall** specify in publicly available datasheets exactly which of the listed
-Architectural Principles and Constraints they do and do not meet or implement.
-Manufacturers **shall** specify in publicly available datasheets the PLL Type and Loop Bandwidth.
-Manufacturers **shall** provide in publicly available documents all data needed to perform
-traceability analysis, or state that traceability is not supported.
-All exercised optional (conditional) requirements **shall** be documented.
 
 # 6 References (Normative)
 
