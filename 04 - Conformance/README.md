@@ -65,7 +65,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 4 Management and Control Interface Verification
+## 4 - Management and Control Interface Verification
 
 ### Register and Attribute Compliance
 - Query all required standard attributes: synchronization source, oscillator status, phase/frequency offsets, firmware version, and alarms.
@@ -86,7 +86,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 5 Performance Validation
+## 5 - Performance Validation
 
 ### Frequency Stability (ADEV/TDEV)
 - Measure Allan deviation over τ = 1 s to 10⁴ s (or vendor-stated range).
@@ -115,7 +115,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 6 Environmental and Power Validation
+## 6 - Environmental and Power Validation
 
 ### Power Cycling and Recovery
 - Cycle power 10× under nominal and cold conditions.
@@ -131,7 +131,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 7 Reporting and Certification
+## 7 - Reporting and Certification
 
 ### Test Report Contents
 Each conformance report **SHALL** include:
@@ -155,119 +155,3 @@ Each conformance report **SHALL** include:
 
 These conformance test procedures ensure that all TimeCards, regardless of vendor or implementation detail, provide measurable, interoperable, and traceable performance across critical dimensions of time, frequency, and stability. Adherence to these procedures establishes a verifiable foundation for cross-vendor compatibility, host integration reliability, and long-term confidence in timing infrastructures built around the TimeCard standard.
 
----
-
-# Reference Implementation and Interoperability Testbed (Informative)
-
-This section defines a recommended reference laboratory environment for evaluating the functional, timing, and interoperability characteristics of TimeCard devices across multiple vendors and use cases. The intent is to provide a repeatable, transparent test framework for the Open Compute Project (OCP) Time Appliances Project (TAP) and related community test efforts.
-
----
-
-## 12.1 Objectives
-
-The primary objectives of the interoperability testbed are to:
-- Validate multi-vendor interoperability.
-- Characterize timing precision, phase alignment, and stability.
-- Verify standardized management interfaces and telemetry.
-- Provide a traceable baseline for certification.
-- Enable continuous regression testing as firmware evolves.
-
----
-
-## 12.2 Testbed Architecture Overview
-
-A typical interoperability testbed includes:
-- **Reference Time Sources:** Multi-GNSS disciplined master clock, rubidium/cesium standard, and networked PTP/WR sources.
-- **Host System Under Test (HSUT):** Server with PCIe/PTM, supporting multiple TimeCards.
-- **Measurement Equipment:** Counters, PN analyzers, oscilloscopes, network analyzers, and power analyzers.
-- **Management Controller:** Collects telemetry via SMBus/I²C, IPMI, or REST.
-- **Environmental Chamber (Optional):** Enables thermal sweeps from −40 °C to +85 °C.
-
----
-
-## 12.3 Topology Example
-
-```
-      ┌────────────────────────────┐
-      │    GNSS / Rb / Cesium     │
-      │   Reference Master Clock  │
-      └──────────┬────────────────┘
-                 │ PPS / 10 MHz
-                 ▼
-     ┌────────────────────────────┐
-     │   Distribution Amplifier   │
-     └──┬───────────┬───────────┬─┘
-        │           │           │
-        ▼           ▼           ▼
-   ┌────────┐  ┌────────┐  ┌────────┐
-   │TC #1   │  │TC #2   │  │TC #n   │
-   └──┬─────┘  └──┬─────┘  └──┬─────┘
-      │            │           │
-      ▼            ▼           ▼
-   ┌────────────────────────────┐
-   │  Host System (PCIe/PTM)    │
-   │  Multi-Slot Test Chassis   │
-   └──────────┬─────────────────┘
-              │
-              ▼
-     ┌────────────────────────────┐
-     │ Time Interval Counter /    │
-     │ PN Analyzer / Management   │
-     │ Data Collector             │
-     └────────────────────────────┘
-```
-
----
-
-## 12.4 Interoperability Scenarios
-
-- **Multi-Vendor Synchronization Test:** Measure PPS/10 MHz phase offset (<1 ns RMS).
-- **Host-Bus Timing Consistency:** Verify PTM timestamps match across cards (<100 ps drift/hour).
-- **Cross-Management Validation:** Validate consistent telemetry schemas.
-- **Failover & Ensemble Evaluation:** Test reference loss recovery.
-- **Holdover Correlation:** Measure drift and MTIE alignment across cards.
-
----
-
-## 12.5 Data Logging and Analysis
-
-- All logs **SHALL** be UTC-synchronized and stored as CSV/JSON.
-- Include firmware version, serial, calibration metadata.
-- Derived metrics (ADEV, TDEV, MTIE, PN) **SHALL** use open algorithms.
-- Public dataset contribution to OCP-TAP repository **SHOULD** be encouraged.
-
----
-
-## 12.6 Reporting and Publication
-
-Reports **SHOULD** include setup diagrams, firmware versions, offsets, stability data, and any deviations.  
-All results **SHOULD** be archived in the OCP-TAP repository for community transparency.
-
----
-
-## 12.7 Continuous Integration and Automation
-
-Automated regression testing **SHOULD** include lock/holdover cycles, temperature variations, telemetry validation, and baseline comparison.  
-Integration with CI/CD systems such as **Jenkins** or **GitLab CI** is recommended.
-
----
-
-## 12.8 Traceability and Calibration
-
-- Reference sources **MUST** be traceable to UTC(NIST) or equivalent.
-- Calibration certificates **SHALL** be maintained and renewed periodically.
-- Detected drift **MUST** be recorded and compensated.
-
----
-
-## 12.9 Expansion and Evolution
-
-- Modular design supports future PTM generations, optical synchronization, and CSAC integration.
-- AI-based ensemble weighting **SHOULD** be documented and shared for future revisions.
-
----
-
-## Closing Statement
-
-The Reference Implementation and Interoperability Testbed provides a **neutral, transparent, and repeatable** evaluation environment for TimeCards.  
-By adhering to this framework, the OCP Time Appliances Project ensures consistent and traceable validation across implementations—fostering **trust, interoperability, and performance assurance** across the precision timing ecosystem.
