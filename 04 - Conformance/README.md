@@ -4,7 +4,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 1 General Test Conditions
+## 1 - General Test Conditions
 
 ### Environmental Setup
 - Tests **SHALL** be performed within the manufacturer’s rated environmental conditions (temperature, humidity, vibration).
@@ -26,7 +26,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 2 Receive Interface Verification
+## 2 - Receive Interface Verification
 
 ### Signal Acceptance and Lock
 - Apply each supported input (GNSS, PPS, PTP, WR, etc.).
@@ -44,7 +44,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 
 ---
 
-## 3 Providing Interface Verification
+## 3 - Providing Interface Verification
 
 ### Output Format and Electrical Compliance
 - Measure each output’s amplitude, impedance, rise/fall time, polarity, and duty cycle.
