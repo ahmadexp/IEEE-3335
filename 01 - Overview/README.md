@@ -1,6 +1,6 @@
 # Overview (Informative)
 
-This document defines the architectural framework, performance expectations, and interoperability requirements for **TimeCard** devices — modular timing subsystems that provide standardized, high-precision time and frequency services to host systems. The purpose of this specification is to promote a consistent, open, and vendor-neutral foundation for precision timing in computing, networking, and distributed AI infrastructure.
+This document defines the architectural framework, performance expectations, and interoperability requirements for **TimeCard** devices; modular timing subsystems that provide standardized, high-precision time [and frequency] services to host systems. The purpose of this specification is to promote a consistent, open, and vendor-neutral foundation for precision timing in computing, networking, and distributed AI infrastructure.
 
 ---
 
