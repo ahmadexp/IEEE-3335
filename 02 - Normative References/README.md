@@ -29,4 +29,3 @@
 | [I8] White Rabbit Docs | Sub-nanosecond Ethernet synchronization. | CERN / GSI |
 | [I9] NTP Reference Implementation | ntpd open-source reference software. | IETF / NTP.org |
 | [I10] Turba Analytics Docs | AI workload timing analytics platform. | Turba Technologies |
-

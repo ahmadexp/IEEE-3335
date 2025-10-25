@@ -102,14 +102,14 @@
 
 ## References
 
-1. **ITU-T G.810** – Definitions and terminology for synchronization networks.  
-2. **ITU-T G.8260** – Definitions and test methods for synchronization performance.  
-3. **IEEE 1588-2019** – Precision Time Protocol (PTP).  
-4. **PCI-SIG PCI Express Base Specification 5.0, Annex PTM.**  
-5. **OCP TAP TimeCard Specification (current document).**  
-6. **NIST Special Publication 1065** – Time and Frequency Measurement.  
+1. **ITU-T G.810** – Definitions and terminology for synchronization networks.
+2. **ITU-T G.8260** – Definitions and test methods for synchronization performance.
+3. **IEEE 1588-2019** – Precision Time Protocol (PTP).
+4. **PCI-SIG PCI Express Base Specification 5.0, Annex PTM.**
+5. **OCP TAP TimeCard Specification (current document).**
+6. **NIST Special Publication 1065** – Time and Frequency Measurement.
 
 ---
 
-This glossary ensures that every acronym and concept used in the TimeCard Specification is **unambiguous**, **standardized**, and **traceable** to existing timing and synchronization frameworks.  
+This glossary ensures that every acronym and concept used in the TimeCard Specification is **unambiguous**, **standardized**, and **traceable** to existing timing and synchronization frameworks.
 It completes the document as a **stand-alone, standards-compliant reference** suitable for publication, implementation, and certification.
