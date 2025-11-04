@@ -10,7 +10,7 @@ TimeCard performance encompasses the precision, stability, and accuracy with whi
 
 Performance metrics for the applicable oscillator/s shall be provided. These shall include frequency accuracy and temperature stability.
 
-Performance metrics applicable for operation ithin the applicable use case should be provided. Those metrics should be characterized under both **locked** (synchronized) and **holdover** operating conditions.
+Performance metrics applicable for the characterization of operation within the applicable use case should be provided. Those metrics should be characterized under both **locked** (synchronized/syntonized) and **holdover** operating conditions.
 
 Manufacturers may report the following metrics:
 - Frequency stability (ADEV, TDEV)
