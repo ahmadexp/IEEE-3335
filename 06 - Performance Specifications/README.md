@@ -65,7 +65,7 @@ Vendors **shall** report absolute accuracy in:
 - Nanoseconds (for PPS and ToD outputs)
 - Parts per billion (ppb) for frequency stability
 
-Accuracy **SHOULD** be measured against UTC or equivalent traceable reference. Drift rates **shall** be reported for holdover intervals from 1 s to 24 h.
+Accuracy **should** be measured against UTC or equivalent traceable reference. Drift rates **shall** be reported for holdover intervals from 1 s to 24 h.
 
 ---
 
@@ -99,7 +99,7 @@ Manufacturers **shall** characterize and report performance variations due to en
 - Supply voltage variations (±5% nominal)
 - Mechanical vibration or shock
 
-ADEV and MTIE **SHOULD** be measured at temperature extremes to confirm thermal stability and compensation effectiveness.
+ADEV and MTIE **should** be measured at temperature extremes to confirm thermal stability and compensation effectiveness.
 
 ---
 
@@ -112,7 +112,7 @@ Each performance report **shall** include:
 - Tabulated summary with key specifications
 - Uncertainty bounds and statistical confidence
 
-All data **SHOULD** be made available in machine-readable format (e.g., CSV, JSON) for inclusion in OCP-TAP conformance databases.
+All data **should** be made available in machine-readable format (e.g., CSV, JSON) for inclusion in OCP-TAP conformance databases.
 
 ---
 
@@ -123,4 +123,4 @@ A TimeCard implementation is deemed **compliant** if it:
 - Reports all required metrics with traceable data
 - Demonstrates conformance via validated test methods
 
-OCP-TAP certification programs **MAY** reference this chapter as the normative basis for timing performance verification.
+OCP-TAP certification programs **may** reference this chapter as the normative basis for timing performance verification.
