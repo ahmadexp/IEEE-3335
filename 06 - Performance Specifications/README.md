@@ -8,7 +8,7 @@ This clause defines the performance reporting and characterization requirements 
 
 TimeCard performance encompasses the precision, stability, and accuracy with which the device maintains and delivers time and / or frequency.
 
-Performance metrics for the applicable oscillator/s shall be provided. These should include frequency accuracy and temperature stability.
+Performance metrics for the applicable oscillator/s shall be provided. These shall include frequency accuracy and temperature stability.
 
 Performance metrics applicable for operation ithin the applicable use case should be provided. Those metrics should be characterized under both **locked** (synchronized) and **holdover** operating conditions.
 
