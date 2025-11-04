@@ -88,7 +88,7 @@ For implementations supporting multiple reference inputs, ensemble performance *
 - Ensemble weighting stability
 - Output deviation from the unified timescale under reference offset conditions
 
-Vendors **SHOULD** provide ensemble response plots showing time offset vs. reference skew for deterministic analysis.
+Vendors **should** provide ensemble response plots showing time offset vs. reference skew for deterministic analysis.
 
 ---
 
