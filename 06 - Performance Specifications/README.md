@@ -1,4 +1,4 @@
-# Performance Specifications (Normative)
+# Performance Metrics (Normative)
 
 This chapter defines the minimum performance reporting and characterization requirements for TimeCard implementations. The intent is to ensure measurable, transparent, and comparable timing behavior across vendors and use cases. Each performance attribute SHALL be verified under standardized test conditions and reported in vendor documentation.
 
