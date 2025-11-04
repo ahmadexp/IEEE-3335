@@ -1,14 +1,18 @@
 # Performance Metrics (Normative)
 
-This chapter defines the minimum performance reporting and characterization requirements for TimeCard implementations. The intent is to ensure measurable, transparent, and comparable timing behavior across vendors and use cases. Each performance attribute shall be verified under standardized test conditions and reported in vendor documentation.
+This clause defines the performance reporting and characterization requirements for TimeCard implementations. The intent is to ensure measurable, transparent, and comparable timing behavior across vendors in a manner enabling targeting differing use cases. Performance metrics shall be reported in vendor documentation. 
 
 ---
 
 ## 6.1 Overview
 
-TimeCard performance encompasses the precision, stability, and accuracy with which the device maintains and delivers time and frequency. Performance shall be characterized under both **locked** (synchronized) and **holdover** (free-running) conditions.
+TimeCard performance encompasses the precision, stability, and accuracy with which the device maintains and delivers time and / or frequency.
 
-Manufacturers **shall** publish the following metrics:
+Performance metrics for the applicable oscillator/s shall be provided. These should include frequency accuracy and temperature stability.
+
+Performance metrics applicable for operation ithin the applicable use case should be provided. Those metrics should be characterized under both **locked** (synchronized) and **holdover** operating conditions.
+
+Manufacturers may report the following metrics:
 - Frequency stability (ADEV, TDEV)
 - Maximum Time Interval Error (MTIE)
 - Phase noise (PN)
