@@ -1,4 +1,4 @@
-## General Terms
+## 3.1 General Terms
 
 | Term | Definition |
 |------|-------------|
@@ -17,7 +17,7 @@
 
 ---
 
-## Performance Metrics
+## 3.1 Performance Metrics
 
 | Metric | Definition / Reference |
 |---------|------------------------|
@@ -37,7 +37,7 @@
 
 ---
 
-## Protocols and Standards
+## 3.3 Protocols and Standards
 
 | Acronym | Description |
 |----------|--------------|
@@ -59,7 +59,7 @@
 
 ---
 
-## Hardware and Clock Types
+## 3.4 Hardware and Clock Types
 
 | Term | Definition |
 |------|-------------|
@@ -73,7 +73,7 @@
 
 ---
 
-## Measurement Instruments
+## 3.5 Measurement Instruments
 
 | Instrument | Description |
 |-------------|-------------|
@@ -86,7 +86,7 @@
 
 ---
 
-## Miscellaneous Terms
+## 3.6 Miscellaneous Terms
 
 | Term | Definition |
 |------|-------------|
@@ -100,7 +100,7 @@
 
 ---
 
-## References
+## 3.7 References
 
 1. **ITU-T G.810** – Definitions and terminology for synchronization networks.
 2. **ITU-T G.8260** – Definitions and test methods for synchronization performance.

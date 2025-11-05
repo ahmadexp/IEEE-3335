@@ -62,7 +62,7 @@ These values **must** be derived over ≥10⁶ consecutive pulses under nominal 
 
 ---
 
-## 11.4 Accuracy and Drift
+## 6.4 Accuracy and Drift
 
 Accuracy refers to the degree of conformance to a known time or frequency reference. Drift represents the accumulated deviation over time.  
 Vendors **shall** report absolute accuracy in:
@@ -73,7 +73,7 @@ Accuracy **should** be measured against UTC or equivalent traceable reference. D
 
 ---
 
-## 11.5 Holdover Performance
+## 6.5 Holdover Performance
 
 Holdover defines the TimeCard’s ability to maintain precise time in the absence of a reference signal.  
 Manufacturers **shall** specify:
@@ -85,7 +85,7 @@ Holdover performance **must** be validated under controlled environmental condit
 
 ---
 
-## 11.6 Ensemble Behavior
+## 6.6 Ensemble Behavior
 
 For implementations supporting multiple reference inputs, ensemble performance **shall** be characterized by:
 - Convergence time between references
@@ -96,7 +96,7 @@ Vendors **should** provide ensemble response plots showing time offset vs. refer
 
 ---
 
-## 11.7 Environmental Sensitivity
+## 6.7 Environmental Sensitivity
 
 Manufacturers **shall** characterize and report performance variations due to environmental factors, including:
 - Temperature (°C range, coefficient)
@@ -107,7 +107,7 @@ ADEV and MTIE **should** be measured at temperature extremes to confirm thermal 
 
 ---
 
-## 11.8 Reporting Format
+## 6.8 Reporting Format
 
 Each performance report **shall** include:
 - Test conditions (temperature, humidity, power)
@@ -120,7 +120,7 @@ All data **should** be made available in machine-readable format (e.g., CSV, JSO
 
 ---
 
-## 11.9 Compliance and Certification
+## 6.9 Compliance and Certification
 
 A TimeCard implementation is deemed **compliant** if it:
 - Meets or exceeds all mandatory (“shall”) performance criteria

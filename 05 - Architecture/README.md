@@ -1,6 +1,6 @@
 # TimeCard Architecture Specification
 
-## 1. Architecture Overview
+## 5.1 -  Architecture Overview
 
 A **TimeCard** is a modular subsystem designed to interface with a host platform through a standardized hardware and software interface. Its primary purpose is to deliver a stable, accurate, and reliable source of time—in the form of phase, frequency, or both—to the host system.
 
@@ -8,13 +8,13 @@ The establishment of a standard architecture for TimeCards plays a critical role
 
 ---
 
-## 2. Core Timing Architecture
+## 5.2 - Core Timing Architecture
 
 At its core, every TimeCard is built around a **high-stability oscillator**, which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time and frequency information to and from the host system.
 
 ---
 
-## 3. Receive Interface
+## 5.3 - Receive Interface
 
 The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms. Common examples include Global Navigation Satellite System (**GNSS**) receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator and maintain alignment with an external time source.
 
@@ -24,7 +24,7 @@ This flexible receive architecture enables TimeCards to support a wide spectrum 
 
 ---
 
-## 4. Providing Interface
+## 5.4 - Providing Interface
 
 While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
@@ -38,7 +38,7 @@ Timestamping can be realized through dedicated physical signals, such as a **Pul
 
 ---
 
-## 5. Management and Control Interfaces
+## 5.5  Management and Control Interfaces
 
 In addition to the receive and providing interfaces, it is recommended that each TimeCard include one or more **management and control interfaces**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface remains acceptable when its operational parameters are fixed or pre-determined, and no runtime monitoring or control is required.
 
@@ -63,31 +63,31 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 
 ---
 
-## 6. Power, Mechanical, and Environmental Considerations
+## 5.6 - Power, Mechanical, and Environmental Considerations
 
-### 6.1 Power Delivery
+### 5.6.1 - Power Delivery
 - TimeCards **MUST** define input rails and tolerances (e.g., 12 V, 3.3 V).  
 - When powered via host bus, the TimeCard **MUST** meet that bus’s limits and sequencing.  
 - If externally powered, protection against reverse polarity **MUST** be included.  
 - Deterministic power-up sequencing and optional energy storage for holdover **SHOULD** be supported.
 
-### 6.2 Mechanical Form Factor
+### 5.6.2 - Mechanical Form Factor
 - The physical envelope **MUST** be documented.  
 - Acceptable forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
 - Mounting **MUST** withstand insertion/removal; strain relief for RF ports **SHOULD** be included.  
 - Faceplates **SHOULD** label GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
 
-### 6.3 Connectors and I/O
+### 5.6.3 - Connectors and I/O
 - RF/timing ports **MUST** be impedance-matched and rated.  
 - PPS/10 MHz electrical levels, impedance, and edge polarity **MUST** be specified.  
 - Data and management ports **SHOULD** have ESD protection and locking connectors.
 
-### 6.4 Thermal Design
+### 5.6.4 - Thermal Design
 - Operating temperature range **MUST** be defined; oscillator drift vs. temperature **SHOULD** be characterized.  
 - Host airflow assumptions **SHOULD** be documented; heat load during warm-up **MUST** be specified.  
 - Over/under-temperature thresholds **MUST** be reported via management.
 
-### 6.5 Environmental and Reliability
+### 5.6.5 - Environmental and Reliability
 - Shock, vibration, and humidity limits **SHOULD** be stated.  
 - EMC/ESD compliance **MUST** meet target-market standards.  
 - MTBF and wear-out items **SHOULD** be published.  
@@ -95,17 +95,17 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 
 ---
 
-## 7. Reference Signals and Performance Metrics
+## 5.7 - Reference Signals and Performance Metrics
 
-### 7.1 Unified Timescale (Normative)
+### 5.7.1 - Unified Timescale (Normative)
 A TimeCard **SHALL** generate a single unified timescale and **MUST** publish it identically across all outputs.  
 All second boundaries from the same TimeCard instance **MUST** align exactly.
 
-### 7.2 Output Signal Classes (Informative)
+### 5.7.2 - Output Signal Classes (Informative)
 Typical outputs include ToD, 1 PPS, 10 MHz/5 MHz, packetized time (PTP), and host-bus time (PTM).  
 Electrical characteristics and limits **SHOULD** be published for each.
 
-### 7.3 Stability, Accuracy, Precision (Normative Reporting)
+### 5.7.3 - Stability, Accuracy, Precision (Normative Reporting)
 Qualities sought include adequate stability (ADEV/TDEV/MTIE), low phase noise, high accuracy, high precision, and fine resolution.  
 Numeric targets are intentionally unspecified; vendors **SHALL** report measurements using:
 - ADEV/TDEV vs. τ  
@@ -113,32 +113,32 @@ Numeric targets are intentionally unspecified; vendors **SHALL** report measurem
 - Timestamp granularity  
 - Physical synchronization extent and conditions
 
-### 7.4 Phase Noise and Time Jitter (Normative Reporting)
+### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
 Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
 For pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak jitter and measurement bandwidth.
 
-### 7.5 Holdover Performance (Normative)
+### 5.7.5 - Holdover Performance (Normative)
 Vendors **SHALL** publish maximum holdover error vs. time, warm-up conditions, and test range.  
 Holdover requirements apply to 1 PPS outputs assuming perfect reference.  
 MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric.
 
-### 7.6 Ensemble References (Normative)
+### 5.7.6 - Ensemble References (Normative)
 Implementations **SHALL** support combining multiple references into one unified Ensemble reference.  
 Ensemble logic **SHOULD** expose source weights, health, and alarms via management telemetry.
 
-### 7.7 Large-Extent Synchronization (Informative)
+### 5.7.7 - Large-Extent Synchronization (Informative)
 For data-hall or campus deployments, vendors **SHOULD** report achievable end-to-end time error, calibration needs, and cable/optical constraints.
 
-### 7.8 Time-Flow Narrative (Informative)
+### 5.7.8 - Time-Flow Narrative (Informative)
 A TimeCard receives zero or more references, selects one via a policy, and disciplines its internal hardware clock using a PLL.  
 PLL type and bandwidth materially affect behavior and **SHOULD** be disclosed.  
 The TimeCard can operate as a PTP Ordinary Clock toward the host or network.
 
-### 7.9 Implementation Flexibility (Informative)
+### 5.7.9 - Implementation Flexibility (Informative)
 The “oscillator” NEED NOT be a discrete resonator; a DDS or similar digital source may suffice for cost-sensitive designs.  
 SWaP-C trade-offs are left to the market.
 
-### 7.10 Conformance and Interface Definitions (Normative Guidance)
+### 5.7.10 - Conformance and Interface Definitions (Normative Guidance)
 Undefined interfaces **SHOULD** normatively cite approved Interface Definition Documents (IDDs) for interoperability.
 
 Conformance testing **SHOULD** cover:
@@ -151,7 +151,7 @@ Conformance testing **SHOULD** cover:
 
 ---
 
-## 8. Documentation Requirements (Normative)
+## 5.8 - Documentation Requirements (Normative)
 
 Manufacturers **SHALL** provide publicly available datasheets specifying:
 - Which architectural principles and constraints are implemented  
@@ -162,7 +162,7 @@ Manufacturers **SHALL** provide publicly available datasheets specifying:
 
 ---
 
-## 9. Vendor Datasheet Checklist (Informative)
+## 5.9 - Vendor Datasheet Checklist (Informative)
 
 | Category | Required / Recommended | Example Contents |
 |-----------|------------------------|------------------|
@@ -179,7 +179,7 @@ Manufacturers **SHALL** provide publicly available datasheets specifying:
 
 ---
 
-## 6. References (Normative)
+## 5.10 - References (Normative)
 
 - [G8620] ITU-T G.8260 *Definitions and terminology for synchronization in packet networks* (2015 or later).  
 - [IEEE 1139] *IEEE Standard Definitions of Physical Quantities for Fundamental Frequency and Time Metrology*.  
@@ -188,7 +188,7 @@ Manufacturers **SHALL** provide publicly available datasheets specifying:
 
 ---
 
-## 7. Bibliography (Informative)
+## 5.11 - Bibliography (Informative)
 
 - Wikipedia: [Precision Time Protocol](https://en.wikipedia.org/wiki/Precision_Time_Protocol)  
 - [IRS_DID] DI-IPSC-81434A, *Interface Requirements Specification Data Item Description* (1999).  
@@ -198,12 +198,12 @@ Manufacturers **SHALL** provide publicly available datasheets specifying:
 
 ---
 
-## 8. Notes
+## 5.12 - Notes
 The present P3335 standard document was initiated on 25 April 2025, largely based on *“TimeCard Architecture (Section 5) Draft (20250424).docx”*.
 
 ---
 
-## 9. Acronyms
+## 5.13 - Acronyms
 
 **1PPS** = One Pulse Per Second  
 **ADEV** = Allan Deviation  

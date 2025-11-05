@@ -1,4 +1,4 @@
-## Normative References
+## 2.1 Normative References
 
 | Reference | Title / Description | Organization |
 |------------|--------------------|--------------|
@@ -15,7 +15,7 @@
 
 ---
 
-## Informative References
+## 2.2 Informative References
 
 | Reference | Title / Description | Organization |
 |------------|--------------------|--------------|

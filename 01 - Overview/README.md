@@ -4,7 +4,7 @@ This document defines the architectural framework, performance expectations, and
 
 ---
 
-## 1 - Purpose and Scope
+## 1.1 - Purpose and Scope
 
 The **TimeCard Specification** establishes the structural, electrical, software, and performance characteristics of TimeCard-based systems. It describes how TimeCards synchronize to external references, maintain timing during holdover, and provide precise phase and frequency outputs to host systems or networks.  
 
@@ -24,7 +24,7 @@ By defining a **standardized timing subsystem interface**, the specification ens
 
 ---
 
-## 2 - Motivation
+## 1.2 - Motivation
 
 Modern computing and networking workloads increasingly depend on precise and deterministic timing. Applications such as **AI model training, financial trading, distributed databases, and 5G networks** require sub-microsecond synchronization across thousands of nodes.  
 
@@ -38,7 +38,7 @@ The ultimate goal is to foster an open ecosystem for precision time distribution
 
 ---
 
-## 3 - Design Philosophy
+## 1.3 - Design Philosophy
 
 The TimeCard specification is founded on several key design principles:
 
@@ -56,7 +56,7 @@ These principles ensure that TimeCard devices serve as reliable, auditable compo
 
 ---
 
-## 4 - Relationship to Other Standards
+## 1.4 - Relationship to Other Standards
 
 This specification aligns with and references several established timing and measurement standards, including:
 
@@ -70,7 +70,7 @@ Where applicable, this document cites these standards normatively or informative
 
 ---
 
-## 5 - Structure of the Specification
+## 1.5 - Structure of the Specification
 
 The TimeCard Specification is organized as follows:
 
@@ -89,7 +89,7 @@ The TimeCard Specification is organized as follows:
 
 ---
 
-## 6 - Intended Audience
+## 1.6 - Intended Audience
 
 This specification is intended for:
 - Hardware designers developing TimeCard-compatible products.  
@@ -102,7 +102,7 @@ Readers are expected to have a basic understanding of frequency control, precisi
 
 ---
 
-## 7 - Goals and Outcomes
+## 1.7 - Goals and Outcomes
 
 The primary outcomes of adopting the TimeCard specification include:
 - **Cross-vendor interoperability** among timing devices and hosts.  
@@ -113,7 +113,7 @@ The primary outcomes of adopting the TimeCard specification include:
 
 ---
 
-## 8 - Document Status and Governance
+## 1.8 - Document Status and Governance
 
 This specification has been developed within the **Open Compute Project (OCP) Time Appliances Project (TAP)**. Future revisions and amendments will be governed by the OCP-TAP Working Group under the principles of transparency, consensus, and open contribution.
 
