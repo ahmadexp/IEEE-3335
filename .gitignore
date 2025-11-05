@@ -318,3 +318,5 @@ cython_debug/
 uv.lock
 
 .obsidian/
+
+*.backup
