@@ -38,9 +38,9 @@ Timestamping can be realized through dedicated physical signals, such as a **Pul
 
 ---
 
-## 5.5  Management and Control Interfaces
+## 5.5  Management and Control Interface
 
-In addition to the receive and providing interfaces, it is recommended that each TimeCard include one or more **management and control interfaces**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface remains acceptable when its operational parameters are fixed or pre-determined, and no runtime monitoring or control is required.
+In addition to the inbound and outbound signal interfaces, it is recommended that each TimeCard include one or more **management and control interface**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface remains acceptable when its operational parameters are fixed or pre-determined, and no runtime monitoring or control is required.
 
 The management interface functions as the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
