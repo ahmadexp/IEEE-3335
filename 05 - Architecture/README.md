@@ -10,7 +10,7 @@ The establishment of a standard architecture for TimeCards plays a critical role
 
 ## 5.2 - Core Timing Architecture
 
-At its core, every TimeCard is built around a **high-stability oscillator**, which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time and frequency information to and from the host system.
+At its core, every TimeCard is built around a **oscillator**, which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time and frequency information to and from the host system.
 
 ---
 
