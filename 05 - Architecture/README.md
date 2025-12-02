@@ -14,7 +14,7 @@ At its core, every TimeCard is built around an **oscillator** (with a quantified
 
 ---
 
-## 5.3 - Receive Interface
+## 5.3 - Inbound Signal Interface
 
 The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms. Common examples include Global Navigation Satellite System (**GNSS**) receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator and maintain alignment with an external time source.
 
@@ -24,7 +24,7 @@ This flexible receive architecture enables TimeCards to support a wide spectrum 
 
 ---
 
-## 5.4 - Providing Interface
+## 5.4 - Outbound Signal Interface
 
 While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
