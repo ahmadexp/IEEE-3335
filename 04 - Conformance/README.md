@@ -1,157 +1,55 @@
-# Conformance Test Procedures (Normative)
+> Editor's note from Rodney C: This entire readme is a note for now. The intention is to describe what goes into a Conformance clause.
 
-This section defines the procedures for verifying that a TimeCard implementation conforms to the requirements defined in this specification. Conformance testing ensures interoperability, performance transparency, and repeatability across vendors and use cases.
+IEEE SA requires text like the following in a standard. This text cannot be edited by the Working Group... it is part of the IEEE SA template for a Standard like P3335. I'm providing a sample from 802.1 here because I don't know the latest IEEE SA version.
 
----
+"
+Requirements placed upon conformant implementations of this standard this standard are expressed using the following terminology:
 
-## 4.1 - General Test Conditions
+1. **Shall** is used for mandatory requirements.
+2. **May** is used to describe implementation or administrative choices (“may” means “is permitted to,”
+and hence, “may” and “may not” mean precisely the same thing).
+3. **Should** is used for recommended choices (the behaviors described by “should” and “should not” are
+both permissible but not equally desirable choices).
 
-### 4.1.1 - Environmental Setup
-- Tests **SHALL** be performed within the manufacturer’s rated environmental conditions (temperature, humidity, vibration).
-- Unless otherwise specified, ambient temperature **SHOULD** be 23 ± 3 °C.
-- Tests **SHALL** note oscillator warm-up time, GNSS visibility, and airflow conditions.
+"
 
-### 4.1.2 - Power and Initialization
-- Apply host or auxiliary power within specified limits.
-- Verify correct sequencing and that all outputs stabilize within manufacturer-declared lock time.
-- Record total power consumption during cold start, warm start, and steady state.
+IEEE SA usually prohibits use of "must", because it can be confused with "shall". IEEE P3335 text cannot use "must".
 
-### 4.1.3 - Reference Inputs
-- All external references (GNSS, PPS, PTP, etc.) **SHALL** meet nominal levels, impedance, and signal shape per vendor spec.
-- Where multiple references are tested, the switching and ensemble-selection behavior **SHALL** be documented.
+These three words are very important, because they tell an engineer how to implement the standard. Without these words, the document is nothing but recommendations (i.e., Recommended Practice).
 
-### 4.1.4 Measurement Equipment
-- Test instruments **MUST** be traceable to national metrology institutes (e.g., NIST, PTB, NPL).
-- Equipment **SHOULD** have at least 10× better stability or resolution than the parameter under test.
+There are roughly three methodologies for using these three words:
 
----
+### Conformance Clause Only
 
-## 4.2 - Receive Interface Verification
+Normative clauses (4 and up) and normative annexes avoid using the three words, using "is" and "are" to describe what an implementer does. There is a single Conformance clause that uses the three words by referencing the subsequent normative clauses. For example, the Conformance clause could state "An implementation of this standard shall implement only one of the following: a) clause 4, b) clause 6, c) subclause 8.2." IEEE 802.1 uses this methodology.
 
-### 4.2.1 - Signal Acceptance and Lock
-- Apply each supported input (GNSS, PPS, PTP, WR, etc.).
-- Verify the TimeCard detects and locks to each within the vendor-specified acquisition time.
-- Record lock indicators, telemetry state, and alarm behavior during lock/unlock transitions.
+Advantages:
+- The Conformance clause is the one-stop-shop to understand what is most important to an implementer.
+- The Conformance clause can be a tree of requirements and options. For example, "If you implement high level option AAA, you shall implement subclause 4.5. If you implement high level option BBB, you may implement subclause 4.5."
 
-### 4.2.2 - Input Priority and Failover
-- Configure multiple references; induce failure or degradation (e.g., GNSS antenna disconnect).
-- Confirm the TimeCard transitions to the next valid source per policy and maintains output continuity.
-- Verify the “active source” and “holdover” status via management telemetry.
+Disadvantages:
+- Standards authors will use "is" for something unrelated to conforamance. This can be very confusing.
+- Standards authors will use the three words in normative text. This can be very confusing, especially when it contradicts the Conformance clause.
 
-### 4.2.3 - Reference Sensitivity and Thresholds
-- Measure minimum input level for lock and maximum tolerable level without overload.
-- Document hysteresis or debounce behavior in input detection.
+### Interspersed Without Conformance clause
 
----
+Normative clauses (4 and up) and normative annexes use the three words. Words like "is" and "can" have no conformance implication. There is no Conformance clause, so the tree of requirements/options is reflected through organization of clauses. For example, subclause 6.8.3 might be titled "Feature foobar (optional)". IEEE 1588 uses this methodology.
 
-## 4.3 - Providing Interface Verification
+Advantages:
+- Avoids all disadvantages of Conformance Clause Only. Conformance is clear as you read the document.
 
-### 4.3.1 - Output Format and Electrical Compliance
-- Measure each output’s amplitude, impedance, rise/fall time, polarity, and duty cycle.
-- Verify conformance to vendor-published limits.
+Disadvantages:
+- Sometimes more work for implementer to find all relevant shalls.
+- Diffult for standards authors is create a complex tree of requirements/options.
 
-### 4.3.2 - Output Alignment
-- Measure relative phase between all outputs (PPS, 10 MHz, ToD).
-- Alignment error **MUST NOT** exceed vendor-published specification and **SHOULD** be < 1 ns for high-stability cards.
-- Confirm that all outputs represent the same unified timescale.
+### Interspersed With Conformance clause
 
-### 4.3.3 - Host-Bus Timestamping Validation (if applicable)
-- For PCIe/PTM or similar buses, measure timestamp accuracy and asymmetry across transfers.
-- Compare against host-reported timestamps and expected hardware-path delay budgets.
+Same as Interspersed Without Conformance clause, but add a Conformance clause to summarize the tree of of requirements/options. The Conformance clause is the high level summary, and subsequent text provides detailed conformance. For example, the Conformance clause can have "If you implement high level option AAA, you shall implement subclause 4.5. If you implement high level option BBB, you may implement subclause 4.5." Within subclause 4.5, "shall" means "if you support 4.5, you shall do this".
 
-### 4.3.4 - Output During Reference Loss
-- Disconnect all references and observe the transition into holdover.
-- Verify timing continuity, proper status indication, and controlled drift according to §7.5 holdover specification.
+> Recommendation from Rodney C: Proceed with subsequent text using the Interspersed technique. Later in the P3335 project, we can consider whether we want a Conformance clause. My guess is that P3335 will have a tree, in which case the Conformance clause will be very useful.
 
----
+> Recommendation from Rodney C: Avoid doing a PICS annex. A PICS is a repetition of all of the above into a table. The table is hierarchical, so it can cover the tree issue. Some people like to read tables instead of text for conformance, so a PICS exists in many IEEE standards for that reason. The huge disadvantage is that a PICS **will** (not maybe... will) get out of sync from the rest of the standard's conformance. That creates huge contradictions for an impelementer. Statements like "When there is a contradiction, ignore PICS" can help, but not much. IEEE 802.1Q suffers from this PICS problem.
 
-## 4.4 - Management and Control Interface Verification
 
-### 4.4.1 - Register and Attribute Compliance
-- Query all required standard attributes: synchronization source, oscillator status, phase/frequency offsets, firmware version, and alarms.
-- Confirm that unsupported or undefined registers return “Not Implemented” or equivalent status.
 
-### 4.4.2 - Telemetry Accuracy
-- Cross-validate reported frequency/phase offsets and temperature readings with external measurements.
-- Discrepancy **SHALL NOT** exceed ±5 % of measured value or vendor-specified tolerance.
-
-### 4.4.3 - Firmware Update and Integrity
-- Perform firmware update via management interface.
-- Verify secure update (signature validation, rollback prevention).
-- Confirm version change and persistent configuration retention.
-
-### 4.4.4 - Security and Authentication
-- Validate that management access controls (e.g., credential, API token, or signed command) function correctly.
-- Confirm audit logging or version tracking, if supported.
-
----
-
-## 4.5 - Performance Validation
-
-### 4.5.1 - Frequency Stability (ADEV/TDEV)
-- Measure Allan deviation over τ = 1 s to 10⁴ s (or vendor-stated range).
-- Conditions: stable environment, reference locked.
-- Compare to published ADEV/TDEV curves.
-- Record results for both locked and holdover states.
-
-### 4.5.2 - Phase Noise
-- For each periodic output (10 MHz, etc.), measure single-sideband PN (dBc/Hz) at 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz offsets.
-- Compare to vendor PN mask or specification.
-
-### 4.5.3 - PPS Jitter and Alignment
-- Record PPS over 1 × 10⁶ samples with respect to reference.
-- Calculate RMS and peak-to-peak jitter; confirm within published limits.
-- Verify second boundary alignment across all PPS outputs.
-
-### 4.5.4 - Holdover Drift and MTIE
-- Disconnect reference and measure 1 PPS phase error vs. time for the declared holdover duration.
-- Compute MTIE per ITU-T G.8260.
-- Compare against vendor-guaranteed maximum.
-
-### 4.5.5 - Ensemble Behavior
-- Apply two or more time sources with deliberate offset (e.g., ±100 ns).
-- Verify ensemble output converges to within expected range and weight selection behaves deterministically.
-- Induce one source fault and confirm seamless fallback.
-
----
-
-## 4.6 - Environmental and Power Validation
-
-### 4.6.1 - Power Cycling and Recovery
-- Cycle power 10× under nominal and cold conditions.
-- Verify consistent startup time, oscillator stabilization, and configuration persistence.
-
-### 4.6.2 - Thermal Response
-- Sweep temperature across operating range; measure frequency drift and holdover stability.
-- Validate thermal alarms trigger and clear at specified thresholds.
-
-### 4.6.3 - Power Consumption
-- Measure consumption under cold start, GNSS acquisition, and steady operation.
-- Compare to declared power budget; deviations >10% **SHALL** be reported.
-
----
-
-## 4.7 - Reporting and Certification
-
-### 4.7.1 - Test Report Contents
-Each conformance report **SHALL** include:
-- Test environment and equipment list
-- Firmware and hardware versions
-- Measured parameters with plots and uncertainty bounds
-- Deviations or non-conformances
-- Traceability references to national standards
-
-### 4.7.2 - Certification Criteria
-- A TimeCard **SHALL** be deemed conformant if all mandatory (“SHALL”) requirements pass and all optional (“SHOULD”) items are either implemented or documented as intentionally omitted.
-- Conformance certificates **SHOULD** reference the applicable standard revision and include the complete test data set.
-
-### 4.7.3 - Re-Verification
-- Re-testing **SHOULD** occur after major firmware updates or hardware revisions.
-- Any parameter regression exceeding 10% from published performance **SHALL** be disclosed in updated datasheets.
-
----
-
-## 4.8 - Summary
-
-These conformance test procedures ensure that all TimeCards, regardless of vendor or implementation detail, provide measurable, interoperable, and traceable performance across critical dimensions of time, frequency, and stability. Adherence to these procedures establishes a verifiable foundation for cross-vendor compatibility, host integration reliability, and long-term confidence in timing infrastructures built around the TimeCard standard.
 
