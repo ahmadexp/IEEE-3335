@@ -28,7 +28,7 @@ This flexible receive architecture enables TimeCards to support a wide spectrum 
 
 While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
-A providing interface is a **mandatory component** of every TimeCard. It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the primary communication and synchronization channel between them.
+A providing interface is a **mandatory component** of every TimeCard. It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the primary communication <Really?  Data comms?> and synchronization channel between them.
 
 Depending on system requirements, the providing interface may consist of a single interface or a combination of multiple concurrent interfaces. Common examples include system bus standards such as **ISA**, **MCA**, **PCI**, and **PCI Express (PCIe)**, as well as peripheral and communication interfaces such as **Serial Bus**, **USB**, **SCSI**, **PCMCIA**, or **LPT**. The selection of interface type directly influences both the data exchange characteristics and the precision of temporal alignment achievable by the host.
 
