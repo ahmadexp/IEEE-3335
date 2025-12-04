@@ -2,7 +2,7 @@
 
 ## 5.1 -  Architecture Overview
 
-A **TimeCard** is a modular subsystem designed to interface with a host platform through a standardized hardware and software interface. Its primary purpose is to deliver a stable, accurate, and reliable source of time—in the form of phase, frequency, or both—to the host system.
+A **TimeCard** is a modular subsystem designed to interface with a host platform through a standardized hardware and software interface. Its primary purpose is to deliver a stable, accurate, and reliable source of time—in the form of phase, frequency, or both to the host system.
 
 The establishment of a standard architecture for TimeCards plays a critical role in ensuring interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and technologies, while maintaining full compatibility with any compliant host. This standardization fosters innovation, simplifies integration, and enables seamless substitution or upgrade of TimeCards without requiring significant host system redesign.
 
