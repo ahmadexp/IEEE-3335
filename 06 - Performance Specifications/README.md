@@ -1,27 +1,27 @@
 # Performance Metrics (Normative)
 
-This clause defines the performance reporting and characterization requirements for TimeCard implementations. The intent is to ensure measurable, transparent, and comparable timing behavior across vendors in a manner enabling targeting differing use cases. Performance metrics shall be reported in vendor documentation. 
+This clause defines the performance reporting and characterization requirements for TimeCard implementations. The intent is to enable measurable, transparent, and comparable timing behavior across vendors. Performance metrics **SHALL** be reported in vendor documentation. 
 
 ---
 
 ## 6.1 Overview
 
-TimeCard performance encompasses the precision, stability, and accuracy with which the device maintains and delivers time and / or frequency.
+TimeCard performance quantifies the precision, stability, and accuracy with which the device maintains and delivers time and / or frequency.
 
 Performance metrics for the applicable oscillator/s shall be provided. These shall include frequency accuracy and temperature stability.
 
 Performance metrics applicable for the characterization of operation within the applicable use case should be provided. Those metrics should be characterized under both **locked** (synchronized/syntonized) and **holdover** operating conditions.
 
-Manufacturers may report the following metrics:
+Manufacturers may report <<at least, or only?>> the following metrics:
 - Frequency stability (ADEV, TDEV)
 - Maximum Time Interval Error (MTIE)
 - Phase noise (PN)
 - Jitter and alignment (PPS and ToD)
 - Accuracy and drift relative to reference
 - Holdover behavior
-- Environmental sensitivity (temperature, voltage, vibration)
+- Environmental sensitivity (to temperature, voltage, vibration)
 
-All measurements **must** reference traceable standards, such as UTC(NIST), and conform to ITU-T G.810/G.8260 methodologies.
+All measurements **must** reference traceable standards, such as UTC(NIST), and conform to ITU-T G.810/G.8260 methodologies.  << What does "reference" mean here?  It sounds like the test equipment mut be traceable (6.3.1), but this is ambiguous. >>
 
 ---
 
@@ -29,7 +29,7 @@ All measurements **must** reference traceable standards, such as UTC(NIST), and 
 
 ### 6.2.1 Allan Deviation (ADEV)
 ADEV quantifies short-term frequency stability as a function of averaging time (τ).  
-Vendors **shall** report ADEV curves for τ ranging from 1 s to 10⁴ s under reference-locked and holdover conditions.
+Vendors **shall** report ADEV curves for τ ranging from at least 1 second to 10⁴ sseconds under reference-locked and holdover conditions.
 
 Example reference: ITU-T G.810 Annex I.
 
@@ -39,7 +39,7 @@ Vendors **shall** provide TDEV plots corresponding to reported ADEV data, includ
 
 ### 6.2.3 Maximum Time Interval Error (MTIE)
 MTIE represents the maximum observed time deviation between any two points in a given observation window.  
-Holdover MTIE **should** conform to the ITU-T G.8260 Appendix II.5 definition. Vendors **shall** publish MTIE vs. observation interval plots and specify measurement bandwidth.
+Holdover MTIE **must** conform to the ITU-T G.8260 Appendix II.5 definition. Vendors **shall** publish MTIE vs. observation interval plots and specify measurement bandwidth.  << See section 7.7.5. >>
 
 ---
 
@@ -47,7 +47,7 @@ Holdover MTIE **should** conform to the ITU-T G.8260 Appendix II.5 definition. V
 
 ### 6.3.1 Phase Noise (PN)
 Phase Noise describes the short-term frequency and phase fluctuations of a periodic signal, expressed in dBc/Hz versus offset frequency.  
-For each sinusoidal output (e.g., 10 MHz, 5 MHz), vendors **shall** provide PN data at minimum offset frequencies of 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz.
+For each sinusoidal output (e.g., 10 MHz, 5 MHz), vendors **shall** provide PN data at minimum the offset frequencies of 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz.
 
 PN **shall** be measured with test equipment traceable to a national metrology institute and calibrated for low-noise operation.
 
@@ -69,7 +69,7 @@ Vendors **shall** report absolute accuracy in:
 - Nanoseconds (for PPS and ToD outputs)
 - Parts per billion (ppb) for frequency stability
 
-Accuracy **should** be measured against UTC or equivalent traceable reference. Drift rates **shall** be reported for holdover intervals from 1 s to 24 h.
+Accuracy **should** be measured against UTC or equivalent traceable reference. Drift rates **shall** be reported for holdover intervals from at least 1 second to 24 hours.
 
 ---
 
@@ -79,7 +79,7 @@ Holdover defines the TimeCard’s ability to maintain precise time in the absenc
 Manufacturers **shall** specify:
 - Maximum allowable drift (MTIE) over time
 - Warm-up and environmental conditioning requirements
-- Recovery time to lock after reference restoration
+- Recovery time to first lock after reference restoration, and time to achieve full performance
 
 Holdover performance **must** be validated under controlled environmental conditions with all external references disconnected.
 
@@ -87,12 +87,14 @@ Holdover performance **must** be validated under controlled environmental condit
 
 ## 6.6 Ensemble Behavior
 
+<< Define "Ensemble". >>
+
 For implementations supporting multiple reference inputs, ensemble performance **shall** be characterized by:
 - Convergence time between references
 - Ensemble weighting stability
 - Output deviation from the unified timescale under reference offset conditions
 
-Vendors **should** provide ensemble response plots showing time offset vs. reference skew for deterministic analysis.
+Vendors **should** provide ensemble response plots showing time offset vs. reference skew for deterministic analysis.  << What is deterministic analysis, and how does it differ from ordinary analysis? >>
 
 ---
 
@@ -103,7 +105,7 @@ Manufacturers **shall** characterize and report performance variations due to en
 - Supply voltage variations (±5% nominal)
 - Mechanical vibration or shock
 
-ADEV and MTIE **should** be measured at temperature extremes to confirm thermal stability and compensation effectiveness.
+ADEV and MTIE **should** be measured at temperature extremes to confirm thermal stability and compensation effectiveness.  << This assumes that  problems can only occur at the upper and lower extremes, which is not always true. >>
 
 ---
 
@@ -116,7 +118,7 @@ Each performance report **shall** include:
 - Tabulated summary with key specifications
 - Uncertainty bounds and statistical confidence
 
-All data **should** be made available in machine-readable format (e.g., CSV, JSON) for inclusion in OCP-TAP conformance databases.
+All data **should** be made available in machine-readable format (e.g., CSV, JSON) for inclusion in OCP-TAP conformance databases.  The format for these data files **must** be publically available to all gratis.
 
 ---
 
