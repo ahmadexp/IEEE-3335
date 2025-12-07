@@ -1,15 +1,15 @@
 # Environmental Specifications (Normative)
 
-This chapter defines the environmental, mechanical, and reliability requirements applicable to all TimeCard implementations. These specifications ensure that TimeCards operate reliably under diverse deployment conditions—ranging from data centers and telecommunications environments to industrial or field installations—while maintaining timing precision and conformance to the unified timescale.
+This chapter defines the environmental, mechanical, and reliability requirements applicable to all TimeCard implementations. The objective is that TimeCards operate reliably under diverse deployment conditions—ranging from data centers and telecommunications environments to industrial or field installations—while maintaining timing precision and conformance to the unified timescale.
 
 ---
 
 ## 9.1 - Overview
 
 TimeCards are precision timing subsystems whose performance is directly influenced by environmental factors such as temperature, humidity, shock, and electromagnetic interference.  
-All implementations **SHALL** specify their environmental operating limits, test methodologies, and mitigation measures in compliance with applicable international standards.
+All implementations **SHALL** specify their environmental operating limits, test methodologies, and mitigation measures in compliance with applicable international standards.  << What about other kinds of standards? Some customers follow national or industry standards, and/or may not need to conform to any such standard. >> 
 
-Environmental performance **SHOULD** be validated through qualification testing to verify stable frequency, phase, and time accuracy across the declared operating range.
+Environmental performance **SHOULD** be validated through qualification testing to verify stable frequency, phase, and time accuracy across the declared operating range or ranges.
 
 ---
 
@@ -29,8 +29,8 @@ Environmental performance **SHOULD** be validated through qualification testing 
 
 ### 9.2.3 - Altitude and Airflow
 - Operating altitude **SHALL** be defined (typically 0–3000 m).  
-- Host airflow assumptions **MUST** be documented, including minimum cubic feet per minute (CFM) for heat dissipation.  
-- Passive or active cooling methods **SHOULD** maintain oscillator core temperature within calibrated limits.
+- Host airflow assumptions **MUST** be documented, including minimum cubic feet per minute (CFM) for heat dissipation as a function of inlet air temperature.  
+- << Cooling methods are a matter of design.  Only performance matters.  >>
 
 ---
 
@@ -38,15 +38,15 @@ Environmental performance **SHOULD** be validated through qualification testing 
 
 ### 9.3.1 - Form Factor
 - Mechanical envelope **SHALL** conform to industry-standard add-in card dimensions (e.g., PCIe low-profile, full-height, or mezzanine form).  
-- Custom or embedded modules **MUST** document mounting hole patterns, insertion force limits, and connector retention torque.
+- Custom or embedded modules **MUST** document at least mounting hole patterns, insertion force limits, and connector retention torque levels.
 
 ### 9.3.2 - Shock and Vibration
-- TimeCards **SHALL** withstand mechanical shock and vibration consistent with IEC 60068-2-6 (vibration) and IEC 60068-2-27 (shock).  
-- Oscillator modules **MUST** be mechanically isolated from high-frequency vibration.  
+- TimeCards **SHALL** withstand mechanical shock and vibration consistent with IEC 60068-2-6 (vibration) and IEC 60068-2-27 (shock).  << For all Use Cases? >>
+- << Oscillator vibration isolation mounts are design details, not requirements. >>  
 - Frequency stability degradation under mechanical stress **SHOULD NOT** exceed ±5 × 10⁻¹¹ per g RMS.
 
 ### 9.3.3 - Connectors and Retention
-- All RF and timing ports **MUST** be impedance-matched (typically 50 Ω) and use locking or threaded connectors (e.g., SMA, MCX).  
+- All RF and timing ports **MUST** be impedance-matched (typically 50 Ω) and use locking or threaded connectors (e.g., SMA, MCX).  << What about non-RF coax (like 1PPS) or twisted-pair clocks, or optical cables? >>
 - Faceplate labeling **SHALL** clearly identify each port (GNSS, PPS, 10 MHz, ToD, MGMT).  
 - Cable strain relief **SHOULD** be incorporated to prevent mechanical fatigue.
 
@@ -55,15 +55,15 @@ Environmental performance **SHOULD** be validated through qualification testing 
 ## 9.4 - Electrical and Power Environment
 
 ### 9.4.1 - Power Supply
-- TimeCards **SHALL** define voltage rails and tolerances (e.g., +12 V ±5%, +3.3 V ±3%).  
+- TimeCards **SHALL** define power rail voltages and tolerances (e.g., +12 V ±5%, +3.3 V ±3%).  
 - Devices powered via host buses (e.g., PCIe) **MUST** comply with bus sequencing and current draw limits.  
 - External power connectors **SHALL** include reverse-polarity and surge protection.  
 - Energy storage (e.g., supercapacitor or battery) **SHOULD** sustain holdover operation during brief outages.
 
 ### 9.4.2 - Electromagnetic Compatibility (EMC)
 - All implementations **MUST** meet the target market’s EMC emission and immunity requirements (e.g., EN 55032, EN 55035, FCC Part 15 Class A/B).  
-- Shielding and grounding **SHALL** minimize coupling between digital and RF domains.  
-- Oscillator enclosures **SHOULD** be metal-shielded to prevent phase noise degradation due to EMI.
+- << Shielding and grounding is a matter of design. >>  
+- << Oscillator enclosure to exclude EMI is a matter of design. >>
 
 ### 9.4.3 - Electrostatic Discharge (ESD)
 - ESD protection **MUST** be provided on all external connectors per IEC 61000-4-2.  
@@ -104,6 +104,7 @@ Performance deviation **MUST NOT** exceed the vendor’s declared tolerance duri
 - Calibration certificates **MUST** include date, environmental conditions, and uncertainty bounds.
 
 ---
+<< The entirety of this section (7, 8, & 9 following) should be converted to an informative annex, for multiple reasons.  First, not all customers can or will follow the cited standards.  This is particularly true of requirements imposed by law, to which a mere IEEE standard adds exactly nothing. vendors will comply to the standards required in their location and customer base. >>
 
 ## 7 - Safety, Compliance, and Disposal
 
@@ -139,4 +140,4 @@ All environmental specifications **MUST** be publicly available to support inter
 ## 9 - Summary
 
 The environmental design and qualification of TimeCards are critical to ensuring consistent, reliable operation across all deployment environments.  
-By adhering to these normative requirements, vendors guarantee predictable timing performance, long-term stability, and regulatory compliance across global data center, telecommunications, and industrial ecosystems.
+<< Adherence to a standard does not guarantee that a product even works, never mind does anything useful. Choir restless.  Sales pitch deleted.  >>
