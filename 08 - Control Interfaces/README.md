@@ -1,6 +1,6 @@
 # Control Interfaces (Normative)
 
-This chapter defines the **control interfaces** used to configure, monitor, and manage TimeCard devices. Control interfaces provide the logical communication and operational management mechanisms necessary to ensure consistency, security, and interoperability across TimeCard implementations.
+This chapter defines the **control interfaces** used to configure, monitor, and manage TimeCard devices. << Deleted a sales pitch to the Choir. Nor can a standard **ensure** anything.  >>
 
 ---
 
@@ -27,7 +27,7 @@ Control interfaces are categorized based on **communication scope** and **data g
 | **Out-of-Band Control** | IPMI or serial interface. | Platform management independent of host OS. |
 | **Remote Network Control** | REST, gRPC, or SNMP. | Distributed system or cloud management. |
 
-A TimeCard **MAY** implement one or more of these control classes simultaneously, provided that concurrency and security are properly managed.
+A TimeCard **MAY** implement one or more of these control classes simultaneously.  << The clause "provided that concurrency and security are properly managed" is a hope not a requirement, and is enforced by the purchasers of Time Cards. >>
 
 ---
 
@@ -64,7 +64,7 @@ All control interfaces **SHALL** expose a minimum common set of functionality:
 ### 8.4.3 - IPMI
 - Enables out-of-band control independent of host software.  
 - TimeCard devices **SHOULD** implement an IPMI command set extension for time synchronization management (e.g., `GET_CLOCK_STATE`, `SET_REFERENCE_SOURCE`).  
-- Commands **MUST** support authenticated sessions using platform credentials.
+- IPMI Commands **MUST** support authenticated sessions using platform credentials.
 
 ### 8.4.4 - REST / gRPC / SNMP
 - Used for network-based management and telemetry aggregation.  
@@ -100,11 +100,11 @@ All registers **SHALL** have consistent endianness, alignment, and versioning pe
 
 ## 8.6 - Security and Access Control
 
-Control interfaces represent potential attack surfaces; therefore, robust protection is **MANDATORY**.
+Control interfaces represent potential attack surfaces; therefore, robust protection is essential.  << Reqts are in the subsections. A blanket requirement is too vague and boundless.  >>
 
 ### 8.6.1 - Authentication and Authorization
 - All control protocols **MUST** support user authentication.  
-- Privilege levels **SHALL** distinguish between read-only, operator, and administrator access.  
+- Privilege levels **SHALL** distinguish at least between read-only, operator, and administrator access.  
 - Access credentials **MUST** be stored securely, preferably in a TPM or hardware security enclave.
 
 ### 8.6.2 - Secure Firmware and Configuration
@@ -156,4 +156,3 @@ This guarantees long-term maintainability, traceability, and security compliance
 ---
 
 **End of Chapter – Control Interfaces**
-
