@@ -1,12 +1,12 @@
 # Control Interfaces (Normative)
 
-This chapter defines the **control interfaces** used to configure, monitor, and manage TimeCard devices. << Deleted a sales pitch to the Choir. Nor can a standard **ensure** anything.  >>
+This chapter defines the **control interfaces** used to configure, monitor, and manage TimeCard devices.  << Needs work >>
 
 ---
 
 ## 8.1 - Overview
 
-Control interfaces form the **management plane** of the TimeCard architecture. Unlike timing interfaces, which operate within the data plane and deliver phase and frequency information, control interfaces are responsible for:
+Control interfaces form the **management plane** of the TimeCard architecture. Unlike timing interfaces, which operate within the data plane and deliver phase and frequency information, control interfaces are responsible for at least:
 - Configuration of synchronization parameters
 - Status monitoring and fault reporting
 - Firmware and security management
@@ -27,13 +27,13 @@ Control interfaces are categorized based on **communication scope** and **data g
 | **Out-of-Band Control** | IPMI or serial interface. | Platform management independent of host OS. |
 | **Remote Network Control** | REST, gRPC, or SNMP. | Distributed system or cloud management. |
 
-A TimeCard **MAY** implement one or more of these control classes simultaneously.  << The clause "provided that concurrency and security are properly managed" is a hope not a requirement, and is enforced by the purchasers of Time Cards. >>
+A TimeCard **MAY** implement one or more of these control classes simultaneously.  
 
 ---
 
 ## 8.3 - Minimum Functional Requirements
 
-All control interfaces **SHALL** expose a minimum common set of functionality:
+All control interfaces **SHALL** expose at least the following minimum common set of functionality:
 
 | Function | Description |
 |-----------|--------------|
@@ -81,7 +81,7 @@ All control interfaces **SHALL** expose a minimum common set of functionality:
 
 ## 8.5 - Control Register Structure
 
-Control registers form the fundamental mechanism for low-level interaction between the host and the TimeCard.
+Control registers listed below form the minimum fundamental mechanism for low-level interaction between the host and the TimeCard.
 
 | Register | Description | Access | Example Units |
 |-----------|--------------|---------|----------------|
@@ -98,10 +98,9 @@ All registers **SHALL** have consistent endianness, alignment, and versioning pe
 
 ---
 
-## 8.6 - Security and Access Control
+## 8.6 - Security and Access Control  << Not all TimeCard markets require any of this >>
 
-Control interfaces represent potential attack surfaces; therefore, robust protection is essential.  << Reqts are in the subsections. A blanket requirement is too vague and boundless.  >>
-
+Control interfaces represent potential attack surfaces; therefore, robust protection is essential.  
 ### 8.6.1 - Authentication and Authorization
 - All control protocols **MUST** support user authentication.  
 - Privilege levels **SHALL** distinguish at least between read-only, operator, and administrator access.  
@@ -112,7 +111,7 @@ Control interfaces represent potential attack surfaces; therefore, robust protec
 - Secure boot **SHOULD** verify firmware integrity at initialization.  
 - Configuration changes **MUST** be logged and cryptographically signed when remote.
 
-### 8.6.3 - Encryption and Network Security
+### 8.6.3 - Encryption and Network Security  << Too specific and limiting >>
 - Remote interfaces (REST, SNMP, gRPC) **MUST** use encrypted transport (TLS 1.3 or higher).  
 - Session keys **SHALL** be refreshed periodically.  
 - Replay and injection protection **MUST** be implemented for critical operations.
