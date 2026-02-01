@@ -7,9 +7,9 @@ This chapter defines the environmental, mechanical, and reliability requirements
 ## 9.1 - Overview
 
 TimeCards are precision timing subsystems whose performance is directly influenced by environmental factors such as temperature, humidity, shock, and electromagnetic interference.  
-All implementations **SHALL** specify their environmental operating limits, test methodologies, and mitigation measures in compliance with applicable international standards.  << What about other kinds of standards? Some customers follow national or industry standards, and/or may not need to conform to any such standard. >> 
+All implementations **SHALL** specify their environmental operating limits, test methodologies, and mitigation measures in compliance with standards, if any, to which the manufacturer complies. 
 
-Environmental performance **SHOULD** be validated through qualification testing to verify stable frequency, phase, and time accuracy across the declared operating range or ranges.
+Environmental performance **SHOULD** be validated through qualification testing to verify stable frequency, phase, and time accuracy over the entire declared operating range or ranges.
 
 ---
 
@@ -28,9 +28,9 @@ Environmental performance **SHOULD** be validated through qualification testing 
 - Condensation prevention measures **SHALL** be verified under thermal cycling.
 
 ### 9.2.3 - Altitude and Airflow
-- Operating altitude **SHALL** be defined (typically 0–3000 m).  
+- Operating altitude range **SHALL** be defined (typically 0–3000 m).  
 - Host airflow assumptions **MUST** be documented, including minimum cubic feet per minute (CFM) for heat dissipation as a function of inlet air temperature.  
-- << Cooling methods are a matter of design.  Only performance matters.  >>
+- Cooling methods are a matter of design. 
 
 ---
 
@@ -42,14 +42,14 @@ Environmental performance **SHOULD** be validated through qualification testing 
 
 ### 9.3.2 - Shock and Vibration
 - TimeCards **SHALL** withstand mechanical shock and vibration consistent with IEC 60068-2-6 (vibration) and IEC 60068-2-27 (shock).  << For all Use Cases? >>
-- << Oscillator vibration isolation mounts are design details, not requirements. >>  
-- Frequency stability degradation under mechanical stress **SHOULD NOT** exceed ±5 × 10⁻¹¹ per g RMS.
+- Oscillator vibration isolation mounts are a matter of design.  
+- Frequency stability degradation acceleration **SHOULD NOT** exceed ±5 × 10⁻¹¹ per g RMS.
 
 ### 9.3.3 - Connectors and Retention
-- All RF and timing ports **MUST** be impedance-matched (typically 50 Ω) and use locking or threaded connectors (e.g., SMA, MCX).  << What about non-RF coax (like 1PPS) or twisted-pair clocks, or optical cables? >>
+- All RF and timing ports **MUST** use locking or threaded connectors (e.g., SMA, MCX).  
 - Faceplate labeling **SHALL** clearly identify each port (GNSS, PPS, 10 MHz, ToD, MGMT).  
 - Cable strain relief **SHOULD** be incorporated to prevent mechanical fatigue.
-
+- Impedance matching is a matter of design.
 ---
 
 ## 9.4 - Electrical and Power Environment
@@ -62,8 +62,8 @@ Environmental performance **SHOULD** be validated through qualification testing 
 
 ### 9.4.2 - Electromagnetic Compatibility (EMC)
 - All implementations **MUST** meet the target market’s EMC emission and immunity requirements (e.g., EN 55032, EN 55035, FCC Part 15 Class A/B).  
-- << Shielding and grounding is a matter of design. >>  
-- << Oscillator enclosure to exclude EMI is a matter of design. >>
+- Shielding and grounding is a matter of design.   
+- Oscillator enclosure to exclude EMI is a matter of design. 
 
 ### 9.4.3 - Electrostatic Discharge (ESD)
 - ESD protection **MUST** be provided on all external connectors per IEC 61000-4-2.  
@@ -73,7 +73,7 @@ Environmental performance **SHOULD** be validated through qualification testing 
 
 ## 9.5 - Environmental Qualification Tests
 
-All TimeCards intended for production **SHOULD** undergo the following qualification tests or equivalent validated procedures:
+All TimeCards intended for production **SHOULD** undergo the following qualification tests or equivalent or added validated procedures:
 
 | Test | Standard | Purpose |
 |------|-----------|----------|
@@ -133,11 +133,10 @@ Datasheets and manuals **SHALL** include:
 - Power, thermal, and airflow requirements  
 - Safety and disposal guidelines
 
-All environmental specifications **MUST** be publicly available to support interoperability testing and regulatory compliance.
+All environmental specifications **MUST** be publicly and freely available to support interoperability testing and regulatory compliance.
 
 ---
 
 ## 9 - Summary
 
 The environmental design and qualification of TimeCards are critical to ensuring consistent, reliable operation across all deployment environments.  
-<< Adherence to a standard does not guarantee that a product even works, never mind does anything useful. Choir restless.  Sales pitch deleted.  >>
