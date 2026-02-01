@@ -81,7 +81,7 @@ Providing interfaces **SHALL** support hardware timestamping where available and
 - PCIe PTM transactions  
 - PTP transmit and receive timestamps  
 
-Timestamping accuracy **MAY** be traceable to the internal oscillator. 
+Timestamping accuracy **SHALL** be measured using test equipment traceable to at least one National Metrology Institute, such as NIST and NPL. 
 
 ---
 
