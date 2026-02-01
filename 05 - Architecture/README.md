@@ -2,7 +2,7 @@
 
 ## 5.1 -  Architecture Overview
 
-A **TimeCard** is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary purpose being to deliver a stable, accurate, and reliable source of time—in the form of phase, frequency, or both, to the host system.
+A **TimeCard** is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary purpose being to deliver a stable, accurate, and reliable source of time (in the form of phase, frequency, or both) to the host system.
 
 The establishment of a standard architecture for TimeCards plays a critical role in ensuring interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and technologies, while maintaining full compatibility with any compliant host. This standardization fosters innovation, simplifies integration, and enables seamless substitution or upgrade of TimeCards without requiring significant host system redesign.
 
@@ -20,7 +20,7 @@ The **receive interface** provides a means for the TimeCard to synchronize its o
 
 In some configurations, a TimeCard may operate without any external timing input—designated as **“NONE”** for its receive interface. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation.
 
-This flexible receive architecture enables TimeCards to support a wide spectrum of use cases—from GNSS-disciplined primary time sources to autonomous holdover systems—while preserving a common and interoperable interface standard.
+This flexible receive architecture enables TimeCards to support a wide use-case spectrum —from GNSS-disciplined primary time sources to autonomous holdover systems— while preserving a common and interoperable interface standard.
 
 ---
 
@@ -28,13 +28,13 @@ This flexible receive architecture enables TimeCards to support a wide spectrum 
 
 While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
-A providing interface is a **mandatory component** of every TimeCard. It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the primary communication <Really?  Data comms? What is being communicated?> and synchronization channel between them.
+A providing interface is a **mandatory component** of every TimeCard. It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the synchronization channel between them.
 
 Depending on system requirements, the providing interface may consist of a single interface or a combination of multiple concurrent interfaces. Common examples include system bus standards such as **ISA**, **MCA**, **PCI**, and **PCI Express (PCIe)**, as well as peripheral and communication interfaces such as **Serial Bus**, **USB**, **SCSI**, **PCMCIA**, or **LPT**. The selection of interface type directly influences both the data exchange characteristics and the precision of temporal alignment achievable by the host.
 
 To preserve the integrity and determinism of timing, it is strongly recommended that the providing interface implement **hardware-based timestamping**. Hardware timestamping enables timing information to be generated and measured directly within hardware logic, avoiding non-deterministic delays caused by software stacks, interrupt latencies, or operating system scheduling.
 
-Timestamping can be realized through dedicated physical signals, such as a **Pulse-Per-Second (PPS)** output, or through in-bus implementations, such as **Precision Time Measurement (PTM)** within **PCIe** architectures. These mechanisms ensure low-latency, deterministic time delivery and improve cross-vendor interoperability among TimeCard and host designs.
+Timestamping can be realized through dedicated physical signals, such as a **Pulse-Per-Second (PPS)** output, or through in-bus implementations, such as **Precision Time Measurement (PTM)** (for Intel processors) within **PCIe** architectures. These mechanisms ensure low-latency, deterministic time delivery and improve cross-vendor interoperability among TimeCard and host designs.
 
 ---
 
@@ -78,19 +78,19 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 - Faceplates **SHOULD** label GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
 
 ### 5.6.3 - Connectors and I/O
-- RF/timing ports **MUST** be impedance-matched and rated << what does "rated" mean? >>.  
-- PPS/10 MHz electrical levels, impedance, and edge polarity **MUST** be specified.  
-- Data and management ports **SHOULD** have ESD protection and locking connectors.
+- RF/timing reference signal ports **MUST** be impedance-matched.  
+- PPS/10 MHz electrical levels, impedance, and edge polarity and significance **MUST** be specified.  
+- Data and management ports **SHOULD** have ESD protection and mechanically locking connectors.
 
 ### 5.6.4 - Thermal Design
 - Operating temperature range **MUST** be defined; oscillator drift vs. temperature **SHOULD** be characterized and documented.  
 - Host airflow assumptions **SHOULD** be documented; heat load during warm-up **MUST** be specified.  
-- Over/under-temperature thresholds **MUST** be reported via management << something >>.
+- Over/under-temperature thresholds **MUST** be reported via a management and control interface, if such an interface is provided.
 
 ### 5.6.5 - Environmental and Reliability
 - Shock, vibration, and humidity limits **SHOULD** be stated.  
 - EMC/ESD compliance **SHOULD** meet target-market standards.  
-- MTBF and wear-out items **SHOULD** be published.  
+- MTBF and wear-out items **SHOULD** be documented and published.  
 - Safety, labeling, and disposal requirements **MUST** be provided.
 
 ---
@@ -99,7 +99,7 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 
 ### 5.7.1 - Unified Timescale (Normative)
 A TimeCard **SHALL** generate a single unified timescale and **MUST** publish it identically across all outputs.  
-All second boundaries from the same TimeCard instance **MUST** align exactly.
+All boundaries between the seconds of signals from the the providing interface of the same TimeCard instance **MUST** align to within a tolerance that is documented and published.
 
 ### 5.7.2 - Output Signal Classes (Informative)
 Typical outputs include ToD, 1 PPS, 10 MHz/5 MHz, packetized time (PTP), and host-bus time (PTM).  
@@ -112,6 +112,7 @@ Numeric targets are intentionally unspecified; vendors **SHALL** report measurem
 - Time/frequency offset to reference  
 - Timestamp granularity  
 - Physical synchronization extent and conditions
+- And any other measurement the manufacturer chooses to include
 
 ### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
 Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
@@ -120,19 +121,18 @@ For pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak jitter and
 ### 5.7.5 - Holdover Performance (Normative)
 Vendors **SHALL** publish maximum holdover error vs. time, warm-up conditions, and test range.  
 Holdover requirements apply to 1 PPS outputs assuming perfect reference.  
-MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric.
+MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric. Other holdover metrics may also be measured and documented.
 
 ### 5.7.6 - Ensemble References (Normative)
-Implementations **SHALL** support combining multiple references into one unified Ensemble reference.  
+Implementations **SHALL** support combining multiple references into one unified "Ensemble" reference.  
 Ensemble logic **SHOULD** provide source weights, health, and alarms via management telemetry.
 
 ### 5.7.7 - Large-Extent Synchronization (Informative)
-For data-hall or campus deployments, vendors **SHOULD** report achievable end-to-end time error, calibration needs, and cable/optical constraints.
+For data-hall or campus deployments, vendors **SHOULD** report achievable end-to-end time error, calibration needs, and cable/optical constraints as a function of the physical dimensions in meters of the extent.
 
-### 5.7.8 - Time-Flow Narrative (Informative)  << What is the purpose of this section?  Update of delete. >>
+### 5.7.8 - Time-Flow Narrative (Informative)  
 A TimeCard receives zero or more references, selects one via a policy, and disciplines its internal hardware clock using a PLL.  
-PLL type and bandwidth materially affect behavior and **SHOULD** be disclosed.  
-The TimeCard can operate as a PTP Ordinary Clock toward the host or network.
+The TimeCard can operate as a PTP Ordinary Clock toward the host or network.  A traversal narrative linked to a notional system block diagram will go here.
 
 ### 5.7.9 - Implementation Flexibility (Informative)
 The “oscillator” NEED NOT be a discrete resonator; a DDS or similar digital source may suffice for cost-sensitive designs.  
@@ -148,15 +148,16 @@ Conformance testing **SHOULD** cover:
 - PTM latency/asymmetry characterization  
 - Holdover MTIE verification  
 - Ensemble behavior under reference loss
+- Plus anything else the manufacturer chooses
 
 ---
 
 ## 5.8 - Documentation Requirements (Normative)
 
-Manufacturers **SHALL** provide publicly available datasheets specifying:
+Manufacturers **SHALL** provide publicly available datasheets specifying at least the following:
 - Which architectural principles and constraints are implemented  
 - PLL/disciplining type and loop bandwidth or range  
-- All performance metrics in §7 (stability, accuracy, PN/jitter, holdover, ensemble)  
+- All performance metrics defined in §7 (stability, accuracy, PN/jitter, holdover, ensemble)  
 - Traceability data sufficient for analysis, or an explicit “traceability not supported” statement  
 - All optional or conditional features exercised in the implementation
 
@@ -203,7 +204,7 @@ The present P3335 standard document was initiated on 25 April 2025, largely base
 
 ---
 
-## 5.13 - Acronyms  << Update to cover all acronyms in the entire documnt and move to a suitable place. >>
+## 5.13 - Acronyms  << Update to cover all acronyms in the entire document and move to a suitable place. >>
 
 **1PPS** = One Pulse Per Second  
 **ADEV** = Allan Deviation  
