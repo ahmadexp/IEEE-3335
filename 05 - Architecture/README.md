@@ -10,13 +10,13 @@ The establishment of a standard architecture for TimeCards plays a critical role
 
 ## 5.2 - Core Timing Architecture
 
-At its core, every TimeCard is built around an **oscillator** (with quantified stability), which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time and frequency information to and from the host system.
+At its core, every TimeCard is built around an **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time, phase, and frequency information to and from the host system.
 
 ---
 
 ## 5.3 - Inbound Signal Interface
 
-The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms. Common examples include Global Navigation Satellite System (**GNSS**) receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator and maintain alignment with an external time source.
+The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms. Common examples include Global Navigation Satellite System (**GNSS**) receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references need not be more stable or lower noise than the this oscillator function.
 
 In some configurations, a TimeCard may operate without any external timing input—designated as **“NONE”** for its receive interface. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation.
 
