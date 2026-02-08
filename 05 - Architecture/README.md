@@ -64,22 +64,21 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 ---
 
 ## 5.6 - Power, Mechanical, and Environmental Considerations
-
+The subsections apply only if the TimeCard is implemented physically, versus for instance as a function within a larger system.
 ### 5.6.1 - Power Delivery
-- TimeCards **MUST** define input power rail voltages and tolerances (e.g., 12 V, 3.3 V).  
-- When powered via host bus, the TimeCard **MUST** meet that bus’s limits and sequencing.  
+- TimeCards **MUST** define and document input power rail voltages and tolerances (e.g., 12 V, 3.3 V).    
 - If externally powered, protection against reverse polarity **MUST** be included.  
 - Deterministic power-up sequencing and optional energy storage for holdover **SHOULD** be supported.
 
 ### 5.6.2 - Mechanical Form Factor
 - The physical envelope **MUST** be documented.  
-- Acceptable forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
+- Acceptable envelope forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
 - Mounting **MUST** withstand insertion/removal; strain relief for all cable ports (electrical or optical) **SHOULD** be included.  
 - Faceplates **SHOULD** label GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
 
 ### 5.6.3 - Connectors and I/O
 - RF/timing reference signal ports **MUST** be impedance-matched.  
-- PPS/10 MHz electrical levels, impedance, and edge polarity and significance **MUST** be specified.  
+- PPS/10 MHz electrical levels, impedance, and edge polarity (trigger on rising versus falling edge) **MUST** be specified.  
 - Data and management ports **SHOULD** have ESD protection and mechanically locking connectors.
 
 ### 5.6.4 - Thermal Design
@@ -92,14 +91,16 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 - EMC/ESD compliance **SHOULD** meet target-market standards.  
 - MTBF and wear-out items **SHOULD** be documented and published.  
 - Safety, labeling, and disposal requirements **MUST** be provided.
+- IEEE 1139 and IEEE 1193 (39 and 93 are both correct) **SHOULD** be used for definitions.
 
 ---
 
 ## 5.7 - Reference Signals and Performance Metrics
 
 ### 5.7.1 - Unified Timescale (Normative)
-A TimeCard **SHALL** generate a single unified timescale and **MUST** publish it identically across all outputs.  
-All boundaries between the seconds of signals from the the providing interface of the same TimeCard instance **MUST** align to within a tolerance that is documented and published.
+A TimeCard **SHALL** generate a single unified timescale and **MUST** publish it identically across all outputs.  A unified timescale comes from a single oscillator function which is published in multiple distribution format approximating the ideal of the timescale to the capabilities of the various distribution formats.  
+
+All boundaries between adjacent seconds of signals from the the providing interface of the same TimeCard instance **MUST** align to within a tolerance that is documented and published.
 
 ### 5.7.2 - Output Signal Classes (Informative)
 Typical outputs include ToD, 1 PPS, 10 MHz/5 MHz, packetized time (PTP), and host-bus time (PTM).  
