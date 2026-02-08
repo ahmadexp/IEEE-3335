@@ -34,20 +34,20 @@ Depending on system requirements, the providing interface may consist of a singl
 
 To preserve the integrity and determinism of timing, it is strongly recommended that the providing interface implement **hardware-based timestamping**. Hardware timestamping enables timing information to be generated and measured directly within hardware logic, avoiding non-deterministic delays caused by software stacks, interrupt latencies, or operating system scheduling.
 
-Timestamping can be realized through dedicated physical signals, such as a **Pulse-Per-Second (PPS)** output, or through in-bus implementations, such as **Precision Time Measurement (PTM)** (for Intel processors) within **PCIe** architectures. These mechanisms ensure low-latency, deterministic time delivery and improve cross-vendor interoperability among TimeCard and host designs.
+Timestamping can be realized through dedicated physical signals, such as a **Pulse-Per-Second (PPS)** output, or through in-bus implementations, such as **Precision Time Measurement (PTM)** (for Intel processors) within **PCIe** architectures. These mechanisms enable low-latency, deterministic time delivery and improve cross-vendor interoperability among TimeCard and host designs.
 
 ---
 
-## 5.5  Management and Control Interface
+## 5.5  Management and Control Interface (M&CI)
 
 In addition to the inbound and outbound signal interfaces, it is recommended that each TimeCard include one or more **management and control interface**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface is acceptable if its operational parameters are fixed or pre-determined, and no runtime monitoring or control is required.
 
 The management interface functions as the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
-Common examples of management and control interfaces include:
+The following M&CI busses are independent of one another.  Common examples of management and control interfaces include but are not limited to:
 - **SMBus or I²C** – typically used for low-level configuration and telemetry in embedded environments.  
 - **IPMI** (Intelligent Platform Management Interface) – for out-of-band management in server-class or rack-scale systems.  
-- **PCIe Configuration Space Registers** – providing time-related control and status directly over the host bus.  
+- **PCIe Configuration Space Registers** – providing time-related control and status directly over the host bus, including direct memory access to the hardware control registers.  
 - **Serial or USB interfaces** – enabling firmware updates, diagnostics, or advanced telemetry access.  
 - **Network-based interfaces** such as REST, gRPC, or SNMP, for distributed or remotely managed timing systems.
 
