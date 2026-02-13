@@ -91,12 +91,16 @@ The subsections apply only if the TimeCard is implemented physically, versus for
 - EMC/ESD compliance **SHOULD** meet target-market standards.  
 - MTBF and wear-out items **SHOULD** be documented and published.  
 - Safety, labeling, and disposal requirements **MUST** be provided.
-- IEEE 1139 and IEEE 1193 (39 and 93 are both correct) **SHOULD** be used for definitions.
 
 ---
 
-## 5.7 - Reference Signals and Performance Metrics
-
+## 5.7 - Reference Signals and Performance Metrics (Normative)
+- IEEE 1139 and IEEE 1193 (39 and 93 are both correct) **SHOULD** be used for definitions.
+- NIST Special Publication 1065 by Riley is informative
+- Requirements **SHOULD** be conditioned on the physical type of signal, including but not limited to: electrical balanced or unbalanced, voltage and/or current levels, optica fiber type or free-space, frequency band, and so on.
+- ITU G.703 Clause 19 **MAY** be used.
+- Measurement bandwidths **MUST** be reported.
+  
 ### 5.7.1 - Unified Timescale (Normative)
 A TimeCard **SHALL** generate a single unified timescale and **MUST** publish it identically across all outputs.  A unified timescale comes from a single oscillator function which is published in multiple distribution format approximating the ideal of the timescale to the capabilities of the various distribution formats.  
 
@@ -109,7 +113,7 @@ Electrical characteristics and limits **SHOULD** be published for each.
 ### 5.7.3 - Stability, Accuracy, Precision (Normative Reporting)
 Qualities sought include adequate stability (ADEV/TDEV/MTIE), low phase noise, high accuracy, high precision, and fine resolution.  
 Numeric targets are intentionally unspecified; vendors **SHALL** report measurements using:
-- ADEV/TDEV vs. τ  
+- ADEV/TDEV vs. tau  
 - Time/frequency offset to reference  
 - Timestamp granularity  
 - Physical synchronization extent and conditions
@@ -118,18 +122,20 @@ Numeric targets are intentionally unspecified; vendors **SHALL** report measurem
 ### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
 Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
 For pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak jitter and measurement bandwidth.
+These requirements **MAY** be conditioned on intended signal and use.
 
 ### 5.7.5 - Holdover Performance (Normative)
 Vendors **SHALL** publish maximum holdover error vs. time, warm-up conditions, and test range.  
-Holdover requirements apply to 1 PPS outputs assuming perfect reference.  
+Holdover requirements apply to 1 PPS outputs assuming a perfect reference.  
 MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric. Other holdover metrics may also be measured and documented.
+Note that ITU G.8262.1 is very loose.
 
 ### 5.7.6 - Ensemble References (Normative)
 Implementations **SHALL** support combining multiple references into one unified "Ensemble" reference.  
-Ensemble logic **SHOULD** provide source weights, health, and alarms via management telemetry.
+Ensemble logic **MAY** provide source weights, health, and alarms via management telemetry.
 
 ### 5.7.7 - Large-Extent Synchronization (Informative)
-For data-hall or campus deployments, vendors **SHOULD** report achievable end-to-end time error, calibration needs, and cable/optical constraints as a function of the physical dimensions in meters of the extent.
+For data-hall or campus deployments, the intent is achievable end-to-end time error, calibration needs, and cable/optical constraints as a function of the physical dimensions (in meters) of the extent.  Many independent vendors are involved, so this is a matter of overall system design.
 
 ### 5.7.8 - Time-Flow Narrative (Informative)  
 A TimeCard receives zero or more references, selects one via a policy, and disciplines its internal hardware clock using a PLL.  
@@ -196,7 +202,8 @@ Manufacturers **SHALL** provide publicly available datasheets specifying at leas
 - [IRS_DID] DI-IPSC-81434A, *Interface Requirements Specification Data Item Description* (1999).  
 - [IDD_DID] DI-IPSC-81436A, *Interface Design Description Data Item Description* (1999).  
 - [SSDD] DI-IPSC-81432A, *System/Subsystem Design Description* (1999).  
-- [SSS] DI-IPSC-81431A, *System/Subsystem Specification* (2000).  
+- [SSS] DI-IPSC-81431A, *System/Subsystem Specification* (2000).
+- NIST Special Publication 1065 by Riley 
 
 ---
 
@@ -211,20 +218,41 @@ The present P3335 standard document was initiated on 25 April 2025, largely base
 **ADEV** = Allan Deviation  
 **ASIC** = Application Specific Integrated Circuit  
 **DDS** = Direct Digital Synthesis  
+**EMC** = Electro Magnetic Compatibility
+**ESD** = Electro Static Discharge
 **FPGA** = Field Programmable Gate Array  
+**GNSS** = Global Navigation Satellite System
+**I2C** = Inter-Integrated Circuit
 **IDD** = Interface Definition Document  
 **IRIG** = Inter-Range Instrumentation Group  
+**ISA** = Industry Standard Architecture computer bus
 **ITU** = International Telecommunications Union  
+**LED** = Light Emitting Diode
+**LPT** = Line Printer Terminal ???
+**MCA** = ????  some kind of computer bus?
+**MHz** = Megahertz (10^6 Hertz)
+**MTBF** = Mean Time Between Failure
 **MTIE** = Maximum Time Interval Error  
+**NTP** = Network Time Protocol
 **PCIe** = Peripheral Component Interconnect Express  
+**PCMCIA** = Personal Computer Memory Card International Association
 **PLL** = Phase Locked Loop  
 **PN** = Phase Noise  
+**PTM** = Precision Time Measurement (Intel)
 **PTP** = Precision Time Protocol  
+**RMS** = Root Mean Square
+**SCSI** = Small Computer System Interface
+**SMB** = System Management Bus
 **SoC** = System on a Chip  
 **SWaP** = Size, Weight, and Power  
 **TDEV** = Time Deviation  
+**ToD** = Time of Day
+**USB** = Universal Serial Bus
 **UTC** = Coordinated Universal Time  
 **WG** = Working Group
+**WiWi** = Wireless two-Way interferometry
+**WR** = White Rabbit
+**WWVB** = Radio Station WWVB
 
 ---
 
