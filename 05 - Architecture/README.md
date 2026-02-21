@@ -2,7 +2,7 @@
 
 ## 5.1 -  Architecture Overview
 
-A **TimeCard** is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary purpose being to deliver a stable, accurate, and reliable source of time (in the form of phase, frequency, or both) to the host system.
+A **TimeCard** is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary purpose being to deliver a stable, accurate, and reliable source of time (in the form of time of day, phase, frequency, or all) to the host system.
 
 The establishment of a standard architecture for TimeCards plays a critical role in ensuring interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and technologies, while maintaining full compatibility with any compliant host. This standardization fosters innovation, simplifies integration, and enables seamless substitution or upgrade of TimeCards without requiring significant host system redesign.
 
@@ -10,13 +10,13 @@ The establishment of a standard architecture for TimeCards plays a critical role
 
 ## 5.2 - Core Timing Architecture
 
-At its core, every TimeCard is built around an **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This oscillator is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time, phase, and frequency information to and from the host system.
+At its core, every TimeCard is built around an **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This source oscillator function is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time, phase, and frequency information to and from the host system.
 
 ---
 
 ## 5.3 - Inbound Signal Interface
 
-The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms. Common examples include **Global Navigation Satellite System (GNSS)** receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references need not be more stable or lower noise than this oscillator function.
+The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms.  Common examples include **Global Navigation Satellite System (GNSS)** receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references may or may not be more stable or of lower noise than this oscillator function.
 
 In some configurations, a TimeCard may operate without any external timing input. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation.
 
@@ -44,7 +44,7 @@ In addition to the inbound and outbound signal interfaces, it is recommended tha
 
 The management interface functions as the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
-The following M&CI busses are independent of one another.  Common examples of management and control interfaces include but are not limited to:
+The following M&CI busses are independent of one another, and a TimeCard may utilize more than one kind of bus.  Common examples of management and control interfaces include but are not limited to:
 - **SMBus or I²C** – typically used for low-level configuration and telemetry in embedded environments.  
 - **IPMI** (Intelligent Platform Management Interface) – for out-of-band management in server-class or rack-scale systems.  
 - **PCIe Configuration Space Registers** – providing time-related control and status directly over the host bus, including direct memory access to the hardware control registers.  
@@ -64,7 +64,7 @@ Furthermore, the management interface **SHOULD** support secure firmware update 
 ---
 
 ## 5.6 - Power, Mechanical, and Environmental Considerations
-The subsections apply only if the TimeCard is implemented physically, versus for instance as a function within a larger system.
+The subsections apply only if the TimeCard is implemented physically, versus for instance as a firmware function within a larger system.
 ### 5.6.1 - Power Delivery
 - TimeCards **SHALL** define and document input power rail voltages and tolerances (e.g., 12 V, 3.3 V).    
 - If externally powered, protection against reverse polarity **SHALL** be included.  
@@ -74,11 +74,11 @@ The subsections apply only if the TimeCard is implemented physically, versus for
 - The physical envelope **SHALL** be documented.  
 - Acceptable envelope forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
 - Mounting **SHALL** withstand insertion/removal; strain relief for all cable ports (electrical or optical) **SHOULD** be included.  
-- Faceplates **SHOULD** label GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
+- Faceplates **SHOULD** label at least GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
 
 ### 5.6.3 - Connectors and I/O
 - RF/timing reference signal ports **SHALL** be impedance-matched.  
-- PPS/10 MHz electrical levels, impedance, and edge polarity (trigger on rising versus falling edge) **MUST** be specified.  
+- PPS/10 MHz electrical levels, impedance, and edge polarity (trigger on rising versus falling edge) **SHALL** be specified.  
 - Data and management ports **SHOULD** have ESD protection and mechanically locking connectors.
 
 ### 5.6.4 - Thermal Design
@@ -99,13 +99,15 @@ The subsections apply only if the TimeCard is implemented physically, versus for
 - NIST Special Publication 1065 by Riley is informative.
 - Requirements **SHOULD** be conditioned on the physical type of signal, including but not limited to: electrical balanced or unbalanced, voltage and/or current levels, optical fiber type or free-space, frequency band, and so on.
 - ITU G.703 Clause 19 **MAY** be used.
-- ITU G.8271, Amendment 1, Annex A, **MAY** be used.  << Verify - Annex A not found >>
+- ITU G.8271, Amendment 1, Annex A, **MAY** be used.  << **Verify - Annex A not found** >>
 - Measurement bandwidths **SHALL** be reported.
   
 ### 5.7.1 - Unified Timescale (Normative)
-A TimeCard **SHALL** generate a single unified timescale and **SHALL** publish it across all outputs.  A unified timescale comes from a single oscillator function which is published in multiple distribution formats each approximating the ideal of the timescale to the capabilities of that format.  
+A unified timescale comes from a single oscillator function which is published in multiple distribution formats each approximating the ideal of the timescale to the capabilities of that format.
 
-All boundaries between adjacent seconds of signals from the the providing interface of the same TimeCard instance **MUST** align to within a time tolerance that is documented and published.
+A TimeCard **SHALL** generate a single unified timescale and **SHALL** publish it across all Outbound Interfaces.    
+
+All boundaries between adjacent seconds of signals from the the providing interface of the same TimeCard instance **SHALL** align to within a time tolerance that is documented and published.
 
 ### 5.7.2 - Output Signal Classes (Informative)
 Typical outputs include ToD, 1 PPS, 10 MHz/5 MHz, packetized time (PTP), and host-bus time (PTM).  
@@ -114,7 +116,7 @@ Electrical characteristics and limits **SHOULD** be published for each.
 ### 5.7.3 - Stability, Accuracy, Precision (Normative Reporting)
 Qualities sought include adequate stability (ADEV/TDEV/MTIE), low phase noise, high accuracy, high precision, and fine resolution.  
 Numeric targets are intentionally unspecified; vendors **SHALL** report measurements using:
-- ADEV/TDEV vs. tau  
+- ADEV/TDEV versus tau  
 - Time/frequency offset to reference  
 - Timestamp granularity  
 - Physical synchronization extent and conditions
@@ -122,14 +124,14 @@ Numeric targets are intentionally unspecified; vendors **SHALL** report measurem
 
 ### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
 Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
-For pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak time jitter and measurement bandwidth in Hertz.
+Pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak time jitter and measurement bandwidth in Hertz.
 These requirements **MAY** be conditioned on intended signal and intended use.
 
 ### 5.7.5 - Holdover Performance (Normative)
 Vendors **SHALL** publish maximum holdover error vs. time, warm-up conditions, and test range.  
 Holdover requirements apply to 1 PPS outputs assuming a perfect inbound reference.  
 MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric. Other holdover metrics may also be measured and documented.
-Note that ITU G.8262.1 is very loose.  << Need to explain "very loose". >>
+Note that ITU G.8262.1 is very loose.  << **Need to explain "very loose".** >>
 
 ### 5.7.6 - Ensemble References (Normative)
 Implementations **SHALL** support combining multiple references into one unified "Ensemble" reference.  
@@ -164,10 +166,10 @@ Conformance testing **SHOULD** cover:
 
 Manufacturers **SHALL** provide publicly available datasheets specifying at least the following:
 - Which architectural principles and constraints are implemented  
-- PLL/disciplining type and loop bandwidth or range  
-- All performance metrics defined in §7 (stability, accuracy, PN/jitter, holdover, ensemble)  
+- PLL/disciplining type and loop bandwidth  
+- All performance metrics defined in §7 (for instance stability, accuracy, PN/jitter, holdover, ensemble)  
 - Traceability data sufficient for analysis, or an explicit “traceability not supported” statement  
-- All optional or conditional features exercised in the implementation
+- All optional or conditional features provided in the implementation
 
 ---
 
@@ -214,47 +216,47 @@ The present P3335 standard document was initiated on 25 April 2025, largely base
 
 ---
 
-## 5.13 - Acronyms  << Update to cover all acronyms in the entire document and move to a suitable place. >>
-
+## 5.13 - Acronyms  
+<< Cover all acronyms in the entire document here; later collect in a single section in the overall standard. >>
 **1PPS** = One Pulse Per Second  
 **ADEV** = Allan Deviation  
 **ASIC** = Application Specific Integrated Circuit  
 **DDS** = Direct Digital Synthesis  
-**EMC** = Electro Magnetic Compatibility
-**ESD** = Electro Static Discharge
+**EMC** = Electro Magnetic Compatibility  
+**ESD** = Electro Static Discharge  
 **FPGA** = Field Programmable Gate Array  
-**GNSS** = Global Navigation Satellite System
-**I2C** = Inter-Integrated Circuit
+**GNSS** = Global Navigation Satellite System  
+**I2C** = Inter-Integrated Circuit  
 **IDD** = Interface Definition Document  
 **IRIG** = Inter-Range Instrumentation Group  
-**ISA** = Industry Standard Architecture computer bus
+**ISA** = Industry Standard Architecture computer bus  
 **ITU** = International Telecommunications Union  
-**LED** = Light Emitting Diode
-**LPT** = Line Printer Terminal
-**MCA** = Micro Channel Architecture
-**MHz** = Megahertz (10^6 Hertz)
-**MTBF** = Mean Time Between Failure
+**LED** = Light Emitting Diode  
+**LPT** = Line Printer Terminal  
+**MCA** = Micro Channel Architecture  
+**MHz** = Megahertz (10^6 Hertz)  
+**MTBF** = Mean Time Between Failure  
 **MTIE** = Maximum Time Interval Error  
-**NTP** = Network Time Protocol
+**NTP** = Network Time Protocol  
 **PCIe** = Peripheral Component Interconnect Express  
-**PCMCIA** = Personal Computer Memory Card International Association
+**PCMCIA** = Personal Computer Memory Card International Association  
 **PLL** = Phase Locked Loop  
 **PN** = Phase Noise  
-**PTM** = Precision Time Measurement (Intel)
+**PTM** = Precision Time Measurement (Intel)  
 **PTP** = Precision Time Protocol  
-**RMS** = Root Mean Square
-**SCSI** = Small Computer System Interface
-**SMB** = System Management Bus
+**RMS** = Root Mean Square  
+**SCSI** = Small Computer System Interface  
+**SMB** = System Management Bus  
 **SoC** = System on a Chip  
 **SWaP-C** = Size, Weight, Power, and Cost  
 **TDEV** = Time Deviation  
-**ToD** = Time of Day
-**USB** = Universal Serial Bus
+**ToD** = Time of Day  
+**USB** = Universal Serial Bus  
 **UTC** = Coordinated Universal Time  
-**WG** = Working Group
-**WiWi** = Wireless two-Way interferometry
-**WR** = White Rabbit
-**WWVB** = Radio Station WWVB
+**WG** = Working Group  
+**WiWi** = Wireless two-Way interferometry  
+**WR** = White Rabbit  
+**WWVB** = Radio Station WWVB  
 
 ---
 
