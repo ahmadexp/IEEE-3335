@@ -1,284 +1,262 @@
 # TimeCard Architecture Specification
 
-## 5.1 Architecture Overview
+## 5.1 -  Architecture Overview
 
-A **TimeCard** is a modular timing subsystem designed to interface with a larger host system through standardized hardware and software boundaries. Its primary objective is to deliver a stable, accurate, and reliable source of time—typically comprising time of day (ToD), phase alignment, and frequency stability—to the host system. By abstracting complex timing and synchronization tasks away from the host's general-purpose processing workload, the TimeCard enables bounded-latency timekeeping without requiring host system modifications.
+A **TimeCard** is a modular subsystem designed to interface with a host system through a standardized hardware and software interface. Its primary purpose being to deliver a stable, accurate, and reliable source of time (in the form of time of day, phase, frequency, or all) to the host system.
 
-The establishment of a standard architecture for TimeCards is critical for establishing broad interoperability among diverse implementations. By adhering to a consistent architectural framework, hardware vendors can design and manufacture TimeCards with varying capabilities, performance tiers, and underlying oscillator technologies while preserving full compatibility with any compliant host. This standardization fosters innovation, simplifies integration, and allows for the seamless substitution or upgrading of TimeCards across different generations of host systems, data centers, telecom platforms, and industrial infrastructure.
-
----
-
-## 5.2 Core Timing Architecture
-
-At its core, every TimeCard is built around an **internal frequency source** (an oscillator with quantified stability characteristics), which serves as the foundational reference for precise timekeeping. This internal oscillator function operates in conjunction with one or more interfaces that enable the TimeCard to **receive**, **process**, and **distribute** phase, frequency, and time-of-day information. 
-
-The TimeCard maintains an internal unified timescale, continuously disciplined by the inbound references (when available) to correct for phase and frequency drift. If no inbound references are available, the oscillator transitions into a holdover state, utilizing its native stability to maintain the timescale autonomously.
+The establishment of a standard architecture for TimeCards plays a critical role in ensuring interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and technologies, while maintaining full compatibility with any compliant host. This standardization fosters innovation, simplifies integration, and enables seamless substitution or upgrade of TimeCards without requiring significant host system redesign.
 
 ---
 
-## 5.3 Inbound Signal Interface
+## 5.2 - Core Timing Architecture
 
-The **receive interface** provides the mechanism for the TimeCard to synchronize its internal oscillator to an external, traceable reference. Depending on the deployment environment and the accuracy objectives, this interface takes various physical and logical forms, ranging from direct radio frequency (RF) reception to network-based packet timing. 
-
-Common inbound references include:
-- **Global Navigation Satellite System (GNSS)** signals (e.g., GPS, Galileo, GLONASS, BeiDou).
-- Packet-based synchronization protocols, such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, or **White Rabbit (WR)**.
-- Direct localized RF/optical inputs like **WWVB**, **WiWi**, or **Pulse-Per-Second (PPS)** and **10 MHz** references.
-
-These interfaces allow the TimeCard to discipline its internal oscillator and maintain phase alignment with a primary reference clock. The external references used for disciplining may possess different noise characteristics than the local oscillator; typically, the local oscillator provides superior short-term stability (low phase noise), while the external reference provides superior long-term accuracy and traceability.
-
-In configurations where an external timing input is lost, intermittent, or deliberately disabled for security isolation, the TimeCard operates in **holdover**. During holdover, the TimeCard relies entirely on the stability of its internal frequency source (e.g., a TCXO, OCXO, or atomic rubidium element) to accurately maintain time over a specified duration before the time error exceeds allowable margins. Flexible receive architectures permit TimeCards to function across a vast spectrum of use cases—from distributed edge nodes relying on GNSS to fully isolated autonomous datacenters.
+At its core, every TimeCard is built around an **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This source oscillator function is complemented by one or more interfaces that enable the TimeCard to both **receive** and **distribute** time, phase, and frequency information to and from the host system.
 
 ---
 
-## 5.4 Outbound Signal Interface
+## 5.3 - Inbound Signal Interface
 
-While the receive interface facilitates external synchronization, the **providing interface** (or outbound interface) distributes the synchronized time and frequency domains to the host system and, optionally, to downstream peripheral devices.
+The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms.  Common examples include **Global Navigation Satellite System (GNSS)** receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references may or may not be more stable or of lower noise than this oscillator function.
 
-A providing interface is a **mandatory component** of the TimeCard architecture. It establishes the temporal synchronization channel by which the TimeCard delivers localized time, frequency, or both, to the operating environment.
+In some configurations, a TimeCard may operate without any external timing input. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation.
 
-Depending on application requirements, this distribution may occur across a single interface or a combination of concurrent interfaces. Typical outbound links include system buses such as **PCI Express (PCIe)**, **Compute Express Link (CXL)**, and legacy buses, alongside peripheral interfaces (e.g., **USB**, **Serial**). The selection of the interface dictates the temporal resolution, achievable accuracy, and bandwidth of the synchronization channel.
-
-To preserve timing integrity and deterministic behavior, it is strongly recommended that the providing interface implement **hardware-based timestamping**. Hardware timestamping measures and stamps events directly within the physical or link-layer logic, bypassing significant and unpredictable software stack delays, interrupt latencies, and operating system scheduling jitter. 
-
-Hardware-assisted delivery mechanisms include:
-- Dedicated physical signaling such as a **Pulse-Per-Second (PPS)** discrete wire alongside a serial Time-of-Day message.
-- In-band bus implementations such as **Precision Time Measurement (PTM)** within modern **PCIe** architectures. 
-
-These explicit hardware mechanisms establish sub-microsecond or nanosecond-class deterministic time delivery, establishing cross-vendor interoperability.
+This flexible receive architecture enables TimeCards to support a wide use-case spectrum — from GNSS-disciplined primary time sources to autonomous holdover systems — while preserving a common and interoperable interface standard.
 
 ---
 
-## 5.5 Management and Control Interface (M&CI)
+## 5.4 - Outbound Signal Interface
 
-In addition to the inbound and outbound signal interfaces, every TimeCard SHOULD include at least one **Management and Control Interface**. These interfaces facilitate configuration, monitoring, diagnostics, state machine transitions, firmware provisioning, and health reporting between the TimeCard and the overarching management plane. (A TimeCard completely lacking a management interface is acceptable only for fixed-function, static-configuration systems requiring no runtime telemetry).
+While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
-The M&CI serves as the **control plane** of the TimeCard, kept logically (and sometimes physically) distinct from the time **data plane**. Through this interface, host applications or external baseboard management controllers (BMCs) configures parameters such as source prioritization, PLL bandwidth, disciplining modes, and holdover thresholds, while monitoring real-time metrics including phase offsets and oscillator temperatures.
+A providing interface is a **mandatory component** of every TimeCard. It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the synchronization channel between them.
 
-Common M&CIs include:
-- **SMBus / I²C** or **I3C**: Frequently used for out-of-band telemetry and low-level configuration by BMCs.
-- **PCIe Configuration Space and Memory-Mapped I/O (MMIO)**: Providing low-latency, in-band access to hardware control registers directly via the host CPU.
-- **Serial (UART) or USB**: Standardized methods for diagnostics, debug, and localized firmware updates.
-- **Network-based APIs**: Such as REST, gRPC, Redfish, or SNMP for distributed, network-managed timing appliances.
+Depending on system requirements, the providing interface may consist of a single interface or a combination of multiple concurrent interfaces. Common examples include system bus standards such as **ISA**, **MCA**, **PCI**, and **PCI Express (PCIe)**, as well as peripheral and communication interfaces such as **Serial Bus**, **USB**, **SCSI**, **PCMCIA**, or **LPT**. The selection of interface type directly influences both the data exchange characteristics and the precision of temporal alignment achievable by the host.
 
-To promote multi-vendor interoperability, TimeCards SHOULD expose a standardized data model (e.g., utilizing Yang models or standardized MMIO register maps) containing:
-- Selected synchronization source and operational state machine.
-- Clock disciplining active status and PLL lock indication.
-- Phase and frequency offset measurements relative to the reference.
-- Holdover duration, projected drift, and current internal temperature.
-- Active alarm definitions, threshold faults, and health indicators.
-- Firmware version, hardware revision, and manufacturer metadata.
+To preserve the integrity and determinism of timing, it is strongly recommended that the providing interface implement **hardware-based timestamping**. Hardware timestamping enables timing information to be generated and measured directly within hardware logic, avoiding non-deterministic delays caused by software stacks, interrupt latencies, and/or operating system scheduling.
 
-Furthermore, the management interface SHOULD support cryptographic firmware update mechanisms and secure boot validation to prevent unauthorized runtime modification and protect critical infrastructure timing integrity.
+Timestamping can be realized through dedicated physical signals, such as a **Pulse-Per-Second (PPS)** output, or through in-bus implementations, such as **Precision Time Measurement (PTM)** (for Intel processors) within **PCIe** architectures. These mechanisms enable low-latency, deterministic time delivery and improve cross-vendor interoperability among TimeCard and host designs.
 
 ---
 
-## 5.6 Power, Mechanical, and Environmental Considerations
+## 5.5  Management and Control Interface (M&CI)
 
-The following subsections apply to physically realized TimeCards (e.g., PCIe add-in cards, mezzanine modules) rather than software-only or deeply integrated embedded firmware functions.
+In addition to the inbound and outbound signal interfaces, it is recommended that each TimeCard include at least one **management and control interface**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface is acceptable if its operational parameters are fixed or pre-determined, and no runtime monitoring or control is required.
 
-### 5.6.1 Power Delivery
-- TimeCards SHALL define and document input power rail voltages, acceptable ripple, and absolute tolerances (e.g., 12 V, 3.3 V).    
-- If powered by external discrete connections, reverse polarity protection SHALL be included.  
-- Deterministic power-up sequencing, inrush current limiting, and optional supercapacitor/battery energy storage for bridging power interruptions SHOULD be documented.
+The management interface functions as the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
-### 5.6.2 Mechanical Form Factor
-- The exact physical envelope and bounding box SHALL be documented.  
-- Acceptable envelope forms include standard server add-in cards (low-profile, full-height, half-length), OCP NIC 3.0, mezzanine forms, or standardized embedded modules.  
-- Mounting mechanics SHALL withstand repeated insertion and removal. Strain relief mechanisms for fragile cable ports (such as coaxial RF drops or optical fiber) SHOULD be included.  
-- Faceplates physical limits permitting, SHOULD visibly label external ports (e.g., GNSS, PPS, 10 MHz, ToD) and include status indicator LEDs.
+The following M&CI busses are independent of one another, and a TimeCard may utilize more than one kind of bus.  Common examples of management and control interfaces include but are not limited to:
+- **SMBus or I²C** – typically used for low-level configuration and telemetry in embedded environments.  
+- **IPMI** (Intelligent Platform Management Interface) – for out-of-band management in server-class or rack-scale systems.  
+- **PCIe Configuration Space Registers** – providing time-related control and status directly over the host bus, including direct memory access to the hardware control registers.  
+- **Serial or USB interfaces** – enabling firmware updates, diagnostics, or advanced telemetry access.  
+- **Network-based interfaces** such as REST, gRPC, or SNMP, for distributed or remotely managed timing systems.
 
-### 5.6.3 Connectors and I/O
-- RF and analog timing reference ports SHALL be impedance-matched (typically 50 ohms).  
-- For PPS and 10 MHz electrical interfaces, the voltage levels, input/output impedance, edge speed, and polarity (e.g., triggering on the rising edge) SHALL be specified explicitly.  
-- Exposed data and management ports SHOULD implement adequate Electrostatic Discharge (ESD) protection and utilize mechanically locking connectors where feasible.
+To promote interoperability and consistency, all TimeCards **SHOULD** expose a minimum common set of registers and attributes in a standardized format, including (but not limited to):
+- Current synchronization source and state  
+- Clock disciplining status  
+- Phase and frequency offset metrics  
+- Holdover duration and expected drift  
+- Alarm and fault indicators  
+- Firmware version and build metadata  
 
-### 5.6.4 Thermal Design
-- The nominal and absolute maximum operating temperature ranges SHALL be defined. The oscillator's frequency drift across this temperature spectrum (temperature coefficient) SHOULD be characterized and documented.  
-- Assumptions regarding host-provided airflow (Linear Feet per Minute - LFM) SHOULD be documented. The maximum thermal dissipation (heat load) during cold-start warm-up SHALL be specified.  
-- Out-of-bounds thermal events (over/under-temperature thresholds) SHALL trigger configurable alerts via the Management and Control Interface.
-
-### 5.6.5 Environmental and Reliability
-- Operational limits for physical shock, vibration, and relative humidity SHOULD be published.  
-- EMC (Electromagnetic Compatibility) and ESD emission/immunity levels SHOULD meet the regulatory standards of the intended target market.  
-- Reliability metrics (e.g., Mean Time Between Failures - MTBF) and components susceptible to wear-out (such as flash memory or oscillators) SHOULD be documented.  
-- Safe handling, labeling, and hazardous material disposal instructions (e.g., RoHS, REACH) SHOULD be provided.
+Furthermore, the management interface **SHOULD** support secure firmware update and integrity verification mechanisms to ensure reliability and prevent unauthorized modification. Collectively, these management and control capabilities provide the operational transparency and lifecycle management required for seamless integration of TimeCards into data centers, telecom infrastructure, and AI back-end clusters.
 
 ---
 
-## 5.7 Reference Signals and Performance Metrics (Normative)
+## 5.6 - Power, Mechanical, and Environmental Considerations
+The subsections apply only if the TimeCard is implemented physically, versus for instance as a firmware function within a larger system.
+### 5.6.1 - Power Delivery
+- TimeCards **SHALL** define and document input power rail voltages and tolerances (e.g., 12 V, 3.3 V).    
+- If externally powered, protection against reverse polarity **SHALL** be included.  
+- Deterministic power-up sequencing and optional energy storage for holdover **SHOULD** be supported.
 
-- IEEE Std 1139 and IEEE Std 1193 SHOULD be used as authoritative references for defining phase noise, frequency stability, and general performance metrics.
-- NIST Special Publication 1065 (Riley) provides informative guidance on frequency stability analysis.
-- Specified performance constraints SHOULD be conditioned upon the physical signal type (e.g., electrical balanced/unbalanced, single-ended voltages, optical properties).
-- ITU-T G.703 Clause 19 MAY be referenced for standard electrical characteristics of synchronization interfaces.
-- Measurement bandwidths and respective integration times SHALL be reported for all specified jitter and stability data.
+### 5.6.2 - Mechanical Form Factor
+- The physical envelope **SHALL** be documented.  
+- Acceptable envelope forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
+- Mounting **SHALL** withstand insertion/removal; strain relief for all cable ports (electrical or optical) **SHOULD** be included.  
+- Faceplates **SHOULD** label at least GNSS, PPS, 10 MHz, ToD, and management ports and include indicator LEDs.
+
+### 5.6.3 - Connectors and I/O
+- RF/timing reference signal ports **SHALL** be impedance-matched.  
+- PPS/10 MHz electrical levels, impedance, and edge polarity (trigger on rising versus falling edge) **SHALL** be specified.  
+- Data and management ports **SHOULD** have ESD protection and mechanically locking connectors.
+
+### 5.6.4 - Thermal Design
+- Operating temperature range **SHALL** be defined; oscillator drift vs. temperature **SHOULD** be characterized and documented.  
+- Host airflow assumptions **SHOULD** be documented; heat load during warm-up **SHALL** be specified.  
+- Over/under-temperature thresholds **SHALL** be reported via a management and control interface, if such an interface is provided.
+
+### 5.6.5 - Environmental and Reliability
+- Shock, vibration, and humidity limits **SHOULD** be stated.  
+- EMC/ESD compliance **SHOULD** meet target-market standards.  
+- MTBF and wear-out items **SHOULD** be documented and published.  
+- Safety, labeling, and disposal requirements **SHOULD** be provided.
+
+---
+
+## 5.7 - Reference Signals and Performance Metrics (Normative)
+- IEEE 1139 and IEEE 1193 (39 and 93 are both correct) **SHOULD** be used for performance-metric definitions.
+- NIST Special Publication 1065 by Riley is informative.
+- Requirements **SHOULD** be conditioned on the physical type of signal, including but not limited to: electrical balanced or unbalanced, voltage and/or current levels, optical fiber type or free-space, frequency band, and so on.
+- ITU G.703 Clause 19 **MAY** be used.
+- ITU G.8271, Amendment 1, Annex A, **MAY** be used.  << **Verify - Annex A not found** >>
+- Measurement bandwidths **SHALL** be reported.
   
-### 5.7.1 Unified Timescale (Normative)
-A unified timescale originates from a single, continuously operating oscillator function. This internal timescale is synthesized and translated into various outbound distribution formats, each approximating the core timescale within the physical limits of that specific interface.
+### 5.7.1 - Unified Timescale (Normative)
+A unified timescale comes from a single oscillator function which is published in multiple distribution formats each approximating the ideal of the timescale to the capabilities of that format.
 
-A TimeCard SHALL generate a single, continuous unified timescale and SHALL publish coherent translations of this timescale across all active Outbound Interfaces.    
+A TimeCard **SHALL** generate a single unified timescale and **SHALL** publish it across all Outbound Interfaces.    
 
-All second boundaries (e.g., the rising edge of a 1 PPS signal) output from any providing interface of the same physical TimeCard instance SHALL align with each other. The maximum allowable time divergence (skew) between these outputs SHALL be tested, documented, and published by the manufacturer.
+All boundaries between adjacent seconds of signals from the the providing interface of the same TimeCard instance **SHALL** align to within a time tolerance that is documented and published.
 
-### 5.7.2 Output Signal Classes (Informative)
-Standard synchronization outputs from a TimeCard frequently include Time of Day (ToD) serial streams, 1 PPS discrete signals, 10 MHz / 5 MHz continuous sine or square waves, packetized synchronization networks (e.g., PTP), and host-bus signaling (e.g., PCIe PTM). Detailed electrical parameters, slew rates, and load limits SHOULD be published for each individual class.
+### 5.7.2 - Output Signal Classes (Informative)
+Typical outputs include ToD, 1 PPS, 10 MHz/5 MHz, packetized time (PTP), and host-bus time (PTM).  
+Electrical characteristics and limits **SHOULD** be published for each.
 
-### 5.7.3 Stability, Accuracy, Precision (Normative Reporting)
-High-performance timekeeping is characterized by stability (measured via ADEV, TDEV, or MTIE), low phase noise, high absolute accuracy relative to UTC, high precision, and nanosecond/picosecond resolution.  
+### 5.7.3 - Stability, Accuracy, Precision (Normative Reporting)
+Qualities sought include adequate stability (ADEV/TDEV/MTIE), low phase noise, high accuracy, high precision, and fine resolution.  
+Numeric targets are intentionally unspecified; vendors **SHALL** report measurements using:
+- ADEV/TDEV versus tau  
+- Time/frequency offset to reference  
+- Timestamp granularity  
+- Physical synchronization extent and conditions
+- And any other measurement the manufacturer chooses to include
 
-Specific numerical thresholds are intentionally omitted from this standard to allow for market innovation; instead, manufacturers SHALL characterize and report performance by providing:
-- Allan Deviation (ADEV) and Time Deviation (TDEV) plots versus observation time (tau).  
-- Bounded worst-case time and frequency offset relative to the primary reference input.  
-- Timestamp granularity and quantization error.  
-- The exact test conditions and synchronization configurations utilized during performance validation.
+### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
+Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
+Pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak time jitter and measurement bandwidth in Hertz.
+These requirements **MAY** be conditioned on intended signal and intended use.
 
-### 5.7.4 Phase Noise and Time Jitter (Normative Reporting)
-For continuous periodic outputs (e.g., 10 MHz), manufacturers SHOULD provide a Phase Noise (PN) spectral density plot (dBc/Hz) across standard offset frequencies (e.g., 1 Hz to 1 MHz).  
+### 5.7.5 - Holdover Performance (Normative)
+Vendors **SHALL** publish maximum holdover error vs. time, warm-up conditions, and test range.  
+Holdover requirements apply to 1 PPS outputs assuming a perfect inbound reference.  
+MTIE per ITU-T G.8260 (G.810 App II.5) **SHALL** be used as the holdover metric. Other holdover metrics may also be measured and documented.
+Note that ITU G.8262.1 is very loose.  << **Need to explain "very loose".** >>
 
-For pulsed time outputs (e.g., 1 PPS), manufacturers SHALL specify the root-mean-square (RMS) and peak-to-peak time jitter, explicitly noting the measurement bandwidth. These disclosures MAY be conditioned on the intended environmental profile.
+### 5.7.6 - Ensemble References (Normative)
+Implementations **SHALL** support combining multiple references into one unified "Ensemble" reference.  
+Ensemble logic **MAY** provide source weights, health, and alarms via management telemetry.
 
-### 5.7.5 Holdover Performance (Normative)
-When inbound references are lost, the system relies on holdover. Vendors SHALL publish the maximum projected holdover error drift profile over time, accounting for specific initial warm-up conditions and external temperature variations.  
+### 5.7.7 - Large-Extent Synchronization (Informative)
+For data-hall or campus deployments, the intent is to achieve a specified maximum end-to-end time error while implementing calibration as needed, and meeting cable/optical constraints as a function of the physical dimensions (in meters) of the extent.  Many independent vendors are involved, so this is a matter of overall system design, and not of TimeCard design per se.
 
-Holdover limits generally apply to the 1 PPS outputs extrapolated from a nominally perfect prior inbound reference.  
+### 5.7.8 - Time-Flow Narrative (Informative)  
+A TimeCard receives zero or more references, selects one via a policy, and disciplines its internal hardware clock using a PLL.  
+The TimeCard can operate as a PTP Ordinary Clock.  A traversal narrative linked to a notional system block diagram will go here.
 
-Maximum Time Interval Error (MTIE) configured per ITU-T G.8260 SHALL be used as the primary holdover metric. Furthermore, it is acknowledged that baseline networking standards, such as ITU-T G.8262.1 (which focuses on telecom boundary clock requirements for SyncE), often permit holdover drifts that are significantly looser than the nanosecond-level tolerances required by advanced TimeCard implementations. Consequently, TimeCards intended for extreme precision applications SHOULD document MTIE against far more stringent, application-specific boundaries than standard telecom profiles.
+### 5.7.9 - Implementation Flexibility (Informative)
+The “oscillator” NEED NOT be or contain a discrete resonator.  A nuclear frequency source may be used for applications requiring extremenly good performasnce.  A DDS or similar digital source may suffice for cost-sensitive designs.  
+SWaP-C trade-offs are left to the market.
 
-### 5.7.6 Ensemble References (Normative)
-Advanced implementations SHALL support algorithms combining multiple diverse references into a single, unified "Ensemble" reference.  
-Ensemble logic MAY provide dynamic source weighting, individual source health monitoring, and boundary alarms accessible via the management telemetry.
+### 5.7.10 - Conformance and Interface Definitions (Normative Guidance)
+Undefined interfaces **SHOULD** normatively cite approved Interface Definition Documents (IDDs) for interoperability.
 
-### 5.7.7 Large-Extent Synchronization (Informative)
-For extensive datacenter or campus-wide deployments, maintaining synchronization implies establishing a specified maximum end-to-end time error budget. This involves system-level calibration, compensating for cable/fiber propagation delays (roughly 5 nanoseconds per meter), and handling thermal shifts in long cable runs. Because these variables depend heavily upon facility dimensions and multi-vendor integrations, large-extent architectural design sits outside the direct scope of the individual TimeCard's hardware specification.
-
-### 5.7.8 Time-Flow Narrative (Informative)  
-In a typical sequence, a TimeCard receives zero or more external references, subjects them to a selection algorithm or policy (e.g., Best Master Clock Algorithm), and disciplines its local hardware clock utilizing a Phase Locked Loop (PLL). 
-*(Note: A traversal narrative linked to a system block diagram is expected to be integrated in future revisions.)*
-
-### 5.7.9 Implementation Flexibility (Informative)
-The internal "oscillator" acts as a functional block and need not consist of a single discrete quartz resonator. Implementations span from Direct Digital Synthesis (DDS) derived from low-cost Silicon-based MEMS, to local atomic frequency standards (e.g., Rubidium or Cesium vapor cells) for ultra-high-stability. The selection strictly governs Size, Weight, Power, and Cost (SWaP-C) trade-offs driven by end-user requirements.
-
-### 5.7.10 Conformance and Interface Definitions (Normative Guidance)
-If physical or logical interfaces are implemented that are not fully defined within this specification, manufacturers SHOULD normatively cite approved external Interface Definition Documents (IDDs) to maintain predictable interoperability.
-
-Recommended conformance verification SHOULD cover:
-- Empirical ADEV/TDEV testing methodology.  
-- Phase Noise masks and verification metrics.  
-- Skew alignment testing across divergent output pins.  
-- Hardware-assisted baseline latency and asymmetric delay characterization (e.g., PCIe PTM).  
-- MTIE holdover verification across temperature cycles.  
-- Deterministic failover and ensemble behavior during abrupt reference loss.
-
----
-
-## 5.8 Documentation Requirements (Normative)
-
-Manufacturers SHALL provide publicly available technical documentation (datasheets or user manuals) specifying:
-- The architectural subset and optional constraints implemented by the specific hardware model.  
-- The structural type of the disciplining mechanism (e.g., DPLL, analog PLL) and corresponding loop bandwidths/time constants.  
-- Comprehensive testing results addressing the performance metrics defined in §5.7.
-- Traceability data establishing a chain of measurement to international primary standards, or a clear "traceability not supported" notice.  
-- Operating parameters for all optional features provided.
+Conformance testing **SHOULD** cover:
+- ADEV/TDEV measurement methodology  
+- PN masks and spectra  
+- PPS alignment across all outputs  
+- PTM latency/asymmetry characterization  
+- Holdover MTIE verification  
+- Ensemble behavior under reference loss
+- Plus anything else the manufacturer chooses
 
 ---
 
-## 5.9 Vendor Datasheet Checklist (Informative)
+## 5.8 - Documentation Requirements (Normative)
 
-| Category | Requirement Level | Example Documentation Objects |
+Manufacturers **SHALL** provide publicly available datasheets specifying at least the following:
+- Which architectural principles and constraints are implemented  
+- PLL/disciplining type and loop bandwidth  
+- All performance metrics defined in §7 (for instance stability, accuracy, PN/jitter, holdover, ensemble)  
+- Traceability data sufficient for analysis, or an explicit “traceability not supported” statement  
+- All optional or conditional features provided in the implementation
+
+---
+
+## 5.9 - Vendor Datasheet Checklist (Informative)
+
+| Category | Required / Recommended | Example Contents |
 |-----------|------------------------|------------------|
-| **Electrical & Power** | REQUIRED | Input rails, required tolerances, peak/idle current draw, power sequencing, inrush limits. |
-| **Mechanical** | REQUIRED | Dimensional bounding box, connector types, faceplate layout, mass. |
-| **Thermal** | REQUIRED | Operating and storage temperature range, required airflow (LFM), max thermal dissipation. |
-| **Timing Performance** | REQUIRED | ADEV/TDEV plots, local oscillator PN spectra, holdover MTIE bounds over time. |
-| **Synchronization Inputs** | REQUIRED | Supported protocols: GNSS bands/constellations, PTP/NTP capability, WR compatibility, 1PPS input specs. |
-| **Outputs** | REQUIRED | Signal voltages, impedance, PPS/10 MHz/ToD alignments, and measurable output skew. |
-| **Management** | RECOMMENDED | Remote interface type, supported telemetry vectors, SNMP/REST support, secure firmware update method. |
-| **Compliance** | REQUIRED | Safety (UL/CSA), EMC/EMI limits, ESD tolerances, RoHS/REACH compliance, CE/FCC markings. |
-| **Reliability** | RECOMMENDED | Specified MTBF, service intervals, oscillator aging rates, backup power retention lifecycle. |
-| **Documentation** | REQUIRED | Implementation/integration guide, status indicator LED matrices, baseline calibration methodologies. |
+| Electrical & Power | REQUIRED | Input rails, tolerance, current draw, sequencing |
+| Mechanical | REQUIRED | Dimensions, connectors, faceplate layout |
+| Thermal | REQUIRED | Operating/storage temp, airflow, warm-up load |
+| Timing Performance | REQUIRED | ADEV/TDEV plots, PN spectra, holdover MTIE |
+| Synchronization Inputs | REQUIRED | GNSS/PTP/NTP/WR interface specs |
+| Outputs | REQUIRED | PPS, 10 MHz, ToD specs, alignment accuracy |
+| Management | RECOMMENDED | Interface type, telemetry fields, firmware update method |
+| Compliance | REQUIRED | Safety, EMC, ESD, RoHS, CE/FCC marks |
+| Reliability | RECOMMENDED | MTBF, service intervals, backup power retention |
+| Documentation | REQUIRED | Quick start guide, LED legend, calibration method |
 
 ---
 
-## 5.10 References (Normative)
+## 5.10 - References (Normative)
 
-- [G8260] ITU-T G.8260 *Definitions and terminology for synchronization in packet networks* (2015 or later).  
-- [IEEE 1139] IEEE Std 1139™, *IEEE Standard Definitions of Physical Quantities for Fundamental Frequency and Time Metrology*.
-- [IEEE 1193] IEEE Std 1193™, *IEEE Guide for Measurement of Environmental Sensitivities of Standard Frequency Generators*.
+- [G8620] ITU-T G.8260 *Definitions and terminology for synchronization in packet networks* (2015 or later).  
+- [IEEE 1139] *IEEE Standard Definitions of Physical Quantities for Fundamental Frequency and Time Metrology*.
+- [IEEE 1193] *IEEE Guide for Measurement of Environmental Sensitivities of Standard Frequency Generators*
 - [MTIE] Stefano Bregni, *Measurement of Maximum Time Interval Error for Telecommunications Clock Stability Characterization*, IEEE Transactions on Instrumentation and Measurement, Vol. 45, No. 5, Oct 1996.  
-- [PTPv2.1] IEEE Std 1588™-2019, *IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems*.  
+- [PTPv2.1] IEEE 1588-2019 *Precision Time Protocol (PTP)*.  
 
 ---
 
-## 5.11 Bibliography (Informative)
+## 5.11 - Bibliography (Informative)
 
-- [IDD_DID] DI-IPSC-81436A, *Interface Design Description Data Item Description* (1999).  
+- Wikipedia: [Precision Time Protocol] (https://en.wikipedia.org/wiki/Precision_Time_Protocol)  
 - [IRS_DID] DI-IPSC-81434A, *Interface Requirements Specification Data Item Description* (1999).  
+- [IDD_DID] DI-IPSC-81436A, *Interface Design Description Data Item Description* (1999).  
 - [SSDD] DI-IPSC-81432A, *System/Subsystem Design Description* (1999).  
 - [SSS] DI-IPSC-81431A, *System/Subsystem Specification* (2000).
-- NIST Special Publication 1065, W.J. Riley, *Handbook of Frequency Stability Analysis* (2008). 
+- NIST Special Publication 1065 by Riley 
 
 ---
 
-## 5.12 Notes
+## 5.12 - Notes
 The present P3335 standard document was initiated on 25 April 2025, largely based on *“TimeCard Architecture (Section 5) Draft (20250424).docx”*.
 
 ---
 
-## 5.13 Acronyms  
-
-*Note: The following acronyms are used within this section; they are intended to be gathered into a single comprehensive abbreviation appendix for the final publication of the standard.*
-
-- **1PPS**: One Pulse Per Second  
-- **ADEV**: Allan Deviation  
-- **ASIC**: Application Specific Integrated Circuit
-- **BMC**: Baseboard Management Controller
-- **CXL**: Compute Express Link
-- **DDS**: Direct Digital Synthesis  
-- **EMC**: Electromagnetic Compatibility
-- **EMI**: Electromagnetic Interference
-- **ESD**: Electrostatic Discharge  
-- **FPGA**: Field Programmable Gate Array  
-- **GNSS**: Global Navigation Satellite System  
-- **I2C**: Inter-Integrated Circuit
-- **I3C**: Improved Inter-Integrated Circuit
-- **IDD**: Interface Definition Document  
-- **IPMI**: Intelligent Platform Management Interface
-- **IRIG**: Inter-Range Instrumentation Group  
-- **ISA**: Industry Standard Architecture
-- **ITU**: International Telecommunication Union  
-- **LED**: Light Emitting Diode  
-- **LPT**: Line Printer Terminal  
-- **MCA**: Micro Channel Architecture  
-- **MEMS**: Micro-Electromechanical Systems
-- **MHz**: Megahertz (10^6 Hertz)  
-- **MMIO**: Memory-Mapped I/O
-- **MTBF**: Mean Time Between Failures  
-- **MTIE**: Maximum Time Interval Error  
-- **NTP**: Network Time Protocol  
-- **OCP**: Open Compute Project
-- **OCXO**: Oven-Controlled Crystal Oscillator
-- **PCIe**: Peripheral Component Interconnect Express  
-- **PCMCIA**: Personal Computer Memory Card International Association  
-- **PLL**: Phase-Locked Loop  
-- **PN**: Phase Noise  
-- **PTM**: Precision Time Measurement  
-- **PTP**: Precision Time Protocol  
-- **RMS**: Root Mean Square  
-- **SCSI**: Small Computer System Interface  
-- **SMBus**: System Management Bus  
-- **SNMP**: Simple Network Management Protocol
-- **SoC**: System on a Chip  
-- **SWaP-C**: Size, Weight, Power, and Cost  
-- **TCXO**: Temperature-Compensated Crystal Oscillator
-- **TDEV**: Time Deviation  
-- **ToD**: Time of Day  
-- **USB**: Universal Serial Bus  
-- **UTC**: Coordinated Universal Time  
-- **WG**: Working Group  
-- **WiWi**: Wireless two-Way interferometry  
-- **WR**: White Rabbit  
-- **WWVB**: Radio Station WWVB
+## 5.13 - Acronyms  
+<< Cover all acronyms in the entire document here; later collect in a single section in the overall standard. >>
+**1PPS** = One Pulse Per Second  
+**ADEV** = Allan Deviation  
+**ASIC** = Application Specific Integrated Circuit  
+**DDS** = Direct Digital Synthesis  
+**EMC** = Electro Magnetic Compatibility  
+**ESD** = Electro Static Discharge  
+**FPGA** = Field Programmable Gate Array  
+**GNSS** = Global Navigation Satellite System  
+**I2C** = Inter-Integrated Circuit  
+**IDD** = Interface Definition Document  
+**IRIG** = Inter-Range Instrumentation Group  
+**ISA** = Industry Standard Architecture computer bus  
+**ITU** = International Telecommunications Union  
+**LED** = Light Emitting Diode  
+**LPT** = Line Printer Terminal  
+**MCA** = Micro Channel Architecture  
+**MHz** = Megahertz (10^6 Hertz)  
+**MTBF** = Mean Time Between Failure  
+**MTIE** = Maximum Time Interval Error  
+**NTP** = Network Time Protocol  
+**PCIe** = Peripheral Component Interconnect Express  
+**PCMCIA** = Personal Computer Memory Card International Association  
+**PLL** = Phase Locked Loop  
+**PN** = Phase Noise  
+**PTM** = Precision Time Measurement (Intel)  
+**PTP** = Precision Time Protocol  
+**RMS** = Root Mean Square  
+**SCSI** = Small Computer System Interface  
+**SMB** = System Management Bus  
+**SoC** = System on a Chip  
+**SWaP-C** = Size, Weight, Power, and Cost  
+**TDEV** = Time Deviation  
+**ToD** = Time of Day  
+**USB** = Universal Serial Bus  
+**UTC** = Coordinated Universal Time  
+**WG** = Working Group  
+**WiWi** = Wireless two-Way interferometry  
+**WR** = White Rabbit  
+**WWVB** = Radio Station WWVB  
 
 ---
 
