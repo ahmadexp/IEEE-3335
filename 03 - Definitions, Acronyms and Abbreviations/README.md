@@ -1,115 +1,101 @@
-## 3.1 General Terms
+# 3. Definitions, Acronyms, and Abbreviations
 
-| Term | Definition |
-|------|-------------|
-| **TimeCard** | A modular timing subsystem that provides standardized interfaces to deliver phase, frequency, and time synchronization services to a host system. |
-| **Host System** | The computing or networking platform that integrates a TimeCard through a standardized interface (e.g., PCIe, USB). |
-| **Unified Timescale** | A single internal timescale maintained by the TimeCard; all outputs are phase-aligned realizations of this same scale. |
-| **Reference Signal** | Any external timing input used to discipline the TimeCard oscillator (e.g., GNSS, PTP, PPS). |
-| **Holdover** | Operation without an external reference, relying on oscillator stability to maintain accurate time. |
-| **Disciplining** | The process of steering the oscillator frequency and phase to align with an external reference. |
-| **Ensemble Clock** | A composite time source created by combining multiple references via weighting or consensus algorithms. |
-| **Management Interface** | Control channel used for configuration, telemetry, and firmware management (e.g., SMBus, IPMI, REST). |
-| **Providing Interface** | The mechanism by which the TimeCard delivers time and frequency to the host (e.g., PPS, 10 MHz, PTM). |
-| **Receive Interface** | The mechanism through which the TimeCard obtains an external reference signal. |
-| **Control Plane** | Logical path for configuration and monitoring operations. |
-| **Data Plane** | Logical path responsible for carrying time and frequency signals to or from the host. |
+This chapter defines the specialized terms, acronyms, and abbreviations utilized throughout the IEEE P3335 specification. 
 
----
+## 3.1 Definitions
 
-## 3.1 Performance Metrics
+For the purposes of this document, the following terms and definitions apply. The *IEEE Standards Dictionary Online* should be consulted for terms not defined in this clause.
 
-| Metric | Definition / Reference |
-|---------|------------------------|
-| **ADEV (Allan Deviation)** | Statistical measure of frequency stability versus averaging time τ (ITU-T G.810 Annex I). |
-| **TDEV (Time Deviation)** | Time-domain equivalent of Allan deviation, representing time stability (ITU-T G.810 Annex I). |
-| **MTIE (Maximum Time Interval Error)** | Maximum time deviation observed between any two points in a measurement window; holdover metric defined in ITU-T G.8260 (Appendix II.5). |
-| **PN (Phase Noise)** | Power spectral density of short-term phase fluctuations, expressed in dBc/Hz at specified offset frequencies. |
-| **Time Jitter** | Short-term variation of a time-domain signal such as PPS, reported as RMS or peak-to-peak. |
-| **Accuracy** | Degree of conformance of a measured time or frequency to a defined reference. |
-| **Precision** | Repeatability or resolution of a measurement under identical conditions. |
-| **Resolution** | Smallest incremental step or quantization of a time or frequency measurement. |
-| **Granularity** | Minimum distinguishable unit of change in time or frequency output. |
-| **Phase Alignment** | Difference in timing between corresponding edges of two signals; often measured in nanoseconds. |
-| **Loop Bandwidth** | Effective frequency range over which the disciplining PLL tracks the reference. |
-| **Lock Time** | Time required for the TimeCard to achieve synchronization after startup or reference change. |
-| **Holdover Error** | Deviation of the TimeCard’s timescale from the ideal reference during holdover. |
-
----
-
-## 3.3 Protocols and Standards
-
-| Acronym | Description |
-|----------|--------------|
-| **GNSS** | Global Navigation Satellite System (GPS, Galileo, GLONASS, BeiDou). |
-| **PTP** | Precision Time Protocol (IEEE 1588). |
-| **NTP** | Network Time Protocol (RFC 5905). |
-| **WR** | White Rabbit — deterministic Ethernet-based time/frequency transfer. |
-| **WiWi** | Wireless Wireline Synchronization Protocol (IEEE 802.1AS extensions). |
-| **WWVB** | Low-frequency U.S. national time broadcast from NIST. |
-| **PPS** | Pulse Per Second; 1 Hz reference pulse marking second boundaries. |
-| **PTM** | Precision Time Measurement feature of PCI Express. |
-| **PCIe** | Peripheral Component Interconnect Express bus standard. |
-| **SMBus** | System Management Bus, based on I²C protocol. |
-| **IPMI** | Intelligent Platform Management Interface for out-of-band management. |
-| **REST** | Representational State Transfer — HTTP-based API model. |
-| **gRPC** | Google Remote Procedure Call protocol for structured telemetry. |
-| **SCPI** | Standard Commands for Programmable Instruments. |
-| **ADEV/TDEV/MTIE** | Core stability metrics from ITU-T G.810 and G.8260. |
+- **Accuracy:** The degree of conformance or closeness of a measured time or frequency value to a defined primary reference (e.g., UTC).
+- **Asymmetry Calibration:** The process of calculating and correcting unequal signal propagation delays in bi-directional timing links.
+- **Control Plane:** The logical communication path dedicated to configuration, telemetry, and operations management rather than active time distribution.
+- **Data Plane:** The logical or physical communication path strictly responsible for carrying phase, frequency, and time signals to or from the host or network.
+- **Data Plane Latency:** The deterministic or variable propagation delay between a time source and its destination hardware.
+- **Deterministic Behavior:** A system characteristic where the timing response under specified operational conditions is highly predictable and repeatable.
+- **Disciplining:** The continuous process of steering a local oscillator's frequency and phase to align with a superior external reference signal.
+- **Ensemble Clock:** A highly stable composite time source created by mathematically combining multiple independent references via weighting or consensus algorithms.
+- **Environmental Chamber:** A specialized testing enclosure used to strictly control ambient temperature, humidity, and atmospheric conditions for hardware thermal testing.
+- **Frequency Counter:** A measurement instrument used to determine the exact signal frequency or period over a defined averaging interval.
+- **Granularity:** The minimum distinguishable or settable unit of change in a time-domain or frequency-domain output.
+- **Hitless Switching:** The ability of a timing device to execute a reference failover or changeover without inducing a measurable phase discontinuity to the downstream consumers.
+- **Holdover:** A mode of operation where a timing subsystem continues to maintain accurate time based solely on the historical stability of its internal oscillator after losing its external reference.
+- **Holdover Error:** The progressively increasing deviation or drift of the subsystem’s timescale from an ideal reference while operating in a holdover state.
+- **Host System:** The overarching computing, telecommunications, or networking platform that integrates a TimeCard through a standardized interface boundary.
+- **Loop Bandwidth:** The effective frequency range over which a disciplining Phase-Locked Loop (PLL) tracks the reference; determining how fast the loop responds to changes.
+- **Lock Time:** The duration required for the subsystem to acquire a reference and assert phase/frequency lock after a cold startup or reference transition.
+- **Management Interface:** The designated control channel (e.g., SMBus, IPMI, REST) used strictly for configuration, diagnostics, and firmware management.
+- **Oscilloscope (TIE Mode):** Measurement equipment configured to capture the Time Interval Error (TIE) of repetitive high-frequency signals.
+- **Phase Alignment:** The absolute difference in timing between the corresponding edges of two separate signals; typically measured in nanoseconds or picoseconds.
+- **Power Analyzer:** An instrument deployed to measure precise current draw, power sequencing, and consumption events over time.
+- **Precision:** The statistical repeatability, resolution, or variance of a measurement under identical operating conditions.
+- **Primary Reference Clock:** The highest-stability, autonomous time or frequency source in a synchronization hierarchy (as defined by ITU-T G.811).
+- **Providing Interface:** The outbound physical or logical mechanism through which the TimeCard distributes precise time, phase, and frequency representations to the host or downstream devices.
+- **Receive Interface:** The inbound physical or logical mechanism through which the TimeCard acquires an external reference representation.
+- **Reference Signal:** Any external, traceable timing input actively utilized to discipline the local oscillator.
+- **Resolution:** The absolute smallest incremental step, quantization, or granularity of a time or frequency measurement that the system can distinguish.
+- **Rubidium Oscillator:** A highly stable atomic oscillator utilizing rubidium-87 vapor transitions to provide exceptional long-term frequency stability.
+- **TimeCard:** A modular, hardware-based timing subsystem that abstracts synchronization complexity to deliver standardized phase, frequency, and time services to a host system.
+- **Time Interval Counter (TIC):** A highly precise laboratory instrument designed to measure time differences between distinct electrical signal edges with picosecond-level resolution.
+- **Time Jitter:** The short-term variation or instability of a time-domain signal (such as a 1PPS edge) from its ideal position, frequently reported as an RMS or peak-to-peak value.
+- **Traceability:** A documented, unbroken mathematical chain of calibrations linking a local measurement back to recognized primary international standards (e.g., UTC).
+- **Unified Timescale:** A single internal temporal scale actively maintained by the TimeCard, from which all separate outbound interfaces derive coherent, phase-aligned realizations.
 
 ---
 
-## 3.4 Hardware and Clock Types
+## 3.2 Acronyms and Abbreviations
 
-| Term | Definition |
-|------|-------------|
-| **OCXO** | Oven-Controlled Crystal Oscillator; provides high thermal stability. |
-| **TCXO** | Temperature-Compensated Crystal Oscillator. |
-| **CSAC** | Chip-Scale Atomic Clock; miniaturized atomic frequency standard. |
-| **Rubidium Oscillator** | Atomic oscillator providing long-term frequency stability. |
-| **PLL** | Phase-Locked Loop used for frequency/phase tracking. |
-| **DDS** | Direct Digital Synthesizer generating precise frequencies from a digital reference. |
-| **Primary Reference Clock** | Highest-stability source in a timing hierarchy (per ITU-T G.811). |
+- **1PPS:** One Pulse Per Second
+- **ADEV:** Allan Deviation
+- **ASIC:** Application Specific Integrated Circuit
+- **BMC:** Baseboard Management Controller
+- **CXL:** Compute Express Link
+- **CSAC:** Chip-Scale Atomic Clock
+- **DDS:** Direct Digital Synthesizer
+- **EMC:** Electromagnetic Compatibility
+- **EMI:** Electromagnetic Interference
+- **ESD:** Electrostatic Discharge
+- **FPGA:** Field Programmable Gate Array
+- **GNSS:** Global Navigation Satellite System (e.g., GPS, Galileo, GLONASS)
+- **gRPC:** Google Remote Procedure Call
+- **I2C:** Inter-Integrated Circuit
+- **I3C:** Improved Inter-Integrated Circuit
+- **IPMI:** Intelligent Platform Management Interface
+- **IRIG:** Inter-Range Instrumentation Group
+- **MAC:** Media Access Control
+- **MMIO:** Memory-Mapped Input/Output
+- **MTBF:** Mean Time Between Failures
+- **MTIE:** Maximum Time Interval Error
+- **NC-SI:** Network Controller Sideband Interface
+- **NTP:** Network Time Protocol
+- **OCP TAP:** Open Compute Project Time Appliances Project
+- **OCXO:** Oven-Controlled Crystal Oscillator
+- **PCIe:** Peripheral Component Interconnect Express
+- **PHY:** Physical Layer
+- **PLL:** Phase-Locked Loop
+- **PN:** Phase Noise
+- **PTM:** Precision Time Measurement
+- **PTP:** Precision Time Protocol
+- **REST:** Representational State Transfer
+- **RoHS:** Restriction of Hazardous Substances
+- **SCPI:** Standard Commands for Programmable Instruments
+- **SEC:** Securities and Exchange Commission
+- **SMA:** SubMiniature version A (connector)
+- **SMBus:** System Management Bus
+- **SNMP:** Simple Network Management Protocol
+- **SWaP-C:** Size, Weight, Power, and Cost
+- **TAI:** International Atomic Time
+- **TCXO:** Temperature-Compensated Crystal Oscillator
+- **TDEV:** Time Deviation
+- **TIC:** Time Interval Counter
+- **TIE:** Time Interval Error
+- **TPM:** Trusted Platform Module
+- **ToD:** Time of Day
+- **USB:** Universal Serial Bus
+- **UTC:** Coordinated Universal Time
+- **WiWi:** Wireless two-Way interferometry
+- **WR:** White Rabbit
+- **WWVB:** Radio Station WWVB (NIST)
 
 ---
 
-## 3.5 Measurement Instruments
-
-| Instrument | Description |
-|-------------|-------------|
-| **TIC (Time Interval Counter)** | Measures time differences between signal edges with ps-level resolution. |
-| **PN Analyzer** | Instrument for single-sideband phase-noise measurement. |
-| **Frequency Counter** | Measures signal frequency or period over an averaging interval. |
-| **Oscilloscope (TIE Mode)** | Captures time-interval error of repetitive signals such as PPS. |
-| **Power Analyzer** | Monitors current draw and consumption over time. |
-| **Environmental Chamber** | Controls ambient temperature for thermal testing. |
-
----
-
-## 3.6 Miscellaneous Terms
-
-| Term | Definition |
-|------|-------------|
-| **Traceability** | Documented, unbroken chain of calibrations linking measurements to national or international standards. |
-| **SWaP-C** | Size, Weight, Power, and Cost — key design trade-off factors. |
-| **Data Plane Latency** | Propagation delay between time source and destination. |
-| **Asymmetry Calibration** | Correction of unequal path delays in bi-directional timing links. |
-| **Hitless Switching** | Reference changeover without phase discontinuity. |
-| **Deterministic Behavior** | Predictable, repeatable timing response under specified conditions. |
-| **OCP TAP** | Open Compute Project Time Appliances Project — community defining open time/frequency standards. |
-
----
-
-## 3.7 References
-
-1. **ITU-T G.810** – Definitions and terminology for synchronization networks.
-2. **ITU-T G.8260** – Definitions and test methods for synchronization performance.
-3. **IEEE 1588-2019** – Precision Time Protocol (PTP).
-4. **PCI-SIG PCI Express Base Specification 5.0, Annex PTM.**
-5. **OCP TAP TimeCard Specification (current document).**
-6. **NIST Special Publication 1065** – Time and Frequency Measurement.
-
----
-
-This glossary ensures that every acronym and concept used in the TimeCard Specification is **unambiguous**, **standardized**, and **traceable** to existing timing and synchronization frameworks.
-It completes the document as a **stand-alone, standards-compliant reference** suitable for publication, implementation, and certification.
+**End of Chapter – Definitions, Acronyms, and Abbreviations**
