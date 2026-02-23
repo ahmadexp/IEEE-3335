@@ -1,177 +1,166 @@
 # Annex A: Metrics (Informative)
 
-This annex provides definitions, measurement methodologies, and interpretation guidelines for key timing and frequency metrics used throughout the TimeCard specification. These metrics enable consistent evaluation of stability, accuracy, and performance across different implementations and test environments.
+This annex provides definitions, mathematical measurement methodologies, and interpretation guidelines for the key timing and frequency metrics utilized throughout the IEEE P3335 TimeCard specification. Because this is an informative annex, the metrics and recommendations presented herein do not constitute strict normative requirements, but rather establish a common engineering vocabulary to facilitate consistent evaluation of stability, accuracy, and performance across different hardware implementations and test environments.
+
+All metrics referenced in this annex heavily align with established industry metrology literature, specifically ITU-T Recommendations G.810 and G.8260, as well as IEEE Std 1139.
 
 ---
 
 ## A.1 Overview
 
-Metrics quantify the performance of TimeCards in terms of **time stability**, **frequency stability**, **phase noise**, and **holdover behavior**.  
-They provide a standardized framework for comparing devices and ensuring interoperability across vendors.
+Metrology metrics quantify the operational performance of TimeCards across four primary domains:
+1. **Time Stability:** The long-term coherence of the clock's phase.
+2. **Frequency Stability:** The consistency of the clock's oscillator over specified averaging periods.
+3. **Phase Noise:** The short-term, frequency-domain spectral purity of the oscillator.
+4. **Holdover Behavior:** The predictable degradation of the timescale when external references are lost.
 
-All metrics referenced in this annex align with ITU-T Recommendations G.810, G.8260, and IEEE 1139.
+Utilizing a standardized mathematical framework allows operators to confidently compare devices from competing vendors and validates interoperability across heterogeneous networks.
 
 ---
 
-## A.2 Core Timing Metrics
+## A.2 Core Timing and Stability Metrics
 
 ### A.2.1 Allan Deviation (ADEV)
-**Definition:** A statistical measure of fractional frequency stability as a function of averaging time (τ).  
+**Definition:** A statistical measure characterizing the fractional frequency stability of an oscillator or a timing system as a function of the averaging time ($\tau$). Unlike standard variance, ADEV converges for common oscillator noise types (such as flicker frequency noise).  
 **Formula:**
 
-\[
-σ_y(τ) = \sqrt{ \frac{1}{2(N-1)} \sum_{i=1}^{N-1} (\bar{y}_{i+1} - \bar{y}_i)^2 }
-\]
+$$ \sigma_y(\tau) = \sqrt{ \frac{1}{2(N-1)} \sum_{i=1}^{N-1} (\bar{y}_{i+1} - \bar{y}_i)^2 } $$
 
-where \( \bar{y}_i \) are successive frequency averages over intervals of duration τ.  
+where $\bar{y}_i$ represents the continuous, successive fractional frequency averages measured over intervals of duration $\tau$, and $N$ represents the total number of frequency samples.  
 
-**Purpose:** Evaluates oscillator and system frequency stability over time.  
+**Purpose:** ADEV is the primary metric for evaluating both short-term and long-term oscillator frequency stability.  
 **Reference:** ITU-T G.810 Annex I; IEEE Std 1139.  
 
-**Typical Ranges:**
-| Oscillator Type | ADEV (τ = 1 s) |
-|------------------|----------------|
-| TCXO | 1×10⁻⁹ |
-| OCXO | 1×10⁻¹¹ |
-| Rubidium | 1×10⁻¹² |
-| CSAC | 5×10⁻¹² |
-
----
+**Typical Baselines for Reference:**
+| Oscillator Technology | Typical ADEV ($\tau = 1$ s) | Typical Application |
+|------------------|----------------|----------------|
+| TCXO (Temperature-Compensated) | $1 \times 10^{-9}$ | Cost-sensitive edge compute |
+| OCXO (Oven-Controlled) | $1 \times 10^{-11}$ | Datacenter / Telecom boundary clocks |
+| Rubidium (Atomic) | $1 \times 10^{-12}$ | Primary Reference Clocks (PRC) / Core |
+| CSAC (Chip-Scale Atomic) | $5 \times 10^{-12}$ | Portable / SWaP-constrained field units |
 
 ### A.2.2 Time Deviation (TDEV)
-**Definition:** The time-domain equivalent of ADEV, representing time stability.  
+**Definition:** The time-domain equivalent of ADEV. It represents the measure of time stability related to the phase variations of the signal.  
 **Formula:**
 
-\[
-TDEV(τ) = \frac{τ}{\sqrt{3}} \times ADEV(τ)
-\]
+$$ \text{TDEV}(\tau) = \frac{\tau}{\sqrt{3}} \times \text{Modified ADEV}(\tau) $$
 
-**Purpose:** Quantifies the variation in time error over an observation period.  
-**Reference:** ITU-T G.810 Annex I.
-
-**Usage:** Ideal for evaluating synchronization precision in packet networks or PTP systems.
-
----
+**Purpose:** TDEV specifically quantifies the variation in absolute time error over a given observation period.  
+**Reference:** ITU-T G.810 Annex I.  
+**Usage:** TDEV is highly useful for evaluating the precision of synchronization networks, particularly assessing packet delay variation (PDV) noise in PTP deployments.
 
 ### A.2.3 Maximum Time Interval Error (MTIE)
-**Definition:** The maximum phase or time deviation between any two points in a measurement window of duration τ.  
+**Definition:** The maximum peak-to-peak phase or time deviation observed between any two measurement points within an observation window of duration $\tau$.  
 **Formula:**
 
-\[
-MTIE(τ) = \max_{i,j} |x_j - x_i|, \quad (t_j - t_i) ≤ τ
-\]
+$$ \text{MTIE}(\tau) = \max_{i,j} |x_j - x_i|, \quad \text{for all } (t_j - t_i) \le \tau $$
 
-**Purpose:** Measures worst-case time wander or drift.  
+where $x$ is the time error constraint.  
+
+**Purpose:** MTIE acts as a worst-case boundary metric, measuring the absolute maximum wander or drift of the timescale.  
 **Reference:** ITU-T G.8260 Appendix II.5.  
-**Use Case:** Defines holdover performance and clock conformance limits.
+**Usage:** MTIE is universally utilized to define strict holdover performance boundaries (e.g., assessing if a clock drifts more than $1.5$ $\mu s$ over a 24-hour holdover period).
 
 ---
 
-## A.3 Frequency and Phase Noise Metrics
+## A.3 Frequency Domain and Jitter Metrics
 
-### A.3.1 Phase Noise (PN)
-**Definition:** The spectral density of phase fluctuations of a periodic signal, expressed as **dBc/Hz** at an offset frequency from the carrier.  
+### A.3.1 Phase Noise ($\mathcal{L}(f)$)
+**Definition:** The power spectral density of phase fluctuations of a continuous periodic signal, traditionally expressed in decibels relative to the carrier per hertz ($\text{dBc/Hz}$) at varying offset frequencies from the main carrier frequency.  
 **Formula:**
 
-\[
-L(f) = 10 \log_{10}\left( \frac{S_φ(f)}{2} \right)
-\]
+$$ \mathcal{L}(f) = 10 \log_{10}\left( \frac{S_\phi(f)}{2\text{ rad}^2} \right) $$
 
-**Purpose:** Evaluates short-term oscillator purity and noise behavior.  
-**Measurement Points:** Typically measured at 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz offsets.  
-**Reference:** IEEE Std 1139; ITU-T G.810.
+where $S_\phi(f)$ is the one-sided spectral density of the phase deviations.  
 
----
+**Purpose:** Phase noise evaluates the short-term spectral purity of the local oscillator.  
+**Reporting Profile:** Manufacturers typically plot phase noise across logarithmic decades: $1\text{ Hz}$, $10\text{ Hz}$, $100\text{ Hz}$, $1\text{ kHz}$, $10\text{ kHz}$, and $100\text{ kHz}$ offsets.  
+**Reference:** IEEE Std 1139.
 
-### A.3.2 Jitter
-**Definition:** Short-term deviation of a timing signal from its ideal periodicity.  
-**Types:**
-- **Peak-to-Peak Jitter:** Maximum instantaneous variation.
-- **RMS Jitter:** Root-mean-square average of jitter samples.
+### A.3.2 Time Jitter
+**Definition:** The short-term variance or instability of a time-domain signal (such as a 1PPS edge or a 10 MHz square wave) from its ideal, mathematically perfect periodic position.  
+**Measurement Types:**
+- **Peak-to-Peak Jitter ($J_{pk-pk}$):** The absolute maximum time difference between the earliest and latest occurrence of the signal edge over the sample set.
+- **RMS Jitter ($J_{rms}$):** The root-mean-square average of the jitter samples, representing the common standard deviation of the timing error.
 
-**Measurement Units:** Picoseconds (ps) or nanoseconds (ns).  
-**Reference:** ITU-T G.8251 and IEEE 802.3.  
-
-**Best Practice:** Measure over 1×10⁶ samples with calibrated time interval counters.
+**Measurement Best Practice:** Jitter characterization is typically captured using calibrated Time Interval Counters (TIC) operating over a statistically significant dataset (e.g., $1 \times 10^6$ samples) with picosecond-level native resolution.
 
 ---
 
-## A.4 Accuracy, Precision, and Resolution
+## A.4 Accuracy, Precision, and Granularity
 
-| Term | Definition | Typical Range | Reference |
-|------|-------------|----------------|------------|
-| **Accuracy** | Degree of conformance of measured time to a reference timescale (e.g., UTC). | <100 ns for PTP systems | ITU-T G.8271 |
-| **Precision** | Repeatability of measurement under identical conditions. | <10 ns | IEEE 1588 |
-| **Resolution** | Smallest distinguishable change in measured time or frequency. | 1 ps – 1 ns | IEEE 1139 |
-| **Granularity** | Minimal step in reported timestamps or intervals. | 1 ns typical | PCIe PTM |
+To prevent ambiguity in TimeCard documentation, developers are encouraged to consistently separate the definitions of accuracy, precision, and hardware granularity.
+
+| Metric | Contextual Definition | Example Target Profile |
+|------|-------------|----------------|
+| **Accuracy** | The degree of conformance or offset of the measured time directly to an absolute primary reference scale (e.g., UTC). | $<100\text{ ns}$ deviation from UTC(NIST) target |
+| **Precision** | The internal repeatability or statistical variance of a measurement operation under completely identical conditions. | $<5\text{ ns}$ $1\sigma$ variance over $1,\!000$ consecutive PTM transactions |
+| **Resolution** | The absolute smallest physically distinguishable change the circuit can detect or measure. | $10\text{ ps}$ inherent TDC (Time-to-Digital Converter) physical resolution |
+| **Granularity** | The minimal mathematical discrete step available in the reported digital timestamps. | $1\text{ ns}$ bit-level granularity within an IEEE 1588 packet payload |
 
 ---
 
 ## A.5 Holdover Metrics
 
-When the external reference is lost, a TimeCard enters **holdover** mode, relying on its internal oscillator to maintain timing.
+When a TimeCard suffers a total loss of its inbound external reference signals (e.g., GNSS jamming or fiber cut), the active disciplining loop opens, and the unit transitions to **holdover**.
 
-### A.5.1 Holdover Error
-**Definition:** The accumulated deviation of time or frequency from the ideal reference during holdover.  
-**Formula:**
+### A.5.1 Holdover Time Error
+**Definition:** The continuously accumulating deviation of absolute time driven by the free-running fractional frequency offset of the internal oscillator during holdover.  
+**Mathematical Concept:**
 
-\[
-Δt(t) = \int_0^t Δf(τ) dτ
-\]
+$$ \Delta x(t) = x_0 + \int_0^t \Delta y(\tau) d\tau + \frac{1}{2} D t^2 + \epsilon(t) $$
 
-**Metric:** Expressed in nanoseconds (ns) or parts per billion (ppb) over time.  
-**Test Condition:** Reference assumed perfect before disconnection.  
+where $x_0$ is initial phase error, $\Delta y$ is the normalized frequency offset, $D$ is the linear frequency aging rate, and $\epsilon(t)$ represents internal random noise.
 
-**Example:**  
-If a TimeCard has a frequency offset of 1×10⁻¹¹, it will drift approximately 0.864 μs per day in holdover.
+**Practical Example:** If a TimeCard enters holdover with an uncorrected frequency offset of $1.15 \times 10^{-11}$, the generated 1PPS signal will mechanically drift by approximately $1\text{ \mu s}$ per day of holdover ($\approx 86.4\text{ ns}$ per $1 \times 10^{-12}$ offset).
 
-### A.5.2 Warm-Up and Recovery
-- **Warm-Up Time:** Duration required for the oscillator to reach thermal equilibrium.  
-- **Recovery Time:** Time required to re-lock after reacquiring a reference.  
-Both parameters **SHOULD** be reported in vendor datasheets.
+### A.5.2 Warm-Up and Recovery Behavior
+- **Warm-Up Time:** The total duration required for an oscillator (specifically heated OCXOs or Rubidium cells) to reach thermal equilibrium and electrical stabilization upon a cold power cycle. 
+- **Recovery Time:** The architectural time required for the PLL to re-establish a solid lock and compress phase errors after successfully reacquiring a valid reference.
+- **Note:** It is highly recommended that vendors empirically characterize and publish both parameters in standard hardware datasheets.
 
 ---
 
 ## A.6 Ensemble and Correlation Metrics
 
-When multiple TimeCards or references are combined (ensemble mode), their collective performance can be expressed through:
+In distributed environments, multiple TimeCards or multiple reference inputs may be mathematically combined into an **Ensemble Clock**.
 
-| Metric | Description |
+| Concept | Description |
 |---------|-------------|
-| **Ensemble Average Stability** | Improvement in ADEV proportional to √N, where N = number of clocks. |
-| **Correlation Coefficient (ρ)** | Quantifies dependency between clocks; ideal ensemble has ρ < 0.2. |
-| **Voting/Weighting Function** | Determines contribution of each reference based on performance. |
-
-**Reference:** IEEE 1139; ITU-T G.811 Annex A.
+| **Ensemble Average Stability** | Statistical improvement in composite ADEV proportional to $\sqrt{N}$, where $N$ represents the number of completely independent, uncorrelated clocks operating in the ensemble. |
+| **Correlation Coefficient ($\rho$)** | A statistical measurement quantifying the dependency or shared error vectors between clocks. A highly resilient ensemble relies on sources with low correlation ($\rho \approx 0$). |
+| **Weighting Function** | The active algorithm determining the proportional contribution of each individual clock/reference step, dynamically shifting based on real-time MTIE performance or variance. |
 
 ---
 
 ## A.7 Environmental Influence Metrics
 
-| Parameter | Metric | Typical Requirement |
-|------------|---------|----------------------|
-| **Temperature Coefficient** | Frequency change per °C | <1×10⁻¹⁰/°C for OCXO |
-| **Vibration Sensitivity** | Frequency change per g | <5×10⁻¹¹/g RMS |
-| **Aging Rate** | Long-term drift per day | <1×10⁻¹⁰/day (OCXO), <5×10⁻¹²/day (Rubidium) |
+Because oscillators physically react to their environment, static laboratory metrics rarely reflect real-world holdover stability unless environmental parameters are factored in.
 
-Environmental parameters are critical for determining the **real-world holdover stability** and **phase coherence** of TimeCards.
+| Parameter | Metric Definition | Impact |
+|------------|---------|----------------------|
+| **Temperature Coefficient** | The variance in fractional frequency ($\Delta f/f$) per degree Celsius ($\Delta^\circ\text{C}$). | Directly dictates holdover drift if the chassis undergoes drastic thermal shifts (e.g., an AC failure). |
+| **Vibration Sensitivity ($\Gamma$)** | The relative frequency change per $g$ of mechanical acceleration. | Critical factor for systems deployed in heavily vibrating racks or industrial transit enclosures. |
+| **Aging Rate** | The constant, predictable, unidirectional long-term frequency drift of the resonator over time (days/years). | Determines how frequently the TimeCard requires absolute external recalibration to prevent systemic clock bias. |
 
 ---
 
-## A.8 Measurement Best Practices
+## A.8 Evaluating Hardware: Best Practices
 
-- Use calibrated measurement instruments traceable to national standards (NIST, PTB, NPL).  
-- Ensure measurement setup minimizes cable delay asymmetries and thermal variations.  
-- Perform tests over multiple averaging intervals (τ = 1 s to 10⁴ s).  
-- Record both locked and holdover states.  
-- Maintain full metadata: temperature, humidity, equipment serials, and calibration date.  
+When designing lab tests or automated qualification fixtures to evaluate the metrics detailed in this annex, engineers are encouraged to observe the following best practices:
+- **Traceability:** Utilize only highly calibrated measurement instruments (e.g., Phase Noise Analyzers, Counters) that possess verifiable traceability to primary national standards (NIST, PTB, NPL).
+- **Control Symmetries:** Rigorously design the physical measurement setup to minimize asymmetric cable propagation delays, thermal gradients, and RF impedance mismatches.
+- **Broad Spectrums:** Execute stability validation tests across broad averaging intervals ($\tau = 1\text{ s}$ out to $>10^5\text{ s}$) to capture both short-term jitter and diurnal temperature-driven wander.
+- **Contextual Logging:** Always log environmental metadata concurrently with performance data (e.g., ambient temperature, relative humidity, chassis airflow, and test equipment calibration schedules).
 
 ---
 
 ## A.9 Summary
 
-The metrics defined in this annex establish a common vocabulary and methodology for evaluating the temporal performance of TimeCards.  
-Adhering to these definitions ensures that all implementations—whether GNSS-disciplined, PTP-based, or ensemble-driven—can be compared, certified, and integrated into synchronized infrastructures with full transparency and repeatability.
+The mathematical metrics outlined in this annex establish a vital, unified vocabulary for characterizing the temporal performance of TimeCard architectures. 
 
+By standardizing exactly how stability, noise, drift, and holdover are mathematically calculated and reported, the IEEE P3335 ecosystem allows operators to rapidly compare discrete hardware configurations, validate regulatory compliance, and confidently integrate mixed-vendor timing infrastructure.
 
+---
 
+**End of Annex A**

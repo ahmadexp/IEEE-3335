@@ -1,146 +1,104 @@
 # Annex B: Test Procedures (Informative)
 
-This annex provides standardized test procedures for evaluating the functional and performance characteristics of TimeCard implementations. These procedures are designed to ensure repeatability, comparability, and traceability of measurement results across vendors, laboratories, and deployment environments.
+This annex provides standardized, repeatable engineering test procedures for evaluating the functional and performance characteristics of TimeCard implementations. These procedures are designed to ensure consistency, comparability, and mathematical traceability of measurement results across independent vendors, metrology laboratories, and live deployment environments. 
+
+As this annex is explicitly informative, the test methodologies proposed herein serve as best-practice engineering baselines for hardware validation rather than strict normative conformance requirements.
 
 ---
 
 ## B.1 Overview
 
-Testing of TimeCards encompasses three primary domains:
+Comprehensive validation of a TimeCard architecture encompasses three primary testing domains:
+1. **Functional Verification:** Validating logical compliance with the architectural interface, physical connectability, and management plane state-machine behaviors.
+2. **Performance Validation:** Empirically measuring TimeCard frequency stability, phase noise, holdover drift, and timestamping jitter against the vendor's declared specifications.
+3. **Environmental and Reliability Qualification:** Assessing physical performance consistency and survivability under externally applied, simulated stress conditions (e.g., thermal shock, vibration, or EMI).
 
-1. **Functional Verification** — ensuring compliance with interface and control requirements.  
-2. **Performance Validation** — verifying timing accuracy, frequency stability, and jitter metrics.  
-3. **Environmental and Reliability Qualification** — assessing performance consistency under stress conditions.
-
-All tests should be conducted using calibrated, traceable instruments and documented per the guidelines in this annex.
+To satisfy traceability requirements, it is strongly recommended that all tests be conducted utilizing equipment recently calibrated against recognized national metrology standards.
 
 ---
 
 ## B.2 General Test Conditions
 
 ### B.2.1 Environmental Setup
-- Tests **SHALL** be conducted under nominal laboratory conditions unless otherwise stated:  
-  - Temperature: 23 ± 3 °C  
-  - Humidity: 30–70% non-condensing  
-  - Atmospheric pressure: 86–106 kPa
-- The device under test (DUT) **SHALL** reach thermal equilibrium prior to measurement.  
-- GNSS antennas, PTP connections, or reference signals **MUST** meet vendor specifications for level and impedance.
+- Testing environments are typically maintained under nominal, thermally stable laboratory conditions unless a specific thermal extreme test is actively being executed. Baseline conditions generally sit at $23 \pm 3 ^\circ\text{C}$ with $30\text{--}70\%$ non-condensing relative humidity.
+- The Device Under Test (DUT) should be allowed to reach complete thermal equilibrium and internal oscillator operational stability (warm-up) prior to the commencement of any metrology recording.
+- Physical cabling (e.g., coaxial cables for 1PPS or 10 MHz) and RF splitters utilized in the test fixture should be phase-matched and carefully impedance-matched (typically $50\,\Omega$) to prevent signal reflections that cause false jitter readings in the instrumentation.
 
 ### B.2.2 Power and Initialization
-- Apply host or auxiliary power within the rated voltage tolerance (±5%).  
-- Verify startup sequence and measure oscillator warm-up time.  
-- Record steady-state power consumption at idle and during synchronization.
+- Evaluators should apply host bus power (e.g., via a PCIe riser) or auxiliary power within the hardware's rated voltage tolerance.
+- The initial power-up sequence provides a baseline to map the oscillator's raw warm-up time from cold-start to achieving a steady-state frequency lock.
 
-### B.2.3 Measurement Equipment
-All instruments used in testing **MUST** be traceable to national metrology standards (e.g., NIST, PTB, NPL).  
-Recommended accuracy ratios:
-- Frequency counter: 10× better than DUT precision.  
-- Time interval counter: 10 ps or better resolution.  
-- PN analyzer: 10 dB lower noise floor than DUT.
+### B.2.3 Measurement Equipment Calibration limits
+Instrumentation utilized in performance validation should possess a noise floor or error margin substantially lower than the DUT to ensure the DUT is being measured, rather than the noise of the instrumentation itself.
+- **Reference Clock:** The primary laboratory reference clock driving the test equipment should possess an Allan Deviation (ADEV) at least one order of magnitude ($10\times$) superior to the target specification of the DUT.
+- **Time Interval Counter (TIC):** TICs should possess a native single-shot resolution of $<10\text{ ps}$ for evaluating high-precision OCXOs or GNSS-disciplined TimeCards.
+- **Phase Noise Analyzer:** The analyzer's internal local oscillator should possess a phase noise floor at least $10\text{ dB}$, preferably $15\text{ dB}$, lower than the anticipated mask of the DUT across all relevant frequency offsets.
 
 ---
 
-## B.3 Functional Tests
+## B.3 Functional Verification Tests
 
-### B.3.1 Receive Interface
-| Test | Description | Pass Criteria |
-|------|--------------|---------------|
-| Reference Detection | Apply GNSS/PTP/PPS and verify detection | Detected within vendor acquisition time |
-| Lock Indication | Observe management telemetry | Status transitions to "Locked" |
-| Failover Response | Disconnect reference input | TimeCard enters Holdover within 1 s |
+Functional tests validate the logical operations and state transitions of the TimeCard without necessarily grading sub-nanosecond physical precision.
 
-### B.3.2 Providing Interface
-| Test | Description | Pass Criteria |
-|------|--------------|---------------|
-| PPS Output | Measure amplitude, polarity, and timing | Within vendor spec |
-| Frequency Output | Measure 10 MHz amplitude and stability | <±1×10⁻⁹ deviation |
-| PTM Timestamp | Compare PCIe timestamps to reference | Within ±100 ps RMS |
+### B.3.1 Receive (Inbound) Interface Tests
+1. **Reference Detection:** Sequentially apply valid external references (e.g., GNSS antenna input, PTP network feed, external 1PPS) and verify via the management telemetry that the TimeCard correctly recognizes the presence of the physical signal.
+2. **Lock Acquisition:** Monitor the management plane to record the time taken for the TimeCard's internal Phase-Locked Loop (PLL) or disciplining mechanism to transition from "Free-Run" to "Locked" status. Compare this to the vendor's specified acquisition time limit.
+3. **Failover Response:** While actively locked to a primary reference, abruptly disconnect the primary input. Verify that the hardware deterministically enters the "Holdover" state or smoothly transitions to a secondary reference without causing a systemic reboot or crashing the host driver.
 
-### B.3.3 Management and Control Interface
-| Test | Description | Pass Criteria |
-|------|--------------|---------------|
-| Register Read/Write | Access control registers | Expected values read/write OK |
-| Telemetry Accuracy | Cross-check frequency offset readings | ±5% of independent measurement |
-| Firmware Update | Perform signed update | Version change validated |
+### B.3.2 Providing (Outbound) Interface Tests
+1. **PPS Amplitude and Polarity:** Utilizing an oscilloscope bridged with a $50\,\Omega$ terminator, capture the 1PPS output edge. Verify the correct edge polarity (rising vs. falling), the slew rate (rise time), and the high/low voltage thresholds against standard CMOS/LVTTL specifications.
+2. **PCIe PTM Validation:** If supported, execute host-side software to trigger Precision Time Measurement (PTM) dialogs across the PCIe bus. Correlate the returned PTM hardware timestamps against the physical 1PPS output to verify systemic, in-band latency and offset behavior.
 
 ---
 
-## B.4 Performance Tests
+## B.4 Performance Validation Tests
+
+Performance tests quantify the physical metrology capabilities of the TimeCard.
 
 ### B.4.1 Frequency Stability (ADEV/TDEV)
-- Record frequency samples over multiple averaging times (τ = 1 s, 10 s, 100 s, 1000 s).  
-- Compute Allan deviation (ADEV) and Time deviation (TDEV) using ITU-T G.810 methodology.  
-- Verify values against vendor data.
+- **Procedure:** Connect the TimeCard’s primary continuous clock output (e.g., 10 MHz) to a Phase Noise Analyzer or high-resolution Frequency Counter. Record continuous phase/frequency samples locked against the laboratory primary reference.
+- **Analysis:** Calculate and plot the Allan Deviation ($\sigma_y(\tau)$) and Time Deviation (TDEV) across logarithmic averaging intervals ($\tau = 1\text{ s}, 10\text{ s}, 100\text{ s}, 1,\!000\text{ s}, 10,\!000\text{ s}$).
+- **Evaluation:** Compare the resulting stability curves against the manufacturer’s published datasheet limits.
 
-### B.4.2 Phase Noise (PN)
-- Measure PN spectrum at offset frequencies: 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, and 100 kHz.  
-- Compare to vendor PN mask.  
-- Phase noise **SHOULD** remain within ±3 dB of specification.
+### B.4.2 Short-Term Phase Noise ($\mathcal{L}(f)$)
+- **Procedure:** Utilize a cross-correlated Phase Noise Analyzer to plot the Single Sideband (SSB) phase noise of the oscillator.
+- **Analysis:** Measure the power spectral density in $\text{dBc/Hz}$ at standard decade offsets extending from $1\text{ Hz}$ to $1\text{ MHz}$ from the primary carrier frequency.
+- **Evaluation:** Validate that the plotted noise curve sits below the vendor's declared upper-bound phase noise mask.
 
-### B.4.3 PPS Jitter
-- Capture 1×10⁶ PPS pulses using a calibrated TIC.  
-- Compute RMS and peak-to-peak jitter.  
-- Verify that RMS jitter ≤ 50 ps (OCXO) or ≤ 1 ns (GNSS-disciplined).
+### B.4.3 Time Jitter
+- **Procedure:** Capture a statistically significant sequence of 1PPS pulses (e.g., minimum $1 \times 10^5$ samples) utilizing a TIC triggered against the pristine laboratory 1PPS reference.
+- **Analysis:** Calculate the Root-Mean-Square (RMS) jitter and the absolute peak-to-peak ($J_{pk-pk}$) timing variance of the signal edges.
 
-### B.4.4 Holdover and MTIE
-- Lock DUT to external reference. Disconnect reference and record time error for declared holdover duration.  
-- Compute MTIE per ITU-T G.8260 Appendix II.5.  
-- MTIE **MUST** remain within vendor-declared limit.
-
-### B.4.5 Ensemble Synchronization
-- Connect multiple TimeCards with two or more reference inputs.  
-- Intentionally offset one reference by ±100 ns.  
-- Measure ensemble output convergence and verify correct weighting behavior.
+### B.4.4 Holdover Boundary (MTIE)
+- **Procedure:** Allow the DUT to lock to a master reference and achieve thermal and mathematical equilibrium for at least 24 hours. Abruptly sever the reference connection, forcing the unit into holdover.
+- **Analysis:** Continuously record the wandering time error of the TimeCard’s 1PPS output against the laboratory master 1PPS for the specified holdover duration (e.g., 4, 12, or 24 hours).
+- **Evaluation:** Compute the Maximum Time Interval Error (MTIE) across the observation window and verify the drift profile remains beneath the target limit (e.g., $1.5\text{ \mu s}$/24hr).
 
 ---
 
-## B.5 Environmental and Stress Tests
+## B.5 Environmental and Stress Qualification
 
-### B.5.1 Thermal Cycling
-- Cycle DUT between minimum and maximum operating temperatures (e.g., −40°C to +85°C).  
-- Record frequency drift and recovery upon returning to nominal temperature.
+Environmental tests validate that the TimeCard's hardware design robustly compensates for external physical interference.
 
-### B.5.2 Power Interruption
-- Interrupt power for 1 s, 10 s, and 60 s intervals.  
-- Verify that holdover continues within specification and recovery occurs without phase discontinuity.
-
-### B.5.3 Vibration and Shock
-- Apply mechanical vibration (5–500 Hz, 1 g RMS).  
-- Apply shock per IEC 60068-2-27.  
-- Observe frequency deviation ≤ ±5×10⁻¹¹ per g RMS.
-
-### B.5.4 ESD and EMC Tests
-- Perform ESD testing per IEC 61000-4-2 (contact ±6 kV, air ±8 kV).  
-- Conduct EMC emission/immunity tests per EN 55032 / EN 55035.  
-- Verify that no functional or timing anomalies occur.
+| Test Profile | Recommended Methodology | Verification Target |
+|------|--------------|---------------|
+| **Thermal Cycling** | Place the active, locked DUT inside an environmental chamber. Cycle the ambient temperature across the manufacturer's maximum specified operating range (e.g., $0^\circ\text{C}$ to $55^\circ\text{C}$) using a predefined ramp rate ($^\circ\text{C}$/min). | Assess the maximum frequency excursion during temperature gradients. Verify that the oscillator’s internal temperature compensation mechanism functions correctly. |
+| **Power Interruption** | Mechanically or electrically interrupt the host power plane for brief intervals ($1\text{ s}$ to $10\text{ s}$) if the TimeCard relies on localized holdover capacitors or batteries. | Verify that the hardware successfully bridges the interruption and maintains the internal unified timescale without experiencing a phase step or discontinuity upon power restoration. |
+| **Vibration / Shock** | Subject the TimeCard to variable frequency, multi-axis harmonic vibration ($5\text{ Hz}$ to $500\text{ Hz}$) utilizing a specialized shaker table. | Record the immediate degradation in phase noise and frequency stability caused by g-force acceleration ($\Gamma$), verifying that the structural design adequately dampens the oscillator. |
 
 ---
 
-## B.6 Reporting
+## B.6 Reporting and Traceability
 
-Each conformance test report **SHALL** include:
-- Test setup diagram and instrumentation list.  
-- Firmware/hardware versions.  
-- Environmental conditions and calibration traceability.  
-- Measurement plots (ADEV, TDEV, PN, MTIE).  
-- Uncertainty analysis and result interpretation.  
-- Declaration of pass/fail for each test.
+To maintain engineering transparency, comprehensive test reports for TimeCard validations should document:
+- A detailed block diagram describing the physical test fixture, including cable lengths to account for fixed propagation delays.
+- Expiration dates and calibration certificates for all primary laboratory measurement instrumentation used during the test.
+- The precise firmware revision, hardware board step, and baseboard management controller (BMC) version installed on the DUT.
+- Raw and plotted measurement data for all ADEV, TDEV, Phase Noise, and MTIE evaluations.
+- Explicitly stated conditions during holdover tests (e.g., the thermal ramp rate applied to the chassis while the reference was disconnected).
 
----
-
-## B.7 Automation and Continuous Testing
-
-### B.7.1 Automated Scripts
-- Automated scripts **SHOULD** be developed in Python or Robot Framework for repeatable test execution.  
-- Data **MUST** be logged in machine-readable formats (CSV, JSON).
-
-### B.7.2 Continuous Integration (CI)
-- Integrate TimeCard testing with CI pipelines (e.g., Jenkins, GitLab CI).  
-- Perform nightly regression tests for firmware and driver updates.  
-- Compare results against historical baselines for deviation detection.
+By adhering to a consistent, traceable testing methodology, integrators can confidently benchmark TimeCard implementations across diverse vendor ecosystems, guaranteeing reliable behavior in production infrastructure.
 
 ---
 
-## B.8 Summary
-
-These test procedures provide a structured and traceable framework for evaluating TimeCard implementations. By following these methodologies, vendors and operators can validate compliance, benchmark performance, and ensure interoperability across the OCP Time Appliances Project ecosystem.
+**End of Annex B**
