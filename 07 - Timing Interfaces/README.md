@@ -1,137 +1,123 @@
-# 7 Timing Interfaces (Normative)
+# 7. Timing Interfaces (Normative)
 
-This chapter defines the interfaces through which a TimeCard exchanges timing and frequency information with external systems. These interfaces form the core of interoperability between TimeCards, host platforms, and external timing networks. All implementations **SHALL** adhere to standardized electrical, protocol, and logical interface behaviors to enable cross-vendor compatibility and predictable operation.
+This chapter defines the physical, electrical, and logical interfaces through which a TimeCard exchanges timing and frequency information with external systems. These interfaces form the foundation of interoperability between diverse TimeCards, host platforms, and external timing networks. All implementations SHALL adhere to the standardized behaviors defined herein to facilitate cross-vendor compatibility and predictable operation.
 
----
+## 7.1 Overview
 
-## 7.1 - Overview
+A TimeCard typically incorporates three fundamental classes of interfaces:
+1. **Receive (Inbound) Interfaces:** Dedicated to acquiring timing signals from external authoritative references.
+2. **Providing (Outbound) Interfaces:** Dedicated to distributing disciplined time, phase, and frequency representations to the host system and other downstream consumers.
+3. **Management and Control Interfaces:** Non-timing-critical data paths used for configuration, telemetry, security, and diagnostics.
 
-A TimeCard typically incorporates two fundamental classes of timing interfaces:
+Each class of interface possesses distinct electrical, signaling, protocol, and performance requirements, which are detailed in the following subclauses.
 
-1. **Receive (Inbound) Interfaces** — used to acquire timing from external sources.  
-2. **Providing (Outbound) Interfaces** — used to distribute disciplined time and frequency to the host system and other consumers.
+## 7.2 Receive (Inbound) Interfaces
+The receive interface enables the TimeCard to lock its internal oscillator function to one or more external references, establishing traceability and synchronization to a higher-order time source.
 
-Additionally, **management and control interfaces** facilitate configuration, monitoring, and diagnostics. Each class of interface has distinct performance, signaling, and protocol requirements, defined in the following sections.
+### 7.2.1 Supported Reference Types
+The following external references are recognized for TimeCard synchronization. A TimeCard MAY support one or more of these inputs:
+- **GNSS Receivers:** (e.g., GPS, Galileo, GLONASS, BeiDou) supplying 1 Pulse Per Second (1PPS) and Time of Day (ToD) streams such as NMEA or binary protocols.
+- **Precision Time Protocol (PTP):** Packet-based synchronization via IEEE Std 1588 over Ethernet or PCIe networks.
+- **Network Time Protocol (NTP):** Packet-based synchronization for administrative or lower-accuracy time distribution via RFC 5905.
+- **White Rabbit (WR):** Sub-nanosecond synchronization via deterministic Ethernet variants.
+- **WiWi:** Wireless precision timing leveraging IEEE 802.1AS extensions.
+- **Regional Radio Standards:** (e.g., WWVB, DCF77, MSF) for localized low-frequency time distribution.
+- **Direct Electrical References:** 1PPS and continuous frequency (e.g., 10 MHz) continuous-wave or square-wave inputs for direct discrete phase locking or localized chaining.
 
----
+### 7.2.2 Interface Characteristics
+For each physical receive interface implemented, the manufacturer SHALL rigorously specify the following characteristics in the product documentation:
+- **Electrical level:** (e.g., 3.3V CMOS, LVTTL, RS-422, sinewave dBm).
+- **Input impedance and line termination:** (e.g., 50 Ω, 75 Ω, high-Z).
+- **Signal polarity and edge definition:** For pulse inputs, defining whether the rising or falling edge acts as the on-time phase marker.
 
-## 7.2 - Receive (Inbound) Interfaces
+Additionally, the lock acquisition time parameters and holdover entry/exit behaviors are configurable properties of the TimeCard and SHALL be documented.
 
-The **receive interface** enables the TimeCard to lock its internal oscillator to one or more external references, establishing synchronization to a higher-order time source.
+### 7.2.3 Input Redundancy and Selection
+TimeCards supporting multiple reference inputs SHALL implement source selection and failover logic (e.g., an implementation of the Best Master Clock Algorithm or a proprietary multi-source weighting ensemble). 
 
-### 7.2.1 - Supported Reference Types
-The following minimum list of external references are recognized for TimeCard synchronization:  
-- **GNSS Receivers** (e.g., GPS, Galileo, GLONASS, BeiDou) providing 1PPS and NMEA/ToD signals.  
-- **PTP (IEEE 1588)** via Ethernet or PCIe networks.  
-- **NTP (RFC 5905)** for lower-accuracy time distribution.  
-- **White Rabbit (WR)** for sub-nanosecond synchronization via deterministic Ethernet.  
-- **WWVB / DCF77 / MSF** radio standards for low-cost regional timing.  
-- **WiWi** (IEEE 802.1AS extensions) for wireless precision timing.  
-- **1PPS / 10 MHz** electrical references for local or chained synchronization.
+The source priority, weighting, and failover policy SHALL be configurable via the management interface. During a reference transition (failover), the TimeCard internal oscillator SHOULD maintain phase continuity; however, derivative outputs are permitted minor bounded discontinuities as defined by the manufacturer’s specification.
 
-### 7.2.2 - Interface Characteristics
-Each receive interface **SHALL** at minimum specify:
-- **Electrical level** (e.g., CMOS, LVTTL, RS-422)  
-- **Input impedance and termination**  
-- **Signal polarity and edge definition**  
+### 7.2.4 Sensitivity and Thresholds
+The physical receive path SHALL tolerate nominal input amplitude variations of at least ±20% and reject high-frequency noise consistent with ITU-T G.8260 sensitivity definitions. 
 
-Lock Acquisition Time and Holdover Behavior Upon Loss are configurable behaviours of a Time Card.
+Loss-of-signal (LOS) detection boundaries and subsequent signal reacquisition thresholds SHALL be explicitly documented in the vendor's datasheet.
 
-### 7.2.3 - Input Redundancy and Selection
-TimeCards supporting multiple references **SHALL** implement source selection logic.  
-Source priority and failover policy **MUST** be configurable via management interface.  
-Failover **SHOULD** occur seamlessly with phase continuity of the fundamental; derivatives need not be continuous.
+## 7.3 Providing (Outbound) Interfaces
+The providing interface is responsible for delivering the unified, synchronized timescale generated by the TimeCard to the host platform or external physical devices.
 
-### 7.2.4 - Sensitivity and Thresholds
-The receive path **SHALL** tolerate nominal input amplitude variations of ±20% and reject noise consistent with ITU-T G.8260 sensitivity definitions.  
-Loss-of-signal and reacquisition thresholds **MUST** be documented in vendor datasheets.
+### 7.3.1 Output Signal Classes
+Typical providing interfaces include, but are not limited to:
+- **Pulse-Per-Second (PPS):** The primary second-aligned discrete reference pulse.
+- **Frequency Outputs:** Continuous clocks (e.g., 10 MHz, 5 MHz) used for frequency synchronization.
+- **Time of Day (ToD):** Serial-formatted absolute time messages (e.g., NMEA, IRIG-B, or proprietary binary telemetry).
+- **Packetized Time (PTP):** IEEE 1588 traffic delivered via Ethernet ports or directly into the host via PCIe networking abstractions.
+- **In-Bus Timing (PTM):** PCIe Precision Time Measurement transactions directly delivered to the host bridging architecture.
+- **Synchronous Clocks:** Discrete phase-aligned clocks for driving localized FPGA or SoC logic domains.
 
----
+### 7.3.2 Electrical and Protocol Standards
+All physical outputs SHALL comply with the following baseline signaling levels unless otherwise documented for specialized physical environments:
+- **PPS and frequency outputs:** 3.3 V CMOS or LVTTL utilizing 50 Ω source impedance.
+- **ToD / Serial outputs:** RS-232, RS-422, or RS-485 compliant signaling levels.
+- **PCIe / PTM interfaces:** Compliant with PCI-SIG 5.0 specifications (or later).
+- **Ethernet / PTP interfaces:** Compliant with IEEE Std 1588-2019 and/or IEEE Std 802.1AS-2020.
 
-## 7.3 - Providing (Outbound) Interfaces
+For each implemented providing interface, the manufacturer SHALL document the signal rise/fall times, maximum intrinsic jitter, source impedance, and absolute drive capability.
 
-The **providing interface** delivers synchronized time and frequency from the TimeCard to the host platform or external devices.
+### 7.3.3 Synchronization Accuracy
+All providing output signals SHALL align coherently to the single unified timescale generated natively by the TimeCard as described in the Architecture clauses. 
 
-### 7.3.1 - Output Signal Classes
-Typical providing interfaces include:
-- **Pulse-Per-Second (PPS)** — primary second-aligned reference pulse.  
-- **Frequency Outputs (10 MHz / 5 MHz)** — for frequency synchronization.  
-- **Time of Day (ToD)** — serial-formatted absolute time delivery (NMEA, IRIG, or binary).  
-- **Packetized Time (PTP)** — via Ethernet or PCIe.  
-- **In-Bus Timing (PTM)** — PCIe Precision Time Measurement transactions.  
-- **Synchronous Clocks** — for FPGA or SoC logic domains.
+For compliant high-precision designs, the 1PPS output alignment error SHALL NOT exceed 1 nanosecond RMS relative to the perfectly aligned internal master reference point. Output clocks SHOULD exhibit deterministic phase behavior and strictly bounded frequency deviations during any internal source failover event.
 
-### 7.3.2 - Electrical and Protocol Standards
-All physical outputs **SHALL** comply with standard signaling levels:
-- PPS and frequency outputs: 3.3 V CMOS or LVTTL at 50 Ω termination.  
-- ToD/Serial outputs: RS-232 or RS-422 compliant.  
-- PCIe/PTM: per PCI-SIG 5.0+ specification.  
-- Ethernet/PTP: IEEE 1588-2019 and IEEE 802.1AS-2020 compliant.
+### 7.3.4 Hardware Timestamping
+Providing interfaces SHALL support hardware-assisted timestamping where technically feasible within the protocol, including:
+- Direct physical PPS edge capture.
+- In-band PCIe PTM transaction stamping.
+- PTP transmit (egress) and receive (ingress) hardware packet timestamps.
 
-Each interface **MUST** specify rise/fall times, jitter limits, impedance, and drive capability.
+Timestamping accuracy validation SHALL be performed using measurement equipment directly traceable to at least one recognized National Metrology Institute (e.g., NIST, NPL, or PTB).
 
-### 7.3.3 - Synchronization Accuracy
-Output signals **SHALL** align to the unified timescale generated by the TimeCard (§7.1).  
-For compliant designs, PPS alignment error **MUST NOT** exceed 1 ns RMS relative to the master reference.  
-Output clocks **SHOULD** exhibit deterministic phase and frequency continuity during source transitions.
+## 7.4 Management and Control Interfaces
+Management interfaces define the logical communications paths dedicated to device configuration, telemetry polling, and firmware lifecycle control. While these interfaces do not carry the critical synchronization timepath, they are indispensable for operational deployment.
 
-### 7.3.4 - Hardware Timestamping
-Providing interfaces **SHALL** support hardware timestamping where available and applicable, including but not limited to:
-- PPS edge capture  
-- PCIe PTM transactions  
-- PTP transmit and receive timestamps  
+### 7.4.1 Common Management Interfaces
 
-Timestamping accuracy **SHALL** be measured using test equipment traceable to at least one National Metrology Institute, such as NIST and NPL. 
-
----
-
-## 7.4 - Management and Control Interfaces
-
-Management interfaces define the logical communication path for configuration, telemetry, and firmware control. These are **non-timing-critical** but essential for operational management.
-
-### 7.4.1 - Common Management Interfaces
-| Interface | Typical Use | Bandwidth | Example Use Case |
+| Interface | Typical Use | Relative Bandwidth | Example Use Case |
 |------------|--------------|------------|------------------|
-| **SMBus / I²C** | Low-level configuration | Low | Telemetry, clock control |
-| **IPMI** | Out-of-band server management | Medium | Platform health monitoring |
-| **PCIe Config Space** | In-band control | High | Status registers, PTM control |
-| **Serial / USB** | Maintenance and updates | Medium | Firmware flashing, diagnostics |
-| **REST / gRPC / SNMP** | Remote network control | Variable | Distributed management systems |
+| **SMBus / I²C** | Low-level baseboard configuration | Low | Host BMC telemetry, power sequencing, clock control |
+| **IPMI / NC-SI** | Out-of-band server management | Medium | Platform health monitoring, remote chassis querying |
+| **PCIe Config Space** | In-band direct host control | High | Runtime MMIO status registers, PCIe PTM enablement |
+| **Serial / USB** | Maintenance and physical access | Medium | Localized firmware flashing, debug CLI access |
+| **REST / gRPC / SNMP** | Remote network orchestration | Variable | Distributed datacenter timing management systems |
 
-### 7.4.2 - Management Capabilities
-Management interfaces **SHALL** allow read/write access to at least:  
-- Active synchronization source and state  
-- Oscillator mode (locked, holdover, free-run)  
-- Phase/frequency offset statistics  
-- Alarm and event logs  
-- Firmware version and security status  
+### 7.4.2 Management Capabilities
+Where a management interface is provided, it SHALL allow read and write access to at minimum the following operational vectors:
+- Active synchronization source selection and current fallback state.
+- Internal oscillator disciplining mode (e.g., locked, holdover, free-run, warming up).
+- Phase and frequency offset statistics relative to the reference.
+- Active alarm registers, event logs, and threshold warnings.
+- Firmware versioning, hardware revisions, and active security status.
 
-### 7.4.3 - Security Requirements
-- All management channels **MUST** support authentication (username, token, or certificate).  
-- Firmware updates **MUST** use cryptographic signing and integrity verification.  
-- Telemetry data **SHOULD** be encrypted when transmitted across shared or external networks.
-<< In many applications, it is essential that the overall system forget all internal data upon a power cycle and/or performance of a sanitization procedure. >>
+### 7.4.3 Security and Sanitization Requirements
+Given the critical nature of timing infrastructure, management interfaces SHALL adhere to strict security protocols:
+- All remote or networked management channels SHALL require standard authentication mechanisms (e.g., username/password, cryptographic tokens, or mutual TLS certificates).
+- Firmware payload updates SHALL mandate cryptographic signing and boot-time integrity verification to prevent unauthorized code execution.
+- Telemetry data crossing shared or external network boundaries SHOULD be encrypted.
+- **Data Sanitization:** TimeCards SHOULD support a cryptographic erase or sanitization procedure. Upon receiving a specific management command, or upon detection of a physical tamper event, the system SHALL permanently erase all sensitive internal state data, private keys, and operational logs, satisfying requirements for environments where the overall system must forget all internal data upon a sanitization procedure.
+
+## 7.5 Physical and Logical Integration
+
+### 7.5.1 Connectors and Labeling
+Physical TimeCard front panels (brackets) SHALL label all timing and management ports clearly. For example:
+`[GNSS] [PPS OUT] [10MHz] [ToD] [MGMT] [USB]`
+
+Manufacturers SHOULD adopt standardized color coding and iconography in accordance with Open Compute Project Time Appliance Project (OCP-TAP) guidelines where applicable.
+
+### 7.5.2 Interoperability Goals and Requirements
+- All providing interfaces on a single TimeCard SHALL publish the same mathematically aligned, unified timescale.
+- Interfaces SHOULD support broad cross-vendor interoperability by utilizing only the common electrical and logical formats specified herein.
+- **Architectural Objective:** While vendors MAY implement proprietary or optional extensions to the TimeCard interface, it is a primary design objective of this standard that such extensions do not natively disrupt or degrade baseline interoperability with standard host systems.
+
+## 7.6 Summary
+Timing interfaces construct the foundational boundaries of TimeCard interoperability, facilitating precise, deterministic, and hardware-agnostic synchronization. Compliance with the physical and logical interface definitions in this chapter realizes the goal that any TimeCard—regardless of underlying component design or vendor origin—can seamlessly integrate into diverse host environments, sustain traceable absolute time accuracy, and distribute stable frequency and phase alignments.
+
 ---
-
-## 7.5 - Physical and Logical Integration
-
-### 7.5.1 - Connectors and Labeling
-TimeCard front panels **SHALL** label all timing and management ports clearly.  
-Example:
-```
-[GNSS] [PPS OUT] [10MHz] [ToD] [MGMT] [USB]
-```
-
-Color coding and standardized iconography **SHOULD** be adopted per OCP-TAP recommendations.
-
-### 7.5.2 - Interoperability Requirements
-- All outputs **MUST** publish the same unified timescale.  
-- Interfaces **SHOULD** support cross-vendor interoperability using common electrical and logical formats.  
-- Optional extensions **MUST NOT** _disrupt_ baseline compatibility.  << This is an objective, being too vague and open-ended to be a requirement. >>
-
----
-
-## 7.6 - Summary
-
-Timing interfaces define the foundation of the TimeCard’s interoperability, enabling precise, deterministic, and cross-vendor synchronization.  
-Compliance with these interface definitions enables the objective that all TimeCards—regardless of vendor or design—can seamlessly integrate into diverse host environments, maintain traceable time accuracy, and deliver stable frequency and phase alignment.  
