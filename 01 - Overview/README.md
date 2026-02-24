@@ -80,14 +80,17 @@ The standard is organized sequentially into the following major clauses:
 |----------|--------------|
 | **1. Overview** | Provides the motivation, high-level scope, and conceptual structure (Informative). |
 | **2. Normative References** | Lists the foundational standards essential for implementing this specification. |
-| **3. Definitions and Acronyms** | Clarifies exact terminology and abbreviations utilized throughout the text. |
+| **3. Definitions, Acronyms and Abbreviations** | Clarifies exact terminology and abbreviations utilized throughout the text. |
 | **4. Conformance** | Outlines the formal terminology and methodology for claiming implementation compliance. |
 | **5. Architecture** | Defines the core TimeCard blueprint, oscillator interactions, and boundary definitions. |
 | **6. Performance Specifications** | Details the mathematical metrics and methodologies used to quantify stability and accuracy. |
 | **7. Timing Interfaces** | Specifies the electrical and logical conduits for receiving and providing synchronization. |
 | **8. Control Interfaces** | Defines the data structures required for out-of-band and in-band management. |
-| **9. Environmental Specifications** | Establishes baselines for physical survivability, thermal tolerance, and RF emissions. |
+| **9. Environment** | Establishes baselines for physical survivability, thermal tolerance, and RF emissions. |
 | **10. Applications and Best Practices** | Offers structural guidance on real-world deployment and operational optimization (Informative). |
+| **Annex A. Metrics** | Provides definitions and measurement methodologies for timing and frequency metrics (Informative). |
+| **Annex B. Test Procedures** | Provides standardized procedures for functional, performance, and environmental testing (Informative). |
+| **Annex C. Bibliography** | Lists informational references and supplementary reading. |
 
 ---
 
