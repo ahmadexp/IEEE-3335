@@ -13,11 +13,11 @@ As an introductory and informative chapter, the concepts presented herein provid
 The **IEEE P3335 TimeCard Specification** establishes the structural, electrical, software, and performance characteristics of TimeCard-based architectures. It describes how hardware subsystems acquire external time references, maintain temporal stability during reference loss (holdover), and accurately distribute disciplined phase and frequency outputs to computing hosts and downstream networks.
 
 The scope of this standardization effort encompasses:
-- Hardware and software architecture definitions.
-- Receive (inbound) and Providing (outbound) timing interface behaviors.
-- Out-of-band and in-band management, telemetry, and security mechanisms.
-- Quantifiable performance metrics and environmental operating constraints.
-- Structural methodologies for testing and claiming conformance.
+- Hardware and software architecture definitions, including unified timescale generation and holdover behavior.
+- Receive (inbound) and Providing (outbound) timing interface behaviors (e.g., GNSS, PTP, 1PPS, and PCIe PTM).
+- Out-of-band and in-band management, telemetry, and security mechanisms (e.g., I²C, IPMI, REST).
+- Quantifiable performance metrics (e.g., ADEV, TDEV, MTIE) and environmental operating constraints.
+- Structural methodologies for testing and claiming conformance, including functional, performance, and environmental validation procedures based on traceable metrology.
 
 This document is designed to apply equally across:
 - Vendor-specific commercial mass-production implementations.
@@ -33,10 +33,10 @@ By defining a **standardized timing subsystem interface**, the specification est
 Modern computing workloads increasingly depend on highly precise and deterministic hardware timing. Modern applications—such as **AI model training clusters, high-frequency financial trading, globally distributed Spanner-style databases, and 5G/6G cellular networks**—frequently require sub-microsecond or nanosecond-class synchronization across thousands of independent nodes.  
 
 Historically, achieving this level of timing relied on bespoke, vendor-specific implementations or tightly coupled architectures that lacked modularity and scale. The **TimeCard architecture** addresses these historical bottlenecks by introducing:
-- A standardized hardware abstraction layer and signal footprint.  
-- A unified management and telemetry framework.  
-- A common timing distribution mechanism capable of bypassing host operating system latencies (e.g., PCIe Precision Time Measurement).  
-- A clear, falsifiable path for cross-vendor conformance certification.  
+- A standardized hardware abstraction layer and signal footprint (e.g., standardized 1PPS, 10 MHz, and Time of Day bounds).  
+- A unified management and telemetry framework supporting diverse transports for configuration and observability.  
+- A common timing distribution mechanism capable of bypassing host operating system latencies using hardware-based timestamping (e.g., PCIe Precision Time Measurement or hardware PTP).  
+- A clear, falsifiable path for cross-vendor conformance certification, grounded in traceable metrology and repeatable test procedures.  
 
 The ultimate motivation is to foster an open, competitive ecosystem for precision time distribution.
 
@@ -49,11 +49,11 @@ The P3335 TimeCard specification is founded on several core engineering principl
 | Principle | Description |
 |------------|-------------|
 | **Modularity** | The TimeCard operates as a self-contained subsystem that fully abstracts the complexities of oscillator disciplining away from the host CPU. |
-| **Interoperability** | Management and timing interfaces are standardized to facilitate plug-and-play architectural compatibility across different server fleets. |
-| **Scalability** | The architecture gracefully scales from single-node isolated edge servers up to globally synchronized hyperscale network domains. |
-| **Determinism** | Hardware-assisted generation and timestamping provide highly predictable, low-jitter, and low-latency outputs. |
-| **Traceability** | Subsystem logic supports establishing an unbroken chain of measurements reflecting recognized international standards (e.g., UTC, TAI). |
-| **Security and Integrity** | Remote management channels and firmware provisioning protocols rely on modern authenticated and cryptographically verifiable mechanisms. |
+| **Interoperability** | Management and timing interfaces are standardized to facilitate plug-and-play architectural compatibility across different server fleets and boundary clocks. |
+| **Scalability** | The architecture gracefully scales from single-node isolated edge servers up to globally synchronized hyperscale network domains relying on unified ensemble clocks. |
+| **Determinism** | Hardware-assisted generation and timestamping provide highly predictable, low-jitter, and low-latency outputs, immune to software scheduling variations. |
+| **Traceability** | Subsystem logic supports establishing an unbroken chain of measurements reflecting recognized international standards (e.g., UTC, TAI), measured using calibrated metrology equipment. |
+| **Security and Integrity** | Remote management channels and firmware provisioning protocols rely on modern authenticated and cryptographically verifiable mechanisms, including provisions for data sanitization. |
 
 ---
 
@@ -98,10 +98,11 @@ The standard is organized sequentially into the following major clauses:
 
 This specification is drafted distinctly for:
 - Hardware, software, and systems engineers developing TimeCard-compatible commercial products or reference designs.  
-- Datacenter architects and system integrators designing synchronized infrastructure.  
-- Network operators managing latency-sensitive distributed environments.  
-- Scientists and researchers requiring high-fidelity timestamping for metrology and experimentation.  
-- Affiliated standards bodies seeking structural harmonization with modern datacenter timing frameworks.  
+- Datacenter architects and system integrators designing synchronized infrastructure and planning for scale-out timing topologies.  
+- Network operators and site-reliability engineers managing latency-sensitive distributed environments who require granular telemetry.  
+- Scientists and researchers requiring high-fidelity timestamping for metrology and specialized physics experimentation.
+- Test and validation engineers utilizing the defined procedures to empirically grade hardware performance and claim conformance.
+- Affiliated standards bodies (e.g., ITU-T or OCP) seeking structural harmonization with modern end-system timing frameworks.  
 
 Readers are expected to possess a foundational understanding of frequency control, phase-locked loops, phase noise characteristics, and packet-based synchronization (e.g., PTP, NTP).
 
@@ -110,10 +111,11 @@ Readers are expected to possess a foundational understanding of frequency contro
 ## 1.7 Strategic Goals
 
 The widespread adoption of the TimeCard architecture aims to achieve the following outcomes:
-- **Broad vendor-neutral interoperability** among specialized timing payloads and generic host computers.  
-- **Drastically improved absolute precision** within distributed databases and distributed AI clusters.  
-- **Lowered integration friction and cost** resulting from strictly defined hardware abstraction interfaces.  
-- **Enhanced operational observability** and traceability to support stringent financial and telecommunications regulatory frameworks.  
+- **Broad vendor-neutral interoperability** among specialized timing payloads and generic host computers, enabling a mature, commercial off-the-shelf (COTS) ecosystem.  
+- **Drastically improved absolute precision** within distributed databases, cellular networks, and distributed AI compute clusters by driving the timescale directly to the hardware bus (e.g., PCIe).  
+- **Lowered integration friction and cost** resulting from strictly defined hardware abstraction interfaces and deterministic holdover behaviors.  
+- **Enhanced operational observability** and traceability to support stringent financial, telecommunications, and governmental regulatory frameworks.  
+- **Consistent metrology evaluations** resulting from standardized, falsifiable performance testing and conformance guidelines.  
 
 ---
 
