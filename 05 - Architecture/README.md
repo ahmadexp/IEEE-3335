@@ -1,18 +1,20 @@
 # TimeCard Architecture Specification
 
+The establishment of a standard architecture for TimeCards plays a critical role in enabling interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and core technologies, while maintaining full plug-and-play compatibility with any compliant host. This standardization fosters an open ecosystem, simplifies hardware integration, and enables seamless substitution or generational upgrades of TimeCards without requiring significant host system redesign.
+
 ## 5.1 - Architecture Overview
 
 A **TimeCard** is a modular subsystem designed to interface with a computing host system through a standardized hardware and software interface. Its primary purpose is to deliver a stable, accurate, deterministic, and reliable source of time (in the form of time of day, phase, frequency, or any combination thereof) to the host system.
 
-The establishment of a standard architecture for TimeCards plays a critical role in ensuring interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and core technologies, while maintaining full plug-and-play compatibility with any compliant host. This standardization fosters an open ecosystem, simplifies hardware integration, and enables seamless substitution or generational upgrades of TimeCards without requiring significant host system redesign.
-
 ### 5.1.1 Rationale for Dedicated Timing Subsystems
-Modern host systems (such as high-performance servers, edge compute nodes, and telecommunications routers) typically lack the internal capabilities required to maintain sub-microsecond or nanosecond-class synchronization. Host limitations generally include unpredictable software and operating system scheduling latencies that interfere with precise clock steering, large thermal profiles that degrade standard quartz oscillators, and a lack of specialized hardware for bounded-latency time transfer or hardware timestamping.
+Modern host systems (such as high-performance servers, edge compute nodes, and telecommunications routers) typically lack the internal capabilities required to maintain sub-microsecond or nanosecond-class synchronization.  Host limitations generally include unpredictable software and operating system scheduling latencies that interfere with precise clock steering, large thermal profiles that degrade standard quartz oscillators, and a lack of specialized hardware for bounded-latency time transfer or hardware timestamping.
 
 The TimeCard overcomes these host limitations by completely offloading critical timing functions—such as phase-locked loops (PLLs), holdover tracking, and signal timestamping—to a dedicated, physically isolated subsystem. By incorporating a TimeCard, a host system gains enhanced, deterministic timekeeping and synchronization capabilities without requiring a fundamental redesign of the host's primary processing architecture.
 
 ### 5.1.2 Implementation Modularity
-While a common physical manifestation of a TimeCard is a discrete add-in card (such as a PCI Express card) inserted into a server chassis, a TimeCard system is fundamentally defined by its logical interfaces and behaviors rather than its physical constraints. Alternate valid implementations include, but are not limited to:
+While a common physical manifestation of a TimeCard is a discrete add-in card (such as a PCI Express card) inserted into a server chassis, a TimeCard system is fundamentally defined by its logical interfaces and behaviors rather than its physical constraints.  
+
+Alternate valid implementations include, but are not limited to:
 * A dedicated intellectual property (IP) block directly embedded into a System-on-Chip (SoC) or integrated onto a server motherboard.
 * An external desktop or ruggedized module temporarily or permanently connected to the host system via a hot-pluggable or peripheral interface (e.g., USB, Thunderbolt).
 
@@ -27,17 +29,17 @@ Hardware timestamping can be realized through dedicated physical signals, such a
 
 ## 5.2 - Core Timing Architecture
 
-At its core, every TimeCard is built around at least one **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This source oscillator function is complemented by one or more interfaces that enable the TimeCard to **receive** and/or **generate** and **distribute** time, phase, and frequency information to and from the host system.
+At its core, every TimeCard is built around at least one **frequency source** (with quantified stability), which serves as the foundational source of precise timing. This source oscillator function is complemented by one or more interfaces that enable the TimeCard to **receive** and/or **generate** and **distribute** time of day, phase, and frequency information to and from the host system.
 
 ---
 
 ## 5.3 - Inbound (Receiving) Signal Interface
 
-The **receive interface** provides a means for the TimeCard to synchronize its oscillator to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms.  Common examples include **Global Navigation Satellite System (GNSS)** receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references may or may not be more stable or of lower noise than this oscillator function.
+The **receive interface** provides a means for the TimeCard to synchronize its oscillator function to an external reference. Depending on the deployment environment and the required accuracy, this interface may take multiple forms.  Common examples include **Global Navigation Satellite System (GNSS)** receivers (e.g., GPS, Galileo, GLONASS, BeiDou), or other precision synchronization methods such as **Precision Time Protocol (PTP)**, **Network Time Protocol (NTP)**, **White Rabbit (WR)**, **WiWi**, **WWVB**, or **Pulse-Per-Second (PPS)** inputs. These interfaces allow the TimeCard to discipline its oscillator function and maintain alignment with an external time source.  The external references may or may not be more stable or of lower noise than this oscillator function.
 
-In some configurations, a TimeCard may operate without any external timing input. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation and redundancy.
+In some configurations, a TimeCard may operate without any inbound external timing input. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator function to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation to enable redundancy.
 
-This flexible receive architecture enables TimeCards to support a wide use-case spectrum - from GNSS-disciplined primary time sources at the edge of the network, to deep-indoor boundary clocks relying on PTP, to autonomous isolated holdover systems - while preserving a common and interoperable host interface standard. This ensures that a datacenter can deploy identical host server binaries regardless of the specific external timing source used by the TimeCard.
+This flexible receive architecture enables TimeCards to support a wide use-case spectrum - from GNSS-disciplined primary time sources at the edge of the network, to deep-indoor boundary clocks relying on PTP *<< explain relevance >>**, to autonomous isolated holdover systems - while preserving a common and interoperable host interface standard. This ensures that a datacenter can deploy identical host server binaries regardless of the specific external timing source used by the TimeCard.
 
 ---
 
@@ -45,7 +47,7 @@ This flexible receive architecture enables TimeCards to support a wide use-case 
 
 While the receive interface allows synchronization to an external reference, the **providing interface** ensures that the synchronized time and frequency are accurately distributed to the host system.
 
-A providing interface is a **mandatory component** of every TimeCard.  It defines the mechanism by which the TimeCard delivers time, frequency, or both to the host, forming the synchronization channel between TimeCard and host.
+A providing interface is a **mandatory component** of every TimeCard.  It defines the mechanism by which the TimeCard delivers time of day, phase, frequency, or all, to the host, forming the synchronization channel between TimeCard and host.
 
 Depending on system requirements, the providing interface may consist of a single interface or a combination of multiple concurrent interfaces. Common examples include system bus standards such as **ISA**, **MCA**, **PCI**, and **PCI Express (PCIe)**, as well as peripheral and communication interfaces such as **Serial Bus**, **USB**, **SCSI**, **PCMCIA**, or **LPT**. The selection of interface type directly influences both the data exchange characteristics and the precision of temporal alignment achievable by the host.
 
@@ -115,7 +117,7 @@ The subsections apply only if the TimeCard is implemented physically, versus for
 - Measurement equipment bandwidths in Hertz and trace averaging settings **SHALL** be explicitly documented alongside all reported performance results.
   
 ### 5.7.1 - Unified Timescale (Normative)
-A unified timescale comes from a single oscillator function which is published in multiple distribution formats each approximating the ideal of the timescale to the capabilities of that format.
+A unified timescale comes from a single oscillator function which is published in multiple distribution formats each approximating the ideal of the timescale to the capabilities of each format.
 
 A TimeCard **SHALL** generate a single unified timescale and **SHALL** publish it across all Outbound Interfaces.    
 
@@ -137,13 +139,13 @@ Numeric targets are intentionally unspecified; vendors **SHALL** report measurem
 ### 5.7.4 - Phase Noise and Time Jitter (Normative Reporting)
 Periodic outputs (e.g., 10 MHz) **SHOULD** include PN spectrum vs. offset frequency.  
 Pulse outputs (e.g., PPS), **SHALL** specify RMS and peak-to-peak time jitter and measurement bandwidth in Hertz.
-These requirements **MAY** be conditioned on intended signal and intended use.
+These requirements **MAY** be conditioned on intended signal and its intended use.
 
 ### 5.7.5 - Holdover Performance (Normative)
-Holdover characterizes the stability of the TimeCard when all primary synchronization references are disconnected or lost.
-- Vendors **SHALL** publish the maximum holdover error bounds versus elapsed time (e.g., drift in microseconds over 4, 12, or 24 hours).
-- Vendors **SHALL** publish the warm-up conditions required before the oscillator's holdover stability guarantees become valid, and the thermal test range the holdover specification assumes.  
-- Holdover requirements strictly apply to the continuous physical drift of the 1PPS output, assuming the TimeCard was previously locked to a perfect, zero-noise inbound reference prior to disconnection.  
+Holdover performance characterizes the stability of the TimeCard when all primary synchronization references are disconnected or lost.
+- Vendors **SHALL** publish the maximum holdover error bounds versus elapsed time (e.g., drift in microseconds over 4, 12, and 24 hours).
+- Vendors **SHALL** publish the warm-up conditions required before the oscillator's holdover stability guarantees become valid, and the test temperature range the holdover specification assumes.  
+- Holdover requirements strictly apply to the continuous physical drift of the 1PPS output, assuming the TimeCard was previously locked to a perfect, zero-noise inbound reference prior to disconnection for some specified minimum period of time.  
 - Maximum Time Interval Error (MTIE) per ITU-T G.8260 (or G.810 App II.5) **SHALL** be used as the definitive mathematical holdover metric. Other auxiliary holdover metrics (such as frequency aging rate) MAY also be measured and documented to assist system integrators.
 
 *Informative Note:* Implementers should be cautious when relying solely on generic telecommunications boundaries (such as certain relaxed profiles within ITU G.8262.1), as those bounds are often too loose for the nanosecond-class strictness required by modern distributed datacenters and AI clusters. P3335 TimeCards target significantly tighter phase-drift boundaries.
@@ -160,18 +162,18 @@ The logical flow of time through the TimeCard architecture generally follows the
 
 1. **Ingress:** The TimeCard receives zero or more external references (e.g., GNSS, PTP, or PPS).
 2. **Selection:** The system evaluates the health, stability, and configured priority of the incoming references and selects the most optimal source using a defined policy (e.g., Best Master Clock Algorithm).
-3. **Disciplining (PLL):** The selected reference is fed into a phase-locked loop (PLL) which gracefully disciplines the TimeCard's internal local oscillator. This loop filters out short-term jitter from the reference, relying on the high short-term stability of the local oscillator to provide a clean signal.
-4. **Timescale Generation:** The disciplined oscillator drives a hardware counter, generating a single, unified timescale representing absolute time (e.g., TAI or UTC).
+3. **Disciplining (PLL):** The selected reference is fed into a phase-locked loop (PLL) which gracefully **<< define >>** disciplines the TimeCard's internal local oscillator. This loop filters out short-term jitter from the reference, relying on the high short-term stability of the local oscillator to provide a clean signal.
+4. **Timescale Generation:** The disciplined oscillator drives a hardware counter, generating a single, unified timescale implementing an official timescale such as TAI or UTC.
 5. **Egress:** The unified timescale is published across all Outbound Interfaces simultaneously. This includes generating physical PPS edges, updating memory-mapped Time of Day registers, scaling frequency outputs (e.g., 10 MHz), and serving host PCIe PTM requests—all originating deterministically from the exact same hardware counter.
 
-If the last ingress reference is lost, the PLL freezes its correction values and the TimeCard enters **Holdover**, keeping the unified timescale running based purely on the uncorrected drift physics of the local oscillator.
+If the last ingress reference is lost, the PLL freezes its correction values and the TimeCard enters **Holdover**, keeping the unified timescale running based purely on the uncorrected drift behavior of the local oscillator function.
 
 ### 5.7.9 - Implementation Flexibility (Informative)
-The “oscillator” need not be or contain a discrete resonator.  A nuclear frequency source may be used for applications requiring extremenly good performasnce.  A DDS or similar digital source may suffice for cost-sensitive designs.  
+The “oscillator function” need not be or contain a discrete resonator.  A nuclear frequency source may be used for applications requiring extremenly good performasnce.  A DDS or similar digital source may suffice for cost-sensitive designs.  
 SWaP-C trade-offs are left to design and the market.
 
 ### 5.7.10 - Conformance and Interface Definitions (Normative Guidance)
-Undefined interfaces **SHOULD** normatively cite approved Interface Definition Documents (IDDs) for interoperability.
+Undefined interfaces **SHALL** normatively cite approved  **<< By who, and how? >>** Interface Definition Documents (IDDs) for interoperability.
 
 Conformance testing **SHOULD** cover:
 - ADEV/TDEV measurement methodology  
@@ -188,7 +190,7 @@ Conformance testing **SHOULD** cover:
 
 Manufacturers **SHALL** provide publicly available datasheets specifying at least the following:
 - Which architectural principles and constraints are implemented  
-- PLL/disciplining type and loop bandwidth  
+- PLL/disciplining loop type and bandwidth  
 - All performance metrics defined in §7 (for instance stability, accuracy, PN/jitter, holdover, ensemble)  
 - Traceability data sufficient for analysis, or an explicit “traceability not supported” statement  
 - All optional or conditional features provided in the implementation
@@ -252,6 +254,7 @@ The present P3335 standard document was initiated on 25 April 2025, largely base
 **GNSS** = Global Navigation Satellite System  
 **I2C** = Inter-Integrated Circuit  
 **IDD** = Interface Definition Document  
+**I/O** = Input/Output  
 **IRIG** = Inter-Range Instrumentation Group  
 **ISA** = Industry Standard Architecture computer bus  
 **ITU** = International Telecommunications Union  
