@@ -20,18 +20,18 @@ For minimum frequency accuracy, recommend using Type III – also maps to OCP-TA
 - Frequency accuracy: 4.6 × 10–6 (1 year)
 - Noise Generation (recommend using both MTIE & TDEV for metrics)
 
-| MTIE limit (ns)        | Observation interval τ<br>(s) |
+| MTIE limit (ns)        | Observation interval $\tau$<br>(s) |
 |------------------------|-------------------------------|
 | 40                     | $0.1 < \tau \le 1$            |
-| $40 \times \tau^{0.4}$ | 1 < τ ≤ 10                    |
-| 100                    | τ > 10                        |
+| $40 \times \tau^{0.4}$ | 1 < $\tau$ ≤ 10                    |
+| 100                    | $\tau$ > 10                        |
 
-| TDEV limit<br>(ns)       | Observation interval τ (s) |
+| TDEV limit<br>(ns)       | Observation interval $\tau$ (s) |
 |--------------------------|----------------------------|
-| $3.2 \times \tau^{-0.5}$ | 0.1 < τ ≤ 2.5              |
-| 2                        | 2.5 < τ ≤ 40               |
-| $0.32\times\tau^{0.5}$   | 40 < τ ≤ 1000              |
-| 10                       | τ > 1000                   |
+| $3.2 \times \tau^{-0.5}$ | 0.1 < $\tau$ ≤ 2.5              |
+| 2                        | 2.5 < $\tau$ ≤ 40               |
+| $0.32\times\tau^{0.5}$   | 40 < $\tau$ ≤ 1000              |
+| 10                       | $\tau$ > 1000                   |
 
 - For noise transfer, recommend using a bandwidth of 0.001 Hz and maximum gain peaking of 0.2 dB
   - Again, allows reuse of metrics and performance targets from G.812
@@ -71,8 +71,8 @@ For minimum time accuracy:
 | 0.25 | 818 |
 
 - When locked to non-GNSS time sources, recommend using metric max|TE| (like ITU-T G.8273.x recommendations)
-  - Minimum time accuracy would be 0x23 (meaning accuracy range of 250 ns ~ 1 μs)
-  - Recommend defining max|TE| of 1 μs as a minimum
+  - Minimum time accuracy would be 0x23 (meaning accuracy range of 250 ns ~ 1 $\mu$s)
+  - Recommend defining max|TE| of 1 $\mu$s as a minimum
   - Metrics may want to also look at sub-components, cTE and dTE
   - Again, there is existing test equipment that can be used to measure max|TE|, cTE, dTE
 

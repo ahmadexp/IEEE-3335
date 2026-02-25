@@ -39,7 +39,7 @@ Benchmarking shall be performed using industry-standard precision measurement eq
 The following tests are standard for evaluating the intrinsic performance of the oscillator on the TimeCard:
 
 1. **Fractional Frequency Stability (ADEV, TDEV):** 
-   - Measured by comparing the TimeCard's oscillator output (e.g., 10 MHz or 1 PPS) against the reference source over various observation intervals (τ). 
+   - Measured by comparing the TimeCard's oscillator output (e.g., 10 MHz or 1 PPS) against the reference source over various observation intervals ($\tau$). 
    - Allan Deviation (ADEV) and Time Deviation (TDEV) metrics shall be plotted to characterize short-term, medium-term, and long-term instability (white noise, flicker noise, and random walk).
 
 2. **Phase Noise Testing:**

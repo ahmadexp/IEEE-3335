@@ -91,7 +91,7 @@ This section defines the procedures for verifying that a TimeCard implementation
 ## 4.5 - Performance Validation
 
 ### 4.5.1 - Frequency Stability (ADEV/TDEV)
-- Measure Allan deviation over τ = 1 s to 10⁴ s (or vendor-stated range).
+- Measure Allan deviation over $\tau$ = 1 s to 10⁴ s (or vendor-stated range).
 - Conditions: stable environment, reference locked.
 - Compare to published ADEV/TDEV curves.
 - Record results for both locked and holdover states.

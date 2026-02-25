@@ -72,7 +72,7 @@ Performance tests quantify the physical metrology capabilities of the TimeCard.
 ### B.4.4 Holdover Boundary (MTIE)
 - **Procedure:** Allow the DUT to lock to a master reference and achieve thermal and mathematical equilibrium for at least 24 hours. Abruptly sever the reference connection, forcing the unit into holdover.
 - **Analysis:** Continuously record the wandering time error of the TimeCard’s 1PPS output against the laboratory master 1PPS for the specified holdover duration (e.g., 4, 12, or 24 hours).
-- **Evaluation:** Compute the Maximum Time Interval Error (MTIE) across the observation window and verify the drift profile remains beneath the target limit (e.g., $1.5\text{ \mu s}$/24hr).
+- **Evaluation:** Compute the Maximum Time Interval Error (MTIE) across the observation window and verify the drift profile remains beneath the target limit (e.g., $1.5\mu\text{s}$/24hr).
 
 ---
 

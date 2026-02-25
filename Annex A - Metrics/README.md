@@ -112,7 +112,7 @@ $$ \Delta x(t) = x_0 + \int_0^t \Delta y(\tau) d\tau + \frac{1}{2} D t^2 + \epsi
 
 where $x_0$ is initial phase error, $\Delta y$ is the normalized frequency offset, $D$ is the linear frequency aging rate, and $\epsilon(t)$ represents internal random noise.
 
-**Practical Example:** If a TimeCard enters holdover with an uncorrected frequency offset of $1.15 \times 10^{-11}$, the generated 1PPS signal will mechanically drift by approximately $1\text{ \mu s}$ per day of holdover ($\approx 86.4\text{ ns}$ per $1 \times 10^{-12}$ offset).
+**Practical Example:** If a TimeCard enters holdover with an uncorrected frequency offset of $1.15 \times 10^{-11}$, the generated 1PPS signal will mechanically drift by approximately $1\mu\text{s}$ per day of holdover ($\approx 86.4\text{ ns}$ per $1 \times 10^{-12}$ offset).
 
 ### A.5.2 Warm-Up and Recovery Behavior
 - **Warm-Up Time:** The total duration required for an oscillator (specifically heated OCXOs or Rubidium cells) to reach thermal equilibrium and electrical stabilization upon a cold power cycle. 

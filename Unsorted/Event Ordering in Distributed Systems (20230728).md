@@ -165,7 +165,7 @@ S. Tanenbaum, CreateSpace 2017, 596 pages.
 9 Acronyms
 **ACID** = {Atomicity, Consistency, Isolation, and Durability}, **ADEV** = Allen
 Deviation, **AI** = Artificial Intelligence, **Kbyte** = Kilobyte, **LAN** = Local Area
-Network, **NIC** = Network Interface Card, **ns** = nanosecond, **µs** = microsecond,
+Network, **NIC** = Network Interface Card, **ns** = nanosecond, **\mu s** = microsecond,
 **PCIe** = Peripheral Component Interconnect Express, **PTP** = Precision Time
 Protocol (IEEE 1588)
 

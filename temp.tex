@@ -1,0 +1,214 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\section{Annex C: Bibliography
+(Informative)}\label{annex-c-bibliography-informative}
+
+This bibliography lists the key standards, engineering references,
+academic publications, and technical documents that provide foundational
+knowledge regarding the design, testing, and implementation of TimeCard
+architectures.
+
+These documents are strictly non-normative. They are provided for
+informational purposes only, and their implementation is not strictly
+required to claim structural conformance to the IEEE P3335 standard.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{C.1 International Standards and Industry
+Profiles}\label{c.1-international-standards-and-industry-profiles}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{{[}B1{]}} CENELEC EN 55032 / EN 55035, \emph{Electromagnetic
+  compatibility of multimedia equipment -- Emission and Immunity
+  Requirements}, 2017.
+\item
+  \textbf{{[}B2{]}} DMTF DSP0236, \emph{Intelligent Platform Management
+  Interface (IPMI) Specification v2.0}, 2015.
+\item
+  \textbf{{[}B3{]}} IEC 60068-2-6, \emph{Environmental testing -- Part
+  2-6: Tests - Test Fc: Vibration (sinusoidal)}, 2007.
+\item
+  \textbf{{[}B4{]}} IEC 60068-2-27, \emph{Environmental testing -- Part
+  2-27: Tests - Test Ea and guidance: Shock}, 2008.
+\item
+  \textbf{{[}B5{]}} IEC 61000-4-2, \emph{Electromagnetic compatibility
+  (EMC) -- Part 4-2: Testing and measurement techniques - Electrostatic
+  discharge immunity test}, 2009.
+\item
+  \textbf{{[}B6{]}} IEC 62368-1, \emph{Audio/video, information and
+  communication technology equipment -- Part 1: Safety requirements},
+  2018.
+\item
+  \textbf{{[}B7{]}} IEEE Std C37.238™-2017, \emph{IEEE Standard Profile
+  for Use of IEEE 1588 Precision Time Protocol in Power System
+  Applications}, 2017.
+\item
+  \textbf{{[}B8{]}} IETF RFC 3411, \emph{An Architecture for Describing
+  Simple Network Management Protocol (SNMP) Management Frameworks},
+  2002.
+\item
+  \textbf{{[}B9{]}} ISO/IEC 17025, \emph{General requirements for the
+  competence of testing and calibration laboratories}, 2017.
+\item
+  \textbf{{[}B10{]}} ITU-T Recommendation G.8275.1, \emph{Precision time
+  protocol telecom profile for phase/time synchronization with full
+  timing support from the network}, 2016.
+\item
+  \textbf{{[}B11{]}} ITU-T Recommendation G.8275.2, \emph{Precision time
+  protocol telecom profile for phase/time synchronization with partial
+  timing support from the network}, 2017.
+\item
+  \textbf{{[}B12{]}} PCI-SIG, \emph{PCI Express Base Specification
+  Revision 5.0 (incorporating Precision Time Measurement ECN)}, 2019.
+\item
+  \textbf{{[}B13{]}} SMBus Forum, \emph{System Management Bus (SMBus)
+  Specification Version 3.2}, 2018.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{C.2 Academic and Technical Metrology
+References}\label{c.2-academic-and-technical-metrology-references}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{{[}B14{]}} Allan, D. W., \emph{Time and Frequency
+  (Time-Domain) Characterization, Estimation, and Prediction of
+  Precision Clocks and Oscillators}, IEEE Transactions on Ultrasonics,
+  Ferroelectrics, and Frequency Control, 1987.
+\item
+  \textbf{{[}B15{]}} Bregni, S., \emph{Measurement of Maximum Time
+  Interval Error for Telecommunications Clock Stability
+  Characterization}, IEEE Transactions on Instrumentation and
+  Measurement, Vol. 45, No.~5, 1996.
+\item
+  \textbf{{[}B16{]}} Calhoun, J., \emph{Clock Stability Characterization
+  for Network Synchronization}, IEEE Communications Surveys \&
+  Tutorials, 2009.
+\item
+  \textbf{{[}B17{]}} CERN / GSI, \emph{White Rabbit Specification and
+  Documentation (Sub-nanosecond Ethernet synchronization)}.
+\item
+  \textbf{{[}B18{]}} Department of Defense, \emph{MIL-HDBK-217F:
+  Reliability Prediction of Electronic Equipment}, 1991.
+\item
+  \textbf{{[}B19{]}} Hartmann, J., \emph{Open Timing Architectures for
+  Data Centers}, OCP Time Appliances Project Whitepaper, 2020.
+\item
+  \textbf{{[}B20{]}} Lombardi, M. A., \emph{NIST Technical Note 1952:
+  Introduction to PTP and synchronization techniques}, National
+  Institute of Standards and Technology, 2016.
+\item
+  \textbf{{[}B21{]}} Riley, W. J., \emph{NIST Special Publication 1065:
+  Handbook of Frequency Stability Analysis}, National Institute of
+  Standards and Technology, 2008.
+\item
+  \textbf{{[}B22{]}} Weiss, M., \emph{Time Transfer and Synchronization
+  for Distributed Systems}, NIST Technical Report, 2013.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{C.3 Supporting Open Source and Community
+Resources}\label{c.3-supporting-open-source-and-community-resources}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{{[}B23{]}} Network Time Foundation, \emph{NTP.org Reference
+  Implementation (ntpd) source code and documentation}.
+\item
+  \textbf{{[}B24{]}} Open Compute Project (OCP) Time Appliances Project
+  (TAP), \emph{TimeCard Hardware Schematics and Firmware Repository}.
+  {[}\url{https://github.com/opencomputeproject/Time-Appliance-Project}{]}
+\item
+  \textbf{{[}B25{]}} Open Compute Project (OCP) Time Appliances Project
+  (TAP), \emph{Interoperability Whitepaper and Multi-Vendor Testing
+  Framework}.
+\item
+  \textbf{{[}B26{]}} Turba Technologies, \emph{Turba Analytics
+  Documentation - AI workload and distributed timing analytics
+  platform}.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{C.4 Related Military/Defense Specifications
+(DID)}\label{c.4-related-militarydefense-specifications-did}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{{[}B27{]}} DI-IPSC-81431A, \emph{System/Subsystem
+  Specification (SSS) Data Item Description}, 2000.
+\item
+  \textbf{{[}B28{]}} DI-IPSC-81432A, \emph{System/Subsystem Design
+  Description (SSDD) Data Item Description}, 1999.
+\item
+  \textbf{{[}B29{]}} DI-IPSC-81434A, \emph{Interface Requirements
+  Specification (IRS) Data Item Description}, 1999.
+\item
+  \textbf{{[}B30{]}} DI-IPSC-81436A, \emph{Interface Design Description
+  (IDD) Data Item Description}, 1999.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{End of Annex C}
+
+\end{document}
