@@ -2,7 +2,7 @@
 
 _Context:_  Define overall system with time reference sources, and especially the the host system and the TimeCards within, how they all fit together.  While the Host System uses TimeCards, it is not itself a timeing system.  One or more Time Sources provide Reference Signals to one or more TimCard implementation within the Host System.  Each Time Card receives the Reference Signals from the external Time Sources, and provides local time et al reference signals to one or more consumer within the Host System. 
 
-**<<A diagram will go here.>>**
+**<< A diagram will go here. >>**
 
 The establishment of a standard architecture for TimeCards plays a critical role in enabling interoperability among diverse implementations. By defining a consistent framework, different vendors can design and manufacture TimeCards with varying capabilities, performance levels, and core technologies, while maintaining full plug-and-play compatibility with any compliant host. This standardization fosters an open ecosystem, simplifies hardware integration, and enables seamless substitution or generational upgrades of TimeCards without requiring significant redesign of the host system.
 
