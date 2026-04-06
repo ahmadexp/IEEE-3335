@@ -14,7 +14,7 @@ Metrology metrics quantify the operational performance of TimeCards across four 
 3. **Phase Noise:** The short-term, frequency-domain spectral purity of the oscillator.
 4. **Holdover Behavior:** The predictable degradation of the timescale when external references are lost.
 
-Utilizing a standardized mathematical framework allows operators to confidently compare devices from competing vendors and validates interoperability across heterogeneous networks.
+Utilizing a standardized mathematical framework allows operators to confidently compare devices from competing vendors and to validate interoperability across heterogeneous networks.
 
 ---
 
@@ -40,7 +40,7 @@ where $\bar{y}_i$ represents the continuous, successive fractional frequency ave
 | CSAC (Chip-Scale Atomic) | $5 \times 10^{-12}$ | Portable / SWaP-constrained field units |
 
 ### A.2.2 Time Deviation (TDEV)
-**Definition:** The time-domain equivalent of ADEV. It represents the measure of time stability related to the phase variations of the signal.  
+**Definition:** The time-domain equivalent of ADEV. It represents the measure of temporal stability related to the signal's phase variations.  
 **Formula:**
 
 $$ \text{TDEV}(\tau) = \frac{\tau}{\sqrt{3}} \times \text{Modified ADEV}(\tau) $$
@@ -83,7 +83,7 @@ where $S_\phi(f)$ is the one-sided spectral density of the phase deviations.
 - **Peak-to-Peak Jitter ($J_{pk-pk}$):** The absolute maximum time difference between the earliest and latest occurrence of the signal edge over the sample set.
 - **RMS Jitter ($J_{rms}$):** The root-mean-square average of the jitter samples, representing the common standard deviation of the timing error.
 
-**Measurement Best Practice:** Jitter characterization is typically captured using calibrated Time Interval Counters (TIC) operating over a statistically significant dataset (e.g., $1 \times 10^6$ samples) with picosecond-level native resolution.
+**Measurement Best Practice:** Jitter characterization is typically performed using calibrated Time Interval Counters (TICs) operating on a statistically significant dataset (e.g., $1 \times 10^6$ samples) with picosecond-level native resolution.
 
 ---
 
@@ -123,7 +123,7 @@ where $x_0$ is initial phase error, $\Delta y$ is the normalized frequency offse
 
 ## A.6 Ensemble and Correlation Metrics
 
-In distributed environments, multiple TimeCards or multiple reference inputs may be mathematically combined into an **Ensemble Clock**.
+In distributed environments, multiple TimeCards or reference inputs may be mathematically combined to form an **Ensemble Clock**.
 
 | Concept | Description |
 |---------|-------------|
