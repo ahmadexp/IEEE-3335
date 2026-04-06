@@ -149,9 +149,9 @@ Manufacturers MAY implement proprietary extensions, custom registers, or vendor-
 
 ## 8.9 Summary
 
-Control interfaces construct the necessary framework for secure, consistent, and vendor-neutral lifecycle management of TimeCard systems.
+Control interfaces provide the framework for secure, consistent, vendor-neutral lifecycle management of TimeCard systems.
 
-By standardizing configuration and telemetry logic, this framework facilitates the integration of diverse TimeCards into heterogeneous server fleets and telecommunications infrastructures. This architectural consistency promotes long-term maintainability, traceability, and operational reliability throughout the lifespan of precision time synchronization networks.
+By standardizing configuration and telemetry logic, this framework facilitates integrating diverse TimeCards across heterogeneous server fleets and telecommunications infrastructures. This architectural consistency promotes long-term maintainability, traceability, and operational reliability throughout the lifespan of precision time synchronization networks.
 
 ---
 
