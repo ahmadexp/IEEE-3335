@@ -21,7 +21,7 @@ The following documents are referred to in the text in such a way that some or a
 
 ## 2.2 Bibliography (Informative References)
 
-The bibliography lists documents that are referenced for informative, educational, or background purposes within the text. Their implementation is not required to claim conformance to this standard. 
+The bibliography lists documents referenced for informational, educational, or background purposes in the text. Their implementation is not required to claim conformance to this standard. 
 
 *Note: In the final compiled IEEE document, this section will likely be moved to the final Annex (e.g., Annex A: Bibliography).*
 
