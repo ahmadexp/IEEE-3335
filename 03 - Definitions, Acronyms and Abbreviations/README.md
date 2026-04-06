@@ -21,7 +21,7 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **Holdover:** A mode of operation where a timing subsystem continues to maintain accurate time based solely on the historical stability of its internal oscillator after losing its external reference.
 - **Holdover Error:** The progressively increasing deviation or drift of the subsystem’s timescale from an ideal reference while operating in a holdover state.
 - **Host System:** The overarching computing, telecommunications, or networking platform that integrates a TimeCard through a standardized interface boundary.
-- **Loop Bandwidth:** The effective frequency range over which a disciplining Phase-Locked Loop (PLL) tracks the reference; determining how fast the loop responds to changes.
+- **Loop Bandwidth:** The effective frequency range over which a disciplining Phase-Locked Loop (PLL) tracks the reference, determining how fast the loop responds to changes.
 - **Lock Time:** The duration required for the subsystem to acquire a reference and assert phase/frequency lock after a cold startup or reference transition.
 - **Management Interface:** The designated control channel (e.g., SMBus, IPMI, REST) used strictly for configuration, diagnostics, and firmware management.
 - **Oscilloscope (TIE Mode):** Measurement equipment configured to capture the Time Interval Error (TIE) of repetitive high-frequency signals.
