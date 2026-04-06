@@ -1,6 +1,6 @@
 # 10. Applications and Best Practices (Informative)
 
-This chapter provides informative guidance regarding key deployment scenarios, application domains, and operational best practices for integrating and maintaining TimeCard systems. It is intended to assist system architects, integrators, and facility operators in achieving optimal synchronization accuracy, stability, and reliability across diverse environments. 
+This chapter offers guidance on key deployment scenarios, application domains, and operational best practices for integrating and maintaining TimeCard systems. It helps system architects, integrators, and facility operators achieve optimal synchronization accuracy, stability, and reliability across diverse environments. 
 
 As an informative chapter, the guidelines presented herein are recommendations and do not constitute normative requirements for IEEE P3335 conformance.
 
@@ -8,9 +8,9 @@ As an informative chapter, the guidelines presented herein are recommendations a
 
 ## 10.1 Overview
 
-TimeCards function as precision timing subsystems capable of providing highly stable, traceable, and interoperable time and frequency services to host platforms. Because the core architecture abstracts the complexities of hardware-level synchronization away from the host CPU, TimeCards are versatile enough to be deployed across a vast array of industries.
+TimeCards function as precision timing subsystems, providing highly stable, traceable, and interoperable time and frequency services to host platforms. Because the core architecture abstracts the complexities of hardware-level synchronization from the host CPU, TimeCards are versatile enough to be deployed across a wide range of industries.
 
-Adopting rigorous best practices for physical installation, software configuration, and continuous monitoring greatly increases the likelihood that a TimeCard will operate reliably at the peak of its specified performance envelope throughout its operational lifecycle.
+By following rigorous best practices for physical installation, software configuration, and continuous monitoring, you can ensure that TimeCard operates reliably at peak performance throughout its lifecycle.
 
 ---
 
@@ -31,7 +31,7 @@ The following subclauses detail the primary industries that leverage TimeCard ar
 ### 10.2.3 Financial Systems and High-Frequency Trading (HFT)
 - **Operational Purpose:** Enabling ultra-precise hardware timestamping for trading events to satisfy stringent regulatory compliance frameworks (e.g., MiFID II in Europe, SEC Rule 613 in the USA).
 - **Key Architectures:** Direct 1PPS electrical signal distribution alongside high-frequency PTP broadcast networks, heavily reliant on hardware-timestamping at the exact point of ingress/egress.
-- **Recommended Best Practice:** Maintain strict, mathematically provable traceability to Coordinated Universal Time (UTC) utilizing GNSS-disciplined master clocks. Calibration certificates SHOULD be maintained and refreshed annually to satisfy regulatory audits.
+- **Recommended Best Practice:** Maintain strict, mathematically provable traceability to Coordinated Universal Time (UTC) utilizing GNSS-disciplined master clocks. Calibration certificates SHOULD be maintained and refreshed annually to meet regulatory audit requirements.
 
 ### 10.2.4 Power Grid and Industrial Control Systems (ICS)
 - **Operational Purpose:** Synchronizing distributed control systems, phasor measurement units (PMUs), SCADA networks, and high-voltage protection relays to monitor wide-area grid stability.
@@ -86,8 +86,8 @@ The following table outlines frequent deployment issues and recommended architec
 | **Constant 1PPS Misalignment** | Reverse polarity settings, or significant cable-length propagation delay. | Verify rising-edge vs. falling-edge configurations. Calibrate for cable propagation delay (~5 ns per meter). |
 | **Intermittent Reference Loss** | GNSS antenna sky-view obstruction, or localized RF jamming/spoofing. | Implement a secondary network-delivered PTP reference as a fallback. Employ anti-spoofing GNSS receivers. |
 | **Excessive Drift in Holdover** | Drastic thermal fluctuations affecting the oscillator during the holdover period. | Improve host chassis thermal regulation. Utilize a TimeCard model equipped with a higher-grade OCXO. |
-| **High Host-to-Card Latency** | Relying on software interrupts and unoptimized OS networking stacks to fetch time. | Transition to in-band hardware timestamping mechanisms such as PCIe PTM to bypass OS scheduling jitter. |
-| **Management Interface Timeout** | Host CPU exhaustion preventing the OS from responding to in-band telemetry polls. | Shift telemetry polling to out-of-band (OOB) BMC channels like SMBus or NC-SI that operate independently of the host OS. |
+| **High Host-to-Card Latency** | Relying on software interrupts and unoptimized OS networking stacks to fetch time. | Transition to in-band hardware timestamping mechanisms, such as PCIe PTM, to bypass OS scheduling jitter. |
+| **Management Interface Timeout** | Host CPU exhaustion is preventing the OS from responding to in-band telemetry polls. | Shift telemetry polling to out-of-band (OOB) BMC channels, such as SMBus or NC-SI, that operate independently of the host OS. |
 
 ---
 
@@ -95,6 +95,6 @@ The following table outlines frequent deployment issues and recommended architec
 
 By implementing the engineering, integration, and operational best practices detailed in this chapter, system architects mitigate the risks associated with distributing highly precise time across complex distributed systems. 
 
-These informative recommendations complement the normative hardware and logical requirements defined within the broader IEEE P3335 specification. When applied comprehensively, they facilitate the deployment of robust, resilient, and highly traceable TimeCard infrastructures that perform reliably across decades of service.
+These informative recommendations complement the normative hardware and logical requirements defined within the broader IEEE P3335 specification. When applied comprehensively, they enable the deployment of a robust, resilient, and highly traceable TimeCard infrastructure that performs reliably over decades of service.
 
 ---
