@@ -42,7 +42,7 @@ Environmental performance SHOULD be validated through qualification testing to v
 
 ### 9.3.2 Shock and Vibration
 - TimeCards SHOULD withstand mechanical shock and vibration profiles aligned with their intended use cases. 
-   *(Note: For example, standard server-grade profiles may utilize IEC 60068-2-6 and IEC 60068-2-27 for vibration and shock respectively, while aerospace or heavy industrial profiles may dictate far stricter constraints. A single shock requirement is not broadly applicable across all TimeCard deployment profiles).*  
+   *(Note: For example, standard server-grade profiles may utilize IEC 60068-2-6 and IEC 60068-2-27 for vibration and shock, respectively, while aerospace or heavy industrial profiles may dictate far stricter constraints. A single shock requirement is not broadly applicable across all TimeCard deployment profiles.*  
 - The mechanical isolation of the oscillator from board-level vibration is a matter of proprietary design.  
 - The manufacturer SHALL document the maximum frequency stability degradation (e.g., acceleration sensitivity, $\Gamma$, measured in parts per $g$) under anticipated vibration levels.
 
@@ -107,7 +107,7 @@ Performance deviation limits recorded during post-qualification testing SHALL NO
 
 # Annex A (Informative): Supplemental Compliance and Documentation Guidelines
 
-*Editor's Note: The contents of this Annex are strictly informative. Hardware vendors are legally bound to comply with the regulatory constraints, safety laws, and environmental policies of the jurisdictions in which their products are manufactured and sold. This standard aims to aid interoperability, but conformity to this standard does not implicitly grant or enforce legal regulatory compliance.*
+*Editor's Note: The contents of this Annex are strictly informative. Hardware vendors are legally bound to comply with the regulatory constraints, safety laws, and environmental policies of the jurisdictions in which their products are manufactured and sold. This standard aims to aid interoperability, but conformity to this standard does not, by itself, grant or enforce legal regulatory compliance.*
 
 ## A.1 Safety Standards
 - TimeCard hardware is commonly evaluated against general electrical safety standards such as IEC 62368-1.
