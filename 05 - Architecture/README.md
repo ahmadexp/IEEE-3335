@@ -57,7 +57,7 @@ IEEE 1588-2019 [PTPv2.1] (Hybrid) Mixed Multicast Unicast Operation **MAY** be r
 
 While the receive interface allows synchronization to an external reference, the **providing interface** supports distribution of accurate synchronized time and frequency within the associated host system.
 
-At least one providing interface **SHALL** be present on every TimeCard.  This interface defines the mechanism by which the TimeCard delivers time of day, phase, and/or frequency in any combination to the host, thereby forming the synchronization channel between the TimeCard and the host.
+At least one providing interface **SHALL** be present on every TimeCard.  This interface defines the mechanism by which the TimeCard delivers time-of-day, phase, and/or frequency to the host in any combination, thereby forming the synchronization channel between the TimeCard and the host.
 
 Depending on system requirements, the provided interface may consist of a single interface or a combination of multiple concurrent interfaces. Common examples include system bus standards such as **ISA**, **MCA**, **PCI**, and **PCI Express (PCIe)**, as well as peripheral and communication interfaces such as **Serial Bus**, **USB**, **SCSI**, **PCMCIA**, or **LPT**. The selection of interface type directly influences both the data exchange characteristics and the precision of temporal alignment achievable by the host.
 
