@@ -80,7 +80,7 @@ The following M&CI busses are independent of one another, and a TimeCard may uti
 - **Serial or USB interfaces** – enabling firmware updates, diagnostics, or advanced telemetry access.  
 - **Network-based interfaces** such as REST, gRPC, or SNMP, for distributed or remotely managed timing systems.
 
-To promote interoperability and consistency, all TimeCards **SHOULD** expose a minimum common set of registers and attributes in a standardized format, including (but not limited to):  **(MAP != API, not intechangeable, need both.  Lots of existing base requires MAPs.  Have APIs be wrappers on underlying MAPs? Looking for a better approach.)**
+To promote interoperability and consistency, all TimeCards **SHOULD** expose a minimum common set of registers and attributes in a standardized format, including (but not limited to):  **(MAP != API, not interchangeable, need both.  Lots of existing base requires MAPs.  Have APIs be wrappers on underlying MAPs? Looking for a better approach.)**
 - Current synchronization sources and their states  
 - Clock disciplining status  
 - Phase and frequency offset metrics  
@@ -102,7 +102,7 @@ Requirements stated within this section may consist of normatively referencing o
 - Such things as deterministic power-up sequencing and optional energy storage for holdover **SHOULD** be supported and documented.
 
 ### 5.6.2 - Mechanical Form Factor
-- The per-unit weight and physical envelope expressed in numerical physical units **SHALL** be documented.  
+- The per-unit weight and physical envelope expressed in standard Metric or Imperial numerical physical units **SHALL** be documented.  
 - Acceptable envelope forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
 - Mounting **SHALL** withstand insertion/removal and strain relief for all cable ports (electrical or optical) **SHOULD** be included.  
 - Faceplates **SHOULD** label at least GNSS, PPS, 10 MHz, ToD, and management ports and include visual status indicators.
@@ -138,7 +138,7 @@ A unified timescale comes from a single oscillator function and is published sim
 
 A TimeCard **SHALL** generate exactly one unified timescale and **SHALL** publish this timescale across all Outbound Interfaces.  _Note that multiple TimeCards are needed to implement multiple unified timescales_.
 
-All boundaries between adjacent seconds of signals from the the providing interface of the same TimeCard instance **SHALL** align to within a specified time tolerance that is documented and published.  This is necessary for Ensemble reference signals (§5.7.6 herein) to be generated and used.
+All boundaries between adjacent seconds of signals from the providing interface of the same TimeCard instance **SHALL** align to within a specified time tolerance that is documented and published.  This is necessary for Ensemble reference signals (§5.7.6 herein) to be generated and used.
 
 All analog reference signal forms of a unified timescale **SHALL** have continuous time phase, although the time derivatives of the phase need not be continuous.  
 
@@ -172,6 +172,7 @@ Holdover performance characterizes the stability of the TimeCard when all extern
 
 ### 5.7.6 - Ensemble References (Normative)
 Implementations **SHALL** support combining multiple inbound references into one unified "Ensemble" inbound reference.  
+
 Ensemble logic **MAY** provide source weights, health, and alarms via management telemetry.
 
 One example of an Ensemble Clock is where the local Primary Reference provides phase and frequency, and an external incoming reference signals defines the boundaries between adjacent SI Seconds and labels those seconds according to a standard timescale such as TAI or UTC.
@@ -188,7 +189,7 @@ The logical flow of time through the TimeCard architecture generally follows the
 4. **Timescale Generation:** The disciplined oscillator drives a hardware counter, generating a _single_, unified timescale implementing a timescale such as TAI or UTC.
 5. **Egress:** The unified timescale is published across all Outbound Interfaces simultaneously. This includes generating physical PPS edges, updating memory-mapped Time of Day registers, scaling frequency outputs (e.g., 10 MHz), and serving host PCIe PTM requests—all originating from the exact same hardware counter.
 
-If the last ingress reference is lost, the the TimeCard enters **Holdover** (the PLL stops updating), keeping the unified timescale running based purely on the uncorrected drift behavior of the local oscillator function.
+If the last ingress reference is lost, the TimeCard enters **Holdover** (the PLL stops updating), keeping the unified timescale running based purely on the uncorrected drift behavior of the local oscillator function.
 
 ### 5.7.9 - Implementation Flexibility (Informative)
 The “oscillator function” need not be or contain a discrete resonator.  A direct atomic primary frequency reference source may be used for applications requiring extremely good performance.  A DDS or similar digital source may suffice for cost-sensitive designs.  
