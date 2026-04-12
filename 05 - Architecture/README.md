@@ -49,7 +49,7 @@ In some configurations, a TimeCard may operate without any inbound external timi
 
 This flexible receive architecture enables TimeCards to support a wide use-case spectrum - from GNSS-disciplined primary time sources at the edge of the network, to boundary clocks that lack access to any PTPv2 *Grand Master*, to autonomous isolated holdover systems - while preserving a common and interoperable host interface standard. (Boundary Clocks are required to have at least two PTP inbound ports.)  
 
-In datacenters having a large number of servers, this flexible architcture allows a single common application (not I/O driver) executable binary to be installed in all servers (a great simplification), each server determining its role and the specific external timing source to be used.  
+In datacenters having a large number of servers, this flexible architecture allows a single common application (not I/O driver) executable binary to be installed in all servers (a great simplification), each server determining its role and the specific external timing source to be used.  
 
 IEEE 1588-2019 [PTPv2.1] (Hybrid) Mixed Multicast Unicast Operation **MAY** be required for physically large host systems.
 
@@ -69,7 +69,7 @@ Depending on system requirements, the providing interface may consist of a singl
 
 In addition to the inbound and outbound signal interfaces, it is recommended that each TimeCard include at least one **Management and Control Interface (M&CI)**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface is acceptable if no runtime monitoring or control is required.
 
-The concept of control and data planes arose decades ago **( details lost, circa 1970? Good reference? May have come from IBM, in the midst of the realization that using special data values for control caused endless problems )**, originally in hardware design, later in the design of networking hardware, where is was observed that things were simplified if one separates data from control.  A few layers carried the data being processed, and a few other layers carried control signals to implement the processing algorithm.  Those same algorithms and controls are now implemented in firmware et al, but the general concepts of control and data planes endure.
+The concept of control and data planes arose decades ago **( details lost, circa 1970? Good reference? May have come from IBM, in the midst of the realization that using special data values for control caused endless problems)**, originally in hardware design, later in the design of networking hardware, where it was observed that things were simplified if one separates data from control.  A few layers carried the data being processed, and a few other layers carried control signals to implement the processing algorithm.  Those same algorithms and controls are now implemented in firmware et al, but the general concepts of control and data planes endure.
 
 The management interface functions as (or is part of) the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
