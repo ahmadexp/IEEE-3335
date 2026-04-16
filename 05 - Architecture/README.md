@@ -11,7 +11,7 @@ The establishment of a standard architecture for TimeCards is critical to enabli
 A **TimeCard** is a modular subsystem designed to interface with a computing host system through a standardized hardware and software interface. The TimeCard's primary purpose is to deliver a stable, accurate, and reliable source of time (in the form of time of day, phase, frequency, or any combination thereof) to a host system.
 
 ### 5.1.1 Rationale for Dedicated Timing Subsystems
-Modern host systems (such as high-performance servers, edge compute nodes, and telecommunications routers) typically lack the internal capabilities required to maintain sub-microsecond or nanosecond-class synchronization.  Host limitations generally include unpredictable software and operating system scheduling latencies that interfere with precise clock steering
+Modern host systems (such as high-performance servers, edge compute nodes, and telecommunications routers) typically lack the internal capabilities required to maintain roughly sub-microsecond or nanosecond-scale synchronization.  Host limitations generally include unpredictable software and operating system scheduling latencies that interfere with precise clock steering.
 
 The temperature dependence of all properties of physical components, like standard quartz oscillators, is always relevant. 
 
@@ -47,7 +47,9 @@ The **receive interface** provides a means for the TimeCard to synchronize its o
 
 In some configurations, a TimeCard may operate without any inbound external timing input. In this mode, the TimeCard functions in **holdover**, relying solely on the stability of its internal oscillator function to maintain accurate time over a defined interval. Such configurations are particularly useful in environments where external timing references are unavailable, intermittent, or deliberately excluded for security or operational isolation to support redundancy.
 
-This flexible receive architecture enables TimeCards to support a wide use-case spectrum - from GNSS-disciplined primary time sources at the edge of the network, to deep-indoor boundary clocks relying on PTP **<< discuss PTP boundary clocks that lack access to valid signals from the sky >>**, to autonomous isolated holdover systems - while preserving a common and interoperable host interface standard. This allows a datacenter to deploy identical executable host server executable binaries regardless of the specific external timing source used by the TimeCard.
+This flexible receive architecture enables TimeCards to support a wide use-case spectrum - from GNSS-disciplined primary time sources at the edge of the network, to boundary clocks that lack access to any PTPv2 *Grand Master*, to autonomous isolated holdover systems - while preserving a common and interoperable host interface standard. (Boundary Clocks are required to have at least two PTP inbound ports.)  
+
+In datacenters having a large number of servers, this flexible architecture allows a single common application (not I/O driver) executable binary to be installed in all servers (a great simplification), each server determining its role and the specific external timing source to be used.  
 
 IEEE 1588-2019 [PTPv2.1] (Hybrid) Mixed Multicast Unicast Operation **MAY** be required for physically large host systems.
 
@@ -67,7 +69,7 @@ Depending on system requirements, the provided interface may consist of a single
 
 In addition to the inbound and outbound signal interfaces, it is recommended that each TimeCard include at least one **Management and Control Interface (M&CI)**. These interfaces enable configuration, monitoring, diagnostics, firmware management, and status reporting between the TimeCard and the host. A TimeCard without a management interface is acceptable if no runtime monitoring or control is required.
 
-The concept of control and data planes arose decades ago (details lost, circa 1970? Good reference?), originally in hardware design, later in the design of networking hardware, where it was observed that things were simplified if one separates data from control.  A few layers carried the data being processed, and a few other layers carried control signals to implement the processing algorithm.  Those same algorithms and controls are now implemented in firmware and related components, but the general concepts of control and data planes endure.
+The concept of control and data planes arose decades ago **( details lost, circa 1970? Good reference? May have come from IBM, in the midst of the realization that using special data values for control caused endless problems)**, originally in hardware design, later in the design of networking hardware, where it was observed that things were simplified if one separates data from control.  A few layers carried the data being processed, and a few other layers carried control signals to implement the processing algorithm.  Those same algorithms and controls are now implemented in firmware et al, but the general concepts of control and data planes endure.
 
 The management interface functions as (or is part of) the **control plane** of the TimeCard, distinct from the **data plane** used for delivering timing and frequency. Through this interface, the host can configure and observe operational parameters such as oscillator state, synchronization source selection, disciplining mode, holdover behavior, temperature compensation, and alarm or fault conditions.
 
@@ -78,7 +80,7 @@ The following M&CI buses are independent of one another, and a TimeCard may util
 - **Serial or USB interfaces** – enabling firmware updates, diagnostics, or advanced telemetry access.  
 - **Network-based interfaces** such as REST, gRPC, or SNMP, for distributed or remotely managed timing systems.
 
-To promote interoperability and consistency, all TimeCards **SHOULD** expose a minimum common set of registers and attributes in a standardized format, including (but not limited to):
+To promote interoperability and consistency, all TimeCards **SHOULD** expose a minimum common set of registers and attributes in a standardized format, including (but not limited to):  **(MAP != API, not interchangeable, need both.  Lots of existing base requires MAPs.  Have APIs be wrappers on underlying MAPs? Looking for a better approach.)**
 - Current synchronization sources and their states  
 - Clock disciplining status  
 - Phase and frequency offset metrics  
@@ -100,7 +102,7 @@ Requirements stated in this section may normatively reference other standards.  
 - Such things as deterministic power-up sequencing and optional energy storage for holdover **SHOULD** be supported and documented.
 
 ### 5.6.2 - Mechanical Form Factor
-- The per-unit weight and physical envelope expressed in numerical physical units **SHALL** be documented.  
+- The per-unit weight and physical envelope expressed in standard Metric or Imperial numerical physical units **SHALL** be documented.  
 - Acceptable envelope forms include add-in cards (low-profile/full-height), mezzanine, or embedded.  
 - Mounting **SHALL** withstand insertion/removal and strain relief for all cable ports (electrical or optical) **SHOULD** be included.  
 - Faceplates **SHOULD** label at least GNSS, PPS, 10 MHz, ToD, and management ports and include visual status indicators.
@@ -170,6 +172,7 @@ Holdover performance measures the stability of the TimeCard when all external sy
 
 ### 5.7.6 - Ensemble References (Normative)
 Implementations **SHALL** support combining multiple inbound references into one unified "Ensemble" inbound reference.  
+
 Ensemble logic **MAY** provide source weights, health, and alarms via management telemetry.
 
 One example of an Ensemble Clock is one in which the local Primary Reference provides phase and frequency, and an incoming external reference signal defines the boundaries between adjacent SI Seconds and labels those seconds according to a standard timescale such as TAI or UTC.
