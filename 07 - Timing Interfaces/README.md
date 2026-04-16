@@ -9,7 +9,7 @@ A TimeCard typically incorporates three fundamental classes of interfaces:
 2. **Providing (Outbound) Interfaces:** Dedicated to distributing disciplined time, phase, and frequency representations to the host system and other downstream consumers.
 3. **Management and Control Interfaces:** Non-timing-critical data paths used for configuration, telemetry, security, and diagnostics.
 
-Each class of interface possesses distinct electrical, signaling, protocol, and performance requirements, which are detailed in the following subclauses.
+Each class of interface has distinct electrical, signaling, protocol, and performance requirements, detailed in the following subclauses.
 
 ## 7.2 Receive (Inbound) Interfaces
 The receive interface enables the TimeCard to lock its internal oscillator function to one or more external references, establishing traceability and synchronization to a higher-order time source.
@@ -64,7 +64,7 @@ All physical outputs SHALL comply with the following baseline signaling levels u
 For each implemented providing interface, the manufacturer SHALL document the signal rise/fall times, maximum intrinsic jitter, source impedance, and absolute drive capability.
 
 ### 7.3.3 Synchronization Accuracy
-All providing output signals SHALL align coherently to the single unified timescale generated natively by the TimeCard as described in the Architecture clauses. 
+All output signals SHALL align coherently with the single unified timescale generated natively by the TimeCard, as described in the Architecture clauses. 
 
 For compliant high-precision designs, the 1PPS output alignment error SHALL NOT exceed 1 nanosecond RMS relative to the perfectly aligned internal master reference point. Output clocks SHOULD exhibit deterministic phase behavior and strictly bounded frequency deviations during any internal source failover event.
 
@@ -77,7 +77,7 @@ Providing interfaces SHALL support hardware-assisted timestamping where technica
 Timestamping accuracy validation SHALL be performed using measurement equipment directly traceable to at least one recognized National Metrology Institute (e.g., NIST, NPL, or PTB).
 
 ## 7.4 Management and Control Interfaces
-Management interfaces define the logical communications paths dedicated to device configuration, telemetry polling, and firmware lifecycle control. While these interfaces do not carry the critical synchronization timepath, they are indispensable for operational deployment.
+Management interfaces define the logical communications paths dedicated to device configuration, telemetry polling, and firmware lifecycle control. While these interfaces do not carry the critical synchronization time path, they are indispensable for operational deployment.
 
 ### 7.4.1 Common Management Interfaces
 
@@ -90,7 +90,7 @@ Management interfaces define the logical communications paths dedicated to devic
 | **REST / gRPC / SNMP** | Remote network orchestration | Variable | Distributed datacenter timing management systems |
 
 ### 7.4.2 Management Capabilities
-Where a management interface is provided, it SHALL allow read and write access to at minimum the following operational vectors:
+Where a management interface is provided, it SHALL allow read and write access to at least the following operational vectors:
 - Active synchronization source selection and current fallback state.
 - Internal oscillator disciplining mode (e.g., locked, holdover, free-run, warming up).
 - Phase and frequency offset statistics relative to the reference.
@@ -102,13 +102,13 @@ Given the critical nature of timing infrastructure, management interfaces SHALL 
 - All remote or networked management channels SHALL require standard authentication mechanisms (e.g., username/password, cryptographic tokens, or mutual TLS certificates).
 - Firmware payload updates SHALL mandate cryptographic signing and boot-time integrity verification to prevent unauthorized code execution.
 - Telemetry data crossing shared or external network boundaries SHOULD be encrypted.
-- **Data Sanitization:** TimeCards SHOULD support a cryptographic erase or sanitization procedure. Upon receiving a specific management command, or upon detection of a physical tamper event, the system SHALL permanently erase all sensitive internal state data, private keys, and operational logs, satisfying requirements for environments where the overall system must forget all internal data upon a sanitization procedure.
+- **Data Sanitization:** TimeCards SHOULD support a cryptographic erase or sanitization procedure. Upon receiving a specific management command or upon detection of a physical tamper event, the system SHALL permanently erase all sensitive internal state data, private keys, and operational logs, satisfying the requirements for environments in which the overall system must forget all internal data during a sanitization procedure.
 
 ## 7.5 Physical and Logical Integration
 
 ### 7.5.1 Connectors and Labeling
-Physical TimeCard front panels (brackets) SHALL label all timing and management ports clearly. For example:
-`[GNSS] [PPS OUT] [10MHz] [ToD] [MGMT] [USB]`
+Physical TimeCard front panels (brackets) SHALL clearly label all timing and management ports. For example:
+`[GNSS] [PPS OUT] [10MHz] [ToD] [MGMT] [USB].`
 
 Manufacturers SHOULD adopt standardized color coding and iconography in accordance with Open Compute Project Time Appliance Project (OCP-TAP) guidelines where applicable.
 
@@ -118,6 +118,6 @@ Manufacturers SHOULD adopt standardized color coding and iconography in accordan
 - **Architectural Objective:** While vendors MAY implement proprietary or optional extensions to the TimeCard interface, it is a primary design objective of this standard that such extensions do not natively disrupt or degrade baseline interoperability with standard host systems.
 
 ## 7.6 Summary
-Timing interfaces construct the foundational boundaries of TimeCard interoperability, facilitating precise, deterministic, and hardware-agnostic synchronization. Compliance with the physical and logical interface definitions in this chapter realizes the goal that any TimeCard—regardless of underlying component design or vendor origin—can seamlessly integrate into diverse host environments, sustain traceable absolute time accuracy, and distribute stable frequency and phase alignments.
+Timing interfaces construct the foundational boundaries of TimeCard interoperability, facilitating precise, deterministic, and hardware-agnostic synchronization. By following the physical and logical interface definitions in this chapter, any TimeCard—regardless of its underlying design or vendor—can integrate into diverse host environments, maintain traceable absolute time accuracy, and distribute stable frequency and phase alignments.
 
 ---

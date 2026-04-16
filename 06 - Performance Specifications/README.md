@@ -10,7 +10,7 @@ TimeCard performance must quantify the precision, stability, and accuracy with w
 
 Performance metrics for the oscillator(s) utilized within the TimeCard shall be provided. These shall include frequency accuracy and temperature stability.
 
-Performance metrics applicable for the characterization of the operation within the applicable use case should be provided. Those metrics should be characterized under both locked (synchronized/syntonized) and holdover operating conditions.
+Performance metrics applicable to the characterization of the operation within the applicable use case should be provided. Those metrics should be characterized under both locked (synchronized/syntonized) and holdover operating conditions.
 
 Manufacturers may report the following metrics:
 - Frequency stability (ADEV, TDEV)
@@ -21,11 +21,11 @@ Manufacturers may report the following metrics:
 - Holdover behavior
 - Environmental sensitivity (to temperature, voltage, vibration)
 
-All measurements shall be made by testing equipment traceable to the relevant standards, such as UTC(NIST), and conform to relevant methodologies e.g. ITU-T G.810/G.8260.
+All measurements shall be made using equipment traceable to the relevant standards, such as UTC (NIST), and shall conform to relevant methodologies, e.g., ITU-T G.810/G.8260.
 
 ## 6.2 Benchmarking and Testing Oscillators on the TimeCard
 
-To validate the capabilities of the onboard oscillator(s) within the context of the TimeCard system, comprehensive testing procedures shall be conducted. The presence of the TimeCard inside a host system (such as a PCIe slot in a standard server) introduces environmental stressors such as thermal gradients, voltage fluctuations, and vibrations, which must be accounted for during benchmarking.
+To validate the capabilities of the onboard oscillator(s) within the context of the TimeCard system, comprehensive testing procedures shall be conducted. The presence of the TimeCard within a host system (such as a PCIe slot in a standard server) introduces environmental stressors, including thermal gradients, voltage fluctuations, and vibrations, which must be accounted for during benchmarking.
 
 ### 6.2.1 Test Environment and Setup
 

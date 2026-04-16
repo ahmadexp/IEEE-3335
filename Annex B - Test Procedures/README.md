@@ -28,7 +28,7 @@ To satisfy traceability requirements, it is strongly recommended that all tests 
 - Evaluators should apply host bus power (e.g., via a PCIe riser) or auxiliary power within the hardware's rated voltage tolerance.
 - The initial power-up sequence provides a baseline to map the oscillator's raw warm-up time from cold-start to achieving a steady-state frequency lock.
 
-### B.2.3 Measurement Equipment Calibration limits
+### B.2.3 Measurement Equipment Calibration Limits
 Instrumentation utilized in performance validation should possess a noise floor or error margin substantially lower than the DUT to ensure the DUT is being measured, rather than the noise of the instrumentation itself.
 - **Reference Clock:** The primary laboratory reference clock driving the test equipment should possess an Allan Deviation (ADEV) at least one order of magnitude ($10\times$) superior to the target specification of the DUT.
 - **Time Interval Counter (TIC):** TICs should possess a native single-shot resolution of $<10\text{ ps}$ for evaluating high-precision OCXOs or GNSS-disciplined TimeCards.
@@ -53,7 +53,7 @@ Functional tests validate the logical operations and state transitions of the Ti
 
 ## B.4 Performance Validation Tests
 
-Performance tests quantify the physical metrology capabilities of the TimeCard.
+Performance tests quantify the TimeCard's physical metrology capabilities.
 
 ### B.4.1 Frequency Stability (ADEV/TDEV)
 - **Procedure:** Connect the TimeCard’s primary continuous clock output (e.g., 10 MHz) to a Phase Noise Analyzer or high-resolution Frequency Counter. Record continuous phase/frequency samples locked against the laboratory primary reference.
@@ -70,7 +70,7 @@ Performance tests quantify the physical metrology capabilities of the TimeCard.
 - **Analysis:** Calculate the Root-Mean-Square (RMS) jitter and the absolute peak-to-peak ($J_{pk-pk}$) timing variance of the signal edges.
 
 ### B.4.4 Holdover Boundary (MTIE)
-- **Procedure:** Allow the DUT to lock to a master reference and achieve thermal and mathematical equilibrium for at least 24 hours. Abruptly sever the reference connection, forcing the unit into holdover.
+- **Procedure:** Allow the DUT to lock to a master reference and achieve thermal and mathematical equilibrium for at least 24 hours. Abruptly sever the reference connection to force the unit into holdover.
 - **Analysis:** Continuously record the wandering time error of the TimeCard’s 1PPS output against the laboratory master 1PPS for the specified holdover duration (e.g., 4, 12, or 24 hours).
 - **Evaluation:** Compute the Maximum Time Interval Error (MTIE) across the observation window and verify the drift profile remains beneath the target limit (e.g., $1.5\mu\text{s}$/24hr).
 
@@ -84,7 +84,7 @@ Environmental tests validate that the TimeCard's hardware design robustly compen
 |------|--------------|---------------|
 | **Thermal Cycling** | Place the active, locked DUT inside an environmental chamber. Cycle the ambient temperature across the manufacturer's maximum specified operating range (e.g., $0^\circ\text{C}$ to $55^\circ\text{C}$) using a predefined ramp rate ($^\circ\text{C}$/min). | Assess the maximum frequency excursion during temperature gradients. Verify that the oscillator’s internal temperature compensation mechanism functions correctly. |
 | **Power Interruption** | Mechanically or electrically interrupt the host power plane for brief intervals ($1\text{ s}$ to $10\text{ s}$) if the TimeCard relies on localized holdover capacitors or batteries. | Verify that the hardware successfully bridges the interruption and maintains the internal unified timescale without experiencing a phase step or discontinuity upon power restoration. |
-| **Vibration / Shock** | Subject the TimeCard to variable frequency, multi-axis harmonic vibration ($5\text{ Hz}$ to $500\text{ Hz}$) utilizing a specialized shaker table. | Record the immediate degradation in phase noise and frequency stability caused by g-force acceleration ($\Gamma$), verifying that the structural design adequately dampens the oscillator. |
+| **Vibration / Shock** | Subject the TimeCard to variable-frequency, multi-axis harmonic vibration ($5\text{ Hz}$ to $500\text{ Hz}$) using a specialized shaker table. | Record the immediate degradation in phase noise and frequency stability caused by g-force acceleration ($\Gamma$), verifying that the structural design adequately dampens the oscillator. |
 
 ---
 
@@ -97,7 +97,7 @@ To maintain engineering transparency, comprehensive test reports for TimeCard va
 - Raw and plotted measurement data for all ADEV, TDEV, Phase Noise, and MTIE evaluations.
 - Explicitly stated conditions during holdover tests (e.g., the thermal ramp rate applied to the chassis while the reference was disconnected).
 
-By adhering to a consistent, traceable testing methodology, integrators can confidently benchmark TimeCard implementations across diverse vendor ecosystems, guaranteeing reliable behavior in production infrastructure.
+With a consistent, traceable testing approach, integrators can confidently compare TimeCard implementations across different vendor ecosystems and ensure reliable behavior in production.
 
 ---
 

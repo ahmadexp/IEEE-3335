@@ -1,5 +1,5 @@
 > **Editor's Note (Rodney C., P3335 Working Group):** 
-> This document currently serves as a structural guideline for defining what will eventually go into the Conformance clause of the P3335 standard. The intention is to align the working group on how to draft normative requirements.
+> This document currently serves as a structural guideline for defining what will eventually go into the Conformance clause of the P3335 standard. We want to align the working group on drafting normative requirements.
 
 # 4. Conformance Guidelines & Methodology
 
@@ -64,6 +64,6 @@ As the P3335 project matures, the Working Group can evaluate whether a high-leve
 ### 4.3.2 Protocol Implementation Conformance Statement (PICS)
 > **Recommendation (Rodney C.):** Strongly avoid creating a PICS annex.
 
-A PICS typically takes all the dispersed requirements and repeats them in a massive hierarchical table. Some engineers prefer reading tables over text for compliance checking, which is why PICS annexes exist in many IEEE standards. 
+A PICS typically takes all the dispersed requirements and repeats them in a massive hierarchical table. Some engineers prefer reading tables to text for compliance checking, which is why PICS annexes are included in many IEEE standards. 
 
 **The critical disadvantage:** A PICS *will* inevitably fall out of sync with the main text of the standard during drafting and iterative revisions. This creates massive contradictions for implementers. Adding disclaimers like *"When there is a contradiction, ignore the PICS"* is often insufficient. *(Note: IEEE 802.1Q heavily suffers from this exact PICS desynchronization problem).*
