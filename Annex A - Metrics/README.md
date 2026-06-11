@@ -21,15 +21,15 @@ Utilizing a standardized mathematical framework allows operators to confidently 
 ## A.2 Core Timing and Stability Metrics
 
 ### A.2.1 Allan Deviation (ADEV)
-**Definition:** A statistical measure characterizing the fractional frequency stability of an oscillator or a timing system as a function of the averaging time ($\tau$). Unlike standard variance, ADEV converges for common oscillator noise types (such as flicker frequency noise).  
+**Definition:** A statistical measure characterizing the fractional frequency stability of an oscillator or a timing system as a function of the averaging time ($\tau$). Unlike standard variance, ADEV converges for common oscillator noise types (such as flicker frequency noise).
 **Formula:**
 
 $$ \sigma_y(\tau) = \sqrt{ \frac{1}{2(N-1)} \sum_{i=1}^{N-1} (\bar{y}_{i+1} - \bar{y}_i)^2 } $$
 
-where $\bar{y}_i$ represents the continuous, successive fractional frequency averages measured over intervals of duration $\tau$, and $N$ represents the total number of frequency samples.  
+where $\bar{y}_i$ represents the continuous, successive fractional frequency averages measured over intervals of duration $\tau$, and $N$ represents the total number of frequency samples.
 
-**Purpose:** ADEV is the primary metric for evaluating both short-term and long-term oscillator frequency stability.  
-**Reference:** ITU-T G.810 Annex I; IEEE Std 1139.  
+**Purpose:** ADEV is the primary metric for evaluating both short-term and long-term oscillator frequency stability.
+**Reference:** ITU-T G.810 Annex I; IEEE Std 1139.
 
 **Typical Baselines for Reference:**
 | Oscillator Technology | Typical ADEV ($\tau = 1$ s) | Typical Application |
@@ -40,25 +40,25 @@ where $\bar{y}_i$ represents the continuous, successive fractional frequency ave
 | CSAC (Chip-Scale Atomic) | $5 \times 10^{-12}$ | Portable / SWaP-constrained field units |
 
 ### A.2.2 Time Deviation (TDEV)
-**Definition:** The time-domain equivalent of ADEV. It represents the measure of temporal stability related to the signal's phase variations.  
+**Definition:** The time-domain equivalent of ADEV. It represents the measure of temporal stability related to the signal's phase variations.
 **Formula:**
 
 $$ \text{TDEV}(\tau) = \frac{\tau}{\sqrt{3}} \times \text{Modified ADEV}(\tau) $$
 
-**Purpose:** TDEV specifically quantifies the variation in absolute time error over a given observation period.  
-**Reference:** ITU-T G.810 Annex I.  
+**Purpose:** TDEV specifically quantifies the variation in absolute time error over a given observation period.
+**Reference:** ITU-T G.810 Annex I.
 **Usage:** TDEV is highly useful for evaluating the precision of synchronization networks, particularly assessing packet delay variation (PDV) noise in PTP deployments.
 
 ### A.2.3 Maximum Time Interval Error (MTIE)
-**Definition:** The maximum peak-to-peak phase or time deviation observed between any two measurement points within an observation window of duration $\tau$.  
+**Definition:** The maximum peak-to-peak phase or time deviation observed between any two measurement points within an observation window of duration $\tau$.
 **Formula:**
 
 $$ \text{MTIE}(\tau) = \max_{i,j} |x_j - x_i|, \quad \text{for all } (t_j - t_i) \le \tau $$
 
-where $x$ is the time error constraint.  
+where $x$ is the time error constraint.
 
-**Purpose:** MTIE acts as a worst-case boundary metric, measuring the absolute maximum wander or drift of the timescale.  
-**Reference:** ITU-T G.8260 Appendix II.5.  
+**Purpose:** MTIE acts as a worst-case boundary metric, measuring the absolute maximum wander or drift of the timescale.
+**Reference:** ITU-T G.8260 Appendix II.5.
 **Usage:** MTIE is universally utilized to define strict holdover performance boundaries (e.g., assessing if a clock drifts more than $1.5$ $\mu s$ over a 24-hour holdover period).
 
 ---
@@ -66,19 +66,19 @@ where $x$ is the time error constraint.
 ## A.3 Frequency Domain and Jitter Metrics
 
 ### A.3.1 Phase Noise ($\mathcal{L}(f)$)
-**Definition:** The power spectral density of phase fluctuations of a continuous periodic signal, traditionally expressed in decibels relative to the carrier per hertz ($\text{dBc/Hz}$) at varying offset frequencies from the main carrier frequency.  
+**Definition:** The power spectral density of phase fluctuations of a continuous periodic signal, traditionally expressed in decibels relative to the carrier per hertz ($\text{dBc/Hz}$) at varying offset frequencies from the main carrier frequency.
 **Formula:**
 
 $$ \mathcal{L}(f) = 10 \log_{10}\left( \frac{S_\phi(f)}{2\text{ rad}^2} \right) $$
 
-where $S_\phi(f)$ is the one-sided spectral density of the phase deviations.  
+where $S_\phi(f)$ is the one-sided spectral density of the phase deviations.
 
-**Purpose:** Phase noise evaluates the short-term spectral purity of the local oscillator.  
-**Reporting Profile:** Manufacturers typically plot phase noise across logarithmic decades: $1\text{ Hz}$, $10\text{ Hz}$, $100\text{ Hz}$, $1\text{ kHz}$, $10\text{ kHz}$, and $100\text{ kHz}$ offsets.  
+**Purpose:** Phase noise evaluates the short-term spectral purity of the local oscillator.
+**Reporting Profile:** Manufacturers typically plot phase noise across logarithmic decades: $1\text{ Hz}$, $10\text{ Hz}$, $100\text{ Hz}$, $1\text{ kHz}$, $10\text{ kHz}$, and $100\text{ kHz}$ offsets.
 **Reference:** IEEE Std 1139.
 
 ### A.3.2 Time Jitter
-**Definition:** The short-term variance or instability of a time-domain signal (such as a 1PPS edge or a 10 MHz square wave) from its ideal, mathematically perfect periodic position.  
+**Definition:** The short-term variance or instability of a time-domain signal (such as a 1PPS edge or a 10 MHz square wave) from its ideal, mathematically perfect periodic position.
 **Measurement Types:**
 - **Peak-to-Peak Jitter ($J_{pk-pk}$):** The absolute maximum time difference between the earliest and latest occurrence of the signal edge over the sample set.
 - **RMS Jitter ($J_{rms}$):** The root-mean-square average of the jitter samples, representing the common standard deviation of the timing error.
@@ -105,7 +105,7 @@ To prevent ambiguity in TimeCard documentation, developers are encouraged to con
 When a TimeCard suffers a total loss of its inbound external reference signals (e.g., GNSS jamming or fiber cut), the active disciplining loop opens, and the unit transitions to **holdover**.
 
 ### A.5.1 Holdover Time Error
-**Definition:** The continuously accumulating deviation of absolute time driven by the free-running fractional frequency offset of the internal oscillator during holdover.  
+**Definition:** The continuously accumulating deviation of absolute time driven by the free-running fractional frequency offset of the internal oscillator during holdover.
 **Mathematical Concept:**
 
 $$ \Delta x(t) = x_0 + \int_0^t \Delta y(\tau) d\tau + \frac{1}{2} D t^2 + \epsilon(t) $$
@@ -115,7 +115,7 @@ where $x_0$ is initial phase error, $\Delta y$ is the normalized frequency offse
 **Practical Example:** If a TimeCard enters holdover with an uncorrected frequency offset of $1.15 \times 10^{-11}$, the generated 1PPS signal will mechanically drift by approximately $1\mu\text{s}$ per day of holdover ($\approx 86.4\text{ ns}$ per $1 \times 10^{-12}$ offset).
 
 ### A.5.2 Warm-Up and Recovery Behavior
-- **Warm-Up Time:** The total duration required for an oscillator (specifically heated OCXOs or Rubidium cells) to reach thermal equilibrium and electrical stabilization upon a cold power cycle. 
+- **Warm-Up Time:** The total duration required for an oscillator (specifically heated OCXOs or Rubidium cells) to reach thermal equilibrium and electrical stabilization upon a cold power cycle.
 - **Recovery Time:** The architectural time required for the PLL to re-establish a solid lock and compress phase errors after successfully reacquiring a valid reference.
 - **Note:** It is highly recommended that vendors empirically characterize and publish both parameters in standard hardware datasheets.
 
@@ -157,7 +157,7 @@ When designing lab tests or automated qualification fixtures to evaluate the met
 
 ## A.9 Summary
 
-The mathematical metrics outlined in this annex establish a vital, unified vocabulary for characterizing the temporal performance of TimeCard architectures. 
+The mathematical metrics outlined in this annex establish a vital, unified vocabulary for characterizing the temporal performance of TimeCard architectures.
 
 By standardizing exactly how stability, noise, drift, and holdover are mathematically calculated and reported, the IEEE P3335 ecosystem allows operators to rapidly compare discrete hardware configurations, validate regulatory compliance, and confidently integrate mixed-vendor timing infrastructure.
 

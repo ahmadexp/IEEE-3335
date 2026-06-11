@@ -1,6 +1,6 @@
 # Annex B: Test Procedures (Informative)
 
-This annex provides standardized, repeatable engineering test procedures for evaluating the functional and performance characteristics of TimeCard implementations. These procedures are designed to ensure consistency, comparability, and mathematical traceability of measurement results across independent vendors, metrology laboratories, and live deployment environments. 
+This annex provides standardized, repeatable engineering test procedures for evaluating the functional and performance characteristics of TimeCard implementations. These procedures are designed to ensure consistency, comparability, and mathematical traceability of measurement results across independent vendors, metrology laboratories, and live deployment environments.
 
 As this annex is explicitly informative, the test methodologies proposed herein serve as best-practice engineering baselines for hardware validation rather than strict normative conformance requirements.
 

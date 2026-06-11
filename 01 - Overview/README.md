@@ -1,14 +1,14 @@
 # 1. Overview (Informative)
 
-This document defines the architectural framework, performance expectations, and interoperability objectives for **TimeCard** devices; modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to a host system. 
+This document defines the architectural framework, performance expectations, and interoperability objectives for **TimeCard** devices; modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to a host system.
 
 The primary purpose of this specification is to establish a consistent structural and logical framework that accommodates various hardware implementation approaches (e.g., PCIe add-in cards, deeply embedded silicon IP, or external modules) while facilitating broad industry interoperability. This interoperability enables diverse TimeCard implementations to be seamlessly swapped, with minimal to no changes required in the host system, empowering the scalable deployment of precision timing in hyperscale computing, telecommunications, and distributed Artificial Intelligence (AI) infrastructure.
 
-As an introductory and informative chapter, the concepts presented herein provide context for the standard and do not contain normative conformance requirements.
+As an introductory and informative clause, the concepts presented herein provide context for the standard and do not contain normative conformance requirements.
 
 ---
 
-## 1.1 Purpose and Scope
+## 1.1 Scope
 
 The **IEEE P3335 TimeCard Specification** establishes the structural, electrical, software, and performance characteristics of TimeCard-based architectures. It describes how hardware subsystems acquire external time references, maintain temporal stability during reference loss (holdover), and accurately distribute disciplined phase and frequency outputs to computing hosts and downstream networks.
 
@@ -28,21 +28,27 @@ By defining a **standardized timing subsystem interface**, the specification est
 
 ---
 
-## 1.2 Motivation
+## 1.2 Purpose
 
-Modern computing workloads increasingly depend on highly precise and deterministic hardware timing. Modern applications—such as **AI model training clusters, high-frequency financial trading, globally distributed Spanner-style databases, and 5G/6G cellular networks**—frequently require sub-microsecond or nanosecond-class synchronization across thousands of independent nodes.  
+The purpose of this standard is to enable interoperable TimeCard implementations, modular timing subsystem integration, and unambiguous comparison of TimeCard performance claims. It does so by defining common architecture, conformance, interface, control, performance-reporting, environmental, and test-method expectations.
+
+---
+
+## 1.3 Motivation
+
+Modern computing workloads increasingly depend on highly precise and deterministic hardware timing. Modern applications—such as **AI model training clusters, high-frequency financial trading, globally distributed Spanner-style databases, and 5G/6G cellular networks**—frequently require sub-microsecond or nanosecond-class synchronization across thousands of independent nodes.
 
 Historically, achieving this level of timing required bespoke, vendor-specific implementations or tightly coupled architectures that lacked modularity and scalability. The **TimeCard architecture** addresses these historical bottlenecks by introducing:
-- A standardized hardware abstraction layer and signal footprint (e.g., standardized 1PPS, 10 MHz, and Time of Day bounds).  
-- A unified management and telemetry framework supporting diverse transports for configuration and observability.  
-- A common timing distribution mechanism capable of bypassing host operating system latencies using hardware-based timestamping (e.g., PCIe Precision Time Measurement or hardware PTP).  
-- A clear, falsifiable path for cross-vendor conformance certification, grounded in traceable metrology and repeatable test procedures.  
+- A standardized hardware abstraction layer and signal footprint (e.g., standardized 1PPS, 10 MHz, and Time of Day bounds).
+- A unified management and telemetry framework supporting diverse transports for configuration and observability.
+- A common timing distribution mechanism capable of bypassing host operating system latencies using hardware-based timestamping (e.g., PCIe Precision Time Measurement or hardware PTP).
+- A clear, falsifiable path for cross-vendor conformance certification, grounded in traceable metrology and repeatable test procedures.
 
 The ultimate motivation is to foster an open, competitive ecosystem for precision time distribution.
 
 ---
 
-## 1.3 Design Philosophy
+## 1.4 Design Philosophy
 
 The P3335 TimeCard specification is founded on several core engineering principles:
 
@@ -57,7 +63,7 @@ The P3335 TimeCard specification is founded on several core engineering principl
 
 ---
 
-## 1.4 Relationship to Other Standards
+## 1.5 Relationship to Other Standards
 
 This specification aligns with and periodically references multiple established global timing and measurement standards. Key related standards include:
 
@@ -72,7 +78,7 @@ Where applicable, this document references these standards to ensure technical c
 
 ---
 
-## 1.5 Structure of the Specification
+## 1.6 Structure of the Specification
 
 The standard is organized sequentially into the following major clauses:
 
@@ -94,32 +100,32 @@ The standard is organized sequentially into the following major clauses:
 
 ---
 
-## 1.6 Intended Audience
+## 1.7 Intended Audience
 
 This specification is drafted distinctly for:
-- Hardware, software, and systems engineers developing TimeCard-compatible commercial products or reference designs.  
-- Datacenter architects and system integrators designing synchronized infrastructure and planning for scale-out timing topologies.  
-- Network operators and site-reliability engineers managing latency-sensitive distributed environments who require granular telemetry.  
+- Hardware, software, and systems engineers developing TimeCard-compatible commercial products or reference designs.
+- Datacenter architects and system integrators designing synchronized infrastructure and planning for scale-out timing topologies.
+- Network operators and site-reliability engineers managing latency-sensitive distributed environments who require granular telemetry.
 - Scientists and researchers requiring high-fidelity timestamping for metrology and specialized physics experimentation.
 - Test and validation engineers utilize the defined procedures to empirically grade hardware performance and claim conformance.
-- Affiliated standards bodies (e.g., ITU-T or OCP) seeking structural harmonization with modern end-system timing frameworks.  
+- Affiliated standards bodies (e.g., ITU-T or OCP) seeking structural harmonization with modern end-system timing frameworks.
 
 Readers are expected to possess a foundational understanding of frequency control, phase-locked loops, phase noise characteristics, and packet-based synchronization (e.g., PTP, NTP).
 
 ---
 
-## 1.7 Strategic Goals
+## 1.8 Strategic Goals
 
 The widespread adoption of the TimeCard architecture aims to achieve the following outcomes:
-- **Broad vendor-neutral interoperability** among specialized timing payloads and generic host computers, enabling a mature, commercial off-the-shelf (COTS) ecosystem.  
-- **Drastically improved absolute precision** within distributed databases, cellular networks, and distributed AI compute clusters by driving the timescale directly to the hardware bus (e.g., PCIe).  
-- **Lowered integration friction and cost** resulting from strictly defined hardware abstraction interfaces and deterministic holdover behaviors.  
-- **Enhanced operational observability** and traceability to support stringent financial, telecommunications, and governmental regulatory frameworks.  
-- **Consistent metrology evaluations** resulting from standardized, falsifiable performance testing and conformance guidelines.  
+- **Broad vendor-neutral interoperability** among specialized timing payloads and generic host computers, enabling a mature, commercial off-the-shelf (COTS) ecosystem.
+- **Drastically improved absolute precision** within distributed databases, cellular networks, and distributed AI compute clusters by driving the timescale directly to the hardware bus (e.g., PCIe).
+- **Lowered integration friction and cost** resulting from strictly defined hardware abstraction interfaces and deterministic holdover behaviors.
+- **Enhanced operational observability** and traceability to support stringent financial, telecommunications, and governmental regulatory frameworks.
+- **Consistent metrology evaluations** resulting from standardized, falsifiable performance testing and conformance guidelines.
 
 ---
 
-## 1.8 Document Status and Origin
+## 1.9 Document Status and Origin
 
 This architectural framework draws heavily on the pioneering work in the **Open Compute Project (OCP) Time Appliances Project (TAP)**. Moving this architecture into the formal IEEE P3335 standardization process reflects the industry's demand for a rigorously governed, universally recognized timing hardware standard.
 

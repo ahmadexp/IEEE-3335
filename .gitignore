@@ -320,3 +320,15 @@ uv.lock
 .obsidian/
 
 *.backup
+
+# macOS metadata
+.DS_Store
+
+# LaTeX / Pandoc scratch output
+*.aux
+*.log
+*.out
+*.toc
+temp.*
+test.tex
+test_full.tex

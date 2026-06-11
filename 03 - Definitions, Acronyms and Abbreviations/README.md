@@ -1,6 +1,6 @@
 # 3. Definitions, Acronyms, and Abbreviations
 
-This chapter defines the specialized terms, acronyms, and abbreviations utilized throughout the IEEE P3335 specification. 
+This chapter defines the specialized terms, acronyms, and abbreviations utilized throughout the IEEE P3335 specification.
 
 ## 3.1 Definitions
 
@@ -9,6 +9,7 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **Accuracy:** The degree of conformance or closeness of a measured time or frequency value to a defined primary reference (e.g., UTC).
 - **Asymmetry Calibration:** The process of calculating and correcting unequal signal propagation delays in bi-directional timing links.
 - **Control Plane:** The logical communication path dedicated to configuration, telemetry, and operations management rather than active time distribution.
+- **Conformance Statement:** Supplier documentation identifying the IEEE P3335 clauses, optional features, interfaces, environmental limits, and performance declarations for which an implementation claims conformance.
 - **Data Plane:** The logical or physical communication path strictly responsible for carrying phase, frequency, and time signals to or from the host or network.
 - **Data Plane Latency:** The deterministic or variable propagation delay between a time source and its destination hardware.
 - **Deterministic Behavior:** A system characteristic where the timing response under specified operational conditions is highly predictable and repeatable.
@@ -24,6 +25,8 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **Loop Bandwidth:** The effective frequency range over which a disciplining Phase-Locked Loop (PLL) tracks the reference, determining how fast the loop responds to changes.
 - **Lock Time:** The duration required for the subsystem to acquire a reference and assert phase/frequency lock after a cold startup or reference transition.
 - **Management Interface:** The designated control channel (e.g., SMBus, IPMI, REST) used strictly for configuration, diagnostics, and firmware management.
+- **Measurement Point:** The physical connector, logical interface, register, packet timestamp, or other defined boundary at which a performance value is measured or declared.
+- **Optional Feature:** A feature, interface, protocol, environmental profile, or security function that is not required for base conformance but that becomes subject to all applicable mandatory requirements when claimed by an implementation.
 - **Oscilloscope (TIE Mode):** Measurement equipment configured to capture the Time Interval Error (TIE) of repetitive high-frequency signals.
 - **Phase Alignment:** The absolute difference in timing between the corresponding edges of two separate signals; typically measured in nanoseconds or picoseconds.
 - **Power Analyzer:** An instrument deployed to measure precise current draw, power sequencing, and consumption events over time.
@@ -39,6 +42,7 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **Time Jitter:** The short-term variation or instability of a time-domain signal (such as a 1PPS edge) from its ideal position, frequently reported as an RMS or peak-to-peak value.
 - **Traceability:** A documented, unbroken mathematical chain of calibrations linking a local measurement back to recognized primary international standards (e.g., UTC).
 - **Unified Timescale:** A single internal temporal scale actively maintained by the TimeCard, from which all separate outbound interfaces derive coherent, phase-aligned realizations.
+- **Unspecified:** A characteristic intentionally not assigned a universal value by this standard. An unspecified characteristic may still be required to be declared by the supplier for a particular implementation or optional feature.
 
 ---
 
@@ -46,21 +50,28 @@ For the purposes of this document, the following terms and definitions apply. Th
 
 - **1PPS:** One Pulse Per Second
 - **ADEV:** Allan Deviation
+- **API:** Application Programming Interface
 - **ASIC:** Application Specific Integrated Circuit
+- **BC:** Boundary Clock
 - **BMC:** Baseboard Management Controller
+- **CDC:** Communications Device Class
 - **CXL:** Compute Express Link
 - **CSAC:** Chip-Scale Atomic Clock
+- **DCLS:** Direct Current Level Shift
 - **DDS:** Direct Digital Synthesizer
 - **EMC:** Electromagnetic Compatibility
 - **EMI:** Electromagnetic Interference
 - **ESD:** Electrostatic Discharge
 - **FPGA:** Field Programmable Gate Array
 - **GNSS:** Global Navigation Satellite System (e.g., GPS, Galileo, GLONASS)
+- **GM:** Grandmaster
 - **gRPC:** Google Remote Procedure Call
+- **GPS:** Global Positioning System
 - **I2C:** Inter-Integrated Circuit
 - **I3C:** Improved Inter-Integrated Circuit
 - **IPMI:** Intelligent Platform Management Interface
 - **IRIG:** Inter-Range Instrumentation Group
+- **IRNSS:** Indian Regional Navigation Satellite System
 - **MAC:** Media Access Control
 - **MMIO:** Memory-Mapped Input/Output
 - **MTBF:** Mean Time Between Failures
@@ -69,12 +80,15 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **NTP:** Network Time Protocol
 - **OCP TAP:** Open Compute Project Time Appliances Project
 - **OCXO:** Oven-Controlled Crystal Oscillator
+- **OC:** Ordinary Clock
 - **PCIe:** Peripheral Component Interconnect Express
+- **PHC:** PTP Hardware Clock or Physical Hardware Clock
 - **PHY:** Physical Layer
 - **PLL:** Phase-Locked Loop
 - **PN:** Phase Noise
 - **PTM:** Precision Time Measurement
 - **PTP:** Precision Time Protocol
+- **QZSS:** Quasi-Zenith Satellite System
 - **REST:** Representational State Transfer
 - **RoHS:** Restriction of Hazardous Substances
 - **SCPI:** Standard Commands for Programmable Instruments
@@ -82,7 +96,9 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **SMA:** SubMiniature version A (connector)
 - **SMBus:** System Management Bus
 - **SNMP:** Simple Network Management Protocol
+- **SFP:** Small Form-factor Pluggable
 - **SWaP-C:** Size, Weight, Power, and Cost
+- **TC:** Transparent Clock
 - **TAI:** International Atomic Time
 - **TCXO:** Temperature-Compensated Crystal Oscillator
 - **TDEV:** Time Deviation

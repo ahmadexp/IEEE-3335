@@ -1,87 +1,131 @@
-# Performance Metrics (Normative)
+# 6. Performance Specifications (Normative)
 
-This clause defines the performance reporting and characterization requirements for TimeCard implementations. The intent is to enable measurable, transparent, and comparable timing behavior across vendors. Performance metrics shall be reported in vendor documentation. 
+This clause defines the performance reporting and characterization requirements for TimeCard implementations. The standard does not define a single universal numeric performance class for all use cases. Instead, it requires performance claims to be stated using common metrics, defined measurement points, traceable methods, and declared operating conditions.
 
----
+## 6.1 Performance Declaration Model
 
-## 6.1 Overview
+Manufacturers shall publish performance declarations for each conforming TimeCard implementation. Each declared value shall identify:
 
-TimeCard performance must quantify the precision, stability, and accuracy with which the device maintains and delivers time and/or frequency in a context aligned with the performance requirements of the intended application.
+- The metric being reported.
+- The measurement point.
+- The operating mode, such as locked, holdover, free-running, warm-up, failover, or recovery.
+- The reference source or reference timescale.
+- The applicable temperature range, voltage range, airflow or cooling condition, and other environmental conditions.
+- The minimum warm-up time and lock time required before the declaration applies.
+- The observation interval, averaging time, bandwidth, sample count, or statistical confidence basis used.
+- The measurement equipment class and traceability path.
 
-Performance metrics for the oscillator(s) utilized within the TimeCard shall be provided. These shall include frequency accuracy and temperature stability.
+Performance values should be stated as bounded claims rather than typical-only values. Typical values may be provided in addition to bounded claims.
 
-Performance metrics applicable to the characterization of the operation within the applicable use case should be provided. Those metrics should be characterized under both locked (synchronized/syntonized) and holdover operating conditions.
+## 6.2 General Measurement Requirements
 
-Manufacturers may report the following metrics:
-- Frequency stability (ADEV, TDEV)
-- Maximum Time Interval Error (MTIE)
-- Phase noise (PN)
-- Jitter and alignment (PPS and ToD)
-- Accuracy and drift relative to reference
-- Holdover behavior
-- Environmental sensitivity (to temperature, voltage, vibration)
+All measurements used to support conformance claims shall be made with equipment traceable to a recognized national metrology institute or other declared primary reference. Measurement methods shall conform to the applicable definitions in IEEE Std 1139, IEEE Std 1193, ITU-T G.810, or ITU-T G.8260 when those metrics are used.
 
-All measurements shall be made using equipment traceable to the relevant standards, such as UTC (NIST), and shall conform to relevant methodologies, e.g., ITU-T G.810/G.8260.
+The measurement uncertainty, instrument noise floor, measurement bandwidth, averaging configuration, and environmental conditions shall be documented with the reported result. The measurement point shall be identified in enough detail that another laboratory can reproduce the setup.
 
-## 6.2 Benchmarking and Testing Oscillators on the TimeCard
+If the term **jitter** is used, the implementation documentation shall define the exact jitter metric, measurement bandwidth, sample population, and statistical calculation. Time jitter, phase noise, MTIE, TDEV, and ADEV shall not be used interchangeably.
 
-To validate the capabilities of the onboard oscillator(s) within the context of the TimeCard system, comprehensive testing procedures shall be conducted. The presence of the TimeCard within a host system (such as a PCIe slot in a standard server) introduces environmental stressors, including thermal gradients, voltage fluctuations, and vibrations, which must be accounted for during benchmarking.
+## 6.3 Time Accuracy
 
-### 6.2.1 Test Environment and Setup
+Time accuracy declarations shall state the error of a TimeCard output or timestamp relative to a declared reference timescale or source.
 
-Benchmarking shall be performed using industry-standard precision measurement equipment to ensure reproducibility and traceability:
-- **Reference Sources:** An atomic reference standard (e.g., Cesium or Rubidium clock) or a highly stable GNSS-disciplined oscillator (GNSSDO) tracing back to UTC.
-- **Measurement Instruments:** High-resolution Time Interval Counters (TIC), Phase Noise Analyzers, and Oscillators with low intrinsic noise.
-- **Environmental Controls:** Thermal chambers and vibration tables for simulating realistic operation conditions.
+For each time accuracy declaration, the manufacturer shall document:
 
-### 6.2.2 Core Performance Characterization
+- Source of standard time, such as GNSS system time, UTC(k), TAI, PTP grandmaster time, or another declared reference.
+- Measurement point, such as 1PPS output, Time of Day output, PTP egress timestamp, PTM timestamp, or register-read timestamp.
+- Maximum time error or another explicitly defined bounded statistic.
+- Statistical basis, such as maximum observed value, percentile, RMS value, or confidence interval.
+- Static error and dynamic error components when they are separately known.
+- Valid temperature range and environmental profile.
+- Minimum lock time before the declaration applies.
+- Relationship between the declared source and UTC or TAI, if the declared source is not itself UTC or TAI.
 
-The following tests are standard for evaluating the intrinsic performance of the oscillator on the TimeCard:
+If an implementation reports IEEE 1588 clockAccuracy values, the values shall correspond to the measured or declared accuracy range for the applicable operating mode.
 
-1. **Fractional Frequency Stability (ADEV, TDEV):** 
-   - Measured by comparing the TimeCard's oscillator output (e.g., 10 MHz or 1 PPS) against the reference source over various observation intervals ($\tau$). 
-   - Allan Deviation (ADEV) and Time Deviation (TDEV) metrics shall be plotted to characterize short-term, medium-term, and long-term instability (white noise, flicker noise, and random walk).
+## 6.4 Time Stability
 
-2. **Phase Noise Testing:**
-   - Evaluated in the frequency domain using a Phase Noise Analyzer to quantify short-term phase fluctuations.
-   - Typically reported at standard offset frequencies (e.g., 1 Hz, 10 Hz, 100 Hz, 1 kHz, 10 kHz, 100 kHz) from the carrier.
+Time stability declarations shall characterize variation of the TimeCard time output or timestamp stream over a defined observation interval.
 
-3. **Maximum Time Interval Error (MTIE) and Time Variance (TVAR):**
-   - Assesses the peak-to-peak variation in time delay of the oscillator's output relative to an ideal reference over a specified observation window.
-   - Crucial for determining whether the oscillator's wander meets telecom and networking standards (e.g., ITU-T G.8262).
+Manufacturers shall report MTIE for time outputs or timestamp streams for which bounded time-error behavior is claimed. The MTIE declaration shall include observation intervals, measurement point, lock state, environmental conditions, and applicable limit or measured result.
 
-### 6.2.3 Operational and Holdover Benchmarking
+Manufacturers should report TDEV for time outputs or timestamp streams where stochastic time deviation is operationally relevant. TDEV declarations shall include averaging intervals and the method used to compute the result.
 
-The interaction between the synchronization subsystem and the oscillator must be tested under dynamic conditions.
+## 6.5 Frequency Stability and Phase Noise
 
-1. **Lock Acquisition and Tracking:**
-   - Measure the time required to achieve syntonization and synchronization from a cold start and a warm start.
-   - Characterize phase transients and frequency overshoot during the locking phase.
+Frequency stability declarations shall characterize the frequency output or local timing function over one or more averaging intervals.
 
-2. **Holdover Performance:**
-   - **Procedure:** Allow the TimeCard to reach a fully stabilized locked state using a GNSS or PTP reference. Disconnect the reference source to force the system into holdover mode.
-   - **Measurement:** Record the time drift (phase error) accumulation relative to the reference over specific periods (e.g., 1 hour, 4 hours, 24 hours).
-   - The reported holdover class must specify the maximum time error observed over a defined duration and temperature profile.
+Manufacturers shall report frequency accuracy and temperature stability for the local timing function or for each frequency output for which a frequency-performance claim is made.
 
-### 6.2.4 Environmental Stress Testing
+Manufacturers should report ADEV for frequency outputs or oscillator functions where long-term or short-term frequency stability is relevant. ADEV declarations shall include the averaging intervals and measurement point.
 
-Since TimeCards are intended for deployment in standard computing hardware, the oscillators must be benchmarked under simulated data center or edge environments.
+For periodic outputs such as 10 MHz, manufacturers should report phase noise as a function of offset frequency. Phase-noise declarations shall identify carrier frequency, offset-frequency range, measurement bandwidth, instrument configuration, and measurement point.
 
-1. **Thermal Stability Profile:**
-   - Expose the TimeCard to a defined temperature ramp (e.g., -5°C to +55°C depending on chassis requirements).
-   - For high-precision applications, determine the dynamic thermal gradient response (e.g., drift resulting from a 1°C/minute change) and steady-state frequency over temperature (Δf/f vs. ΔT).
+## 6.6 Pulse and Event Timing
 
-2. **Power Supply and Voltage Variation:**
-   - The PCIe bus provides power, but servers can exhibit significant voltage ripple.
-   - Test frequency stability and phase noise under ±5% or ±10% input voltage fluctuations, verifying the effectiveness of onboard Low Dropout Regulators (LDOs) and power-filtering circuitry.
+For pulse outputs such as 1PPS, manufacturers shall document:
 
-3. **Vibration and Airflow:**
-   - Data center chassis fans cause mechanical vibration and rapid, localized temperature shifts due to airflow.
-   - Benchmark the oscillator using a shaker table matching typical server rack vibration profiles (e.g., ETSI EN 300 019).
-   - Measure vibration-induced phase noise and dynamic frequency shifts.
+- On-time edge definition.
+- Output polarity.
+- Pulse width range.
+- Rise and fall time measurement method.
+- RMS time jitter or another explicitly defined short-term timing variation metric.
+- Peak-to-peak or bounded time variation when claimed.
+- Alignment to other providing interfaces of the same TimeCard.
 
-### 6.2.5 PCIe and System Integration Impact
+For event-capture or timestamping inputs, manufacturers shall document the event measurement point, timestamp resolution, granularity, latency, fixed corrections, and known uncertainty contributors.
 
-It is critical to test the oscillator's performance when integrated within a standard PCIe environment, rather than isolated on a test bench:
-- Compare baseline (standalone test bench) oscillator performance to performance while executing heavy PCIe data transfers.
-- Verify that standard clock domains within the server do not induce crosstalk or correlated jitter on the TimeCard's precision timing signals.
+## 6.7 Holdover Performance
+
+Holdover declarations shall characterize accumulated time error after loss of all applicable external synchronization references.
+
+For each holdover declaration, the manufacturer shall document:
+
+- Holdover entry condition and triggering event.
+- Reference source and lock duration before holdover begins.
+- Minimum warm-up and stabilization conditions before holdover begins.
+- Measurement point.
+- Maximum time error or MTIE versus elapsed holdover time.
+- Temperature profile and voltage conditions during holdover.
+- Behavior when the reference is restored.
+
+MTIE as defined by ITU-T G.810 or ITU-T G.8260 shall be used when reporting bounded holdover time error. Other holdover indicators, such as aging rate or estimated drift, may be reported in addition to MTIE.
+
+## 6.8 Dynamic Operation
+
+Manufacturers shall characterize timing behavior during operational transitions that can affect output phase, frequency, or timestamp values. The characterization shall include, where applicable:
+
+- Cold-start and warm-start lock acquisition time.
+- Transition from locked operation to holdover.
+- Transition from holdover to locked operation.
+- Reference failover between two valid sources.
+- Manual time step or frequency steering command.
+- Firmware update or restart behavior if timing service is interrupted or degraded.
+
+For each transition, the manufacturer shall document whether the unified timescale remains continuous, whether an output phase step can occur, and how the condition is reported through the control interface.
+
+## 6.9 Environmental and System-Integration Effects
+
+Performance declarations shall identify the environmental and host-system conditions under which the declared values apply. The following effects shall be characterized when applicable to the declared deployment profile:
+
+- Temperature and thermal-gradient sensitivity.
+- Input-voltage variation and supply noise sensitivity.
+- Vibration sensitivity.
+- Airflow and host thermal loading.
+- Host-bus activity, electromagnetic interference, or crosstalk that can affect timing outputs.
+
+If performance is declared only for a subset of the environmental range specified in Clause 9, that subset shall be explicitly stated.
+
+## 6.10 Performance Documentation Checklist
+
+The performance section of a datasheet or conformance statement shall include the following items when applicable:
+
+| Category | Required reporting content |
+|----------|-----------------------------|
+| Time accuracy | Reference source, measurement point, bounded error, statistic, temperature range, lock time |
+| Time stability | MTIE and applicable TDEV intervals, measurement point, state, environmental profile |
+| Frequency stability | Frequency accuracy, temperature stability, applicable ADEV intervals, measurement point |
+| Phase noise | Carrier frequency, offset-frequency range, measurement bandwidth, phase-noise curve or limits |
+| Pulse timing | Edge definition, pulse width, rise/fall time, time jitter definition, alignment to unified timescale |
+| Holdover | Entry condition, prior lock duration, MTIE/error versus elapsed time, temperature profile |
+| Transitions | Lock acquisition, failover, holdover exit, phase steps, reporting mechanism |
+| Environment | Temperature, voltage, vibration, airflow, and host-integration assumptions |

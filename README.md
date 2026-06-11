@@ -2,33 +2,33 @@
 
 <img width="877" height="458" alt="logo_blue" src="https://github.com/user-attachments/assets/d7a902ab-45db-423e-98c3-9673068b70e5" />
 
-This repository serves as the working document scratchpad for the **IEEE P3335 TimeCard Specification**. It defines the architectural framework, performance expectations, and interoperability objectives for TimeCard devices—modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to host systems.
+This repository contains the working draft source for the **IEEE P3335 TimeCard Specification**. It defines the architectural framework, performance expectations, and interoperability objectives for TimeCard devices--modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to host systems.
 
 ## Project Structure
 
-The text is organized by chapter, with each section having its own dedicated folder. Inside each folder, a `README.md` file serves as the definitive current state of the text for that clause. 
+The text is organized by clause, with each clause having its own dedicated folder. Inside each folder, a `README.md` file serves as the current draft source for that clause.
 
 Other files (such as references, diagrams, or unstructured notes) may exist in these folders, but they are not considered part of the normative or informative text unless explicitly included or referenced within the chapter's respective `README.md` file.
 
-### Chapter Statistics
+### Active Draft Sources
 
-Based on the standalone PDF compilations of the individual Markdown files, the current page counts for each chapter are as follows (assuming a standard 1-inch uniform margin layout):
-
-| Chapter / Clause | LaTeX Compiled Pages |
+| Clause / Annex | Source |
 | :--- | :--- |
-| **01 - Overview** | 4 pages |
-| **02 - Normative References** | 2 pages |
-| **03 - Definitions, Acronyms and Abbreviations** | 3 pages |
-| **04 - Conformance** | 2 pages |
-| **05 - Architecture** | 9 pages |
-| **06 - Performance Specifications** | 2 pages |
-| **07 - Timing Interfaces** | 4 pages |
-| **08 - Control Interfaces** | 5 pages |
-| **09 - Environment** | 5 pages |
-| **10 - Applications and Best Practices** | 4 pages |
-| **Annex A - Metrics** | 5 pages |
-| **Annex B - Test Procedures** | 3 pages |
-| **Annex C - Bibliography** | 2 pages |
+| **1. Overview** | `01 - Overview/README.md` |
+| **2. Normative References** | `02 - Normative References/README.md` |
+| **3. Definitions, Acronyms, and Abbreviations** | `03 - Definitions, Acronyms and Abbreviations/README.md` |
+| **4. Conformance** | `04 - Conformance/README.md` |
+| **5. Architecture** | `05 - Architecture/README.md` |
+| **6. Performance Specifications** | `06 - Performance Specifications/README.md` |
+| **7. Timing Interfaces** | `07 - Timing Interfaces/README.md` |
+| **8. Control Interfaces** | `08 - Control Interfaces/README.md` |
+| **9. Environment** | `09 - Environment/README.md` |
+| **10. Applications and Best Practices** | `10 - Applications and Best Practices/README.md` |
+| **Annex A. Metrics** | `Annex A - Metrics/README.md` |
+| **Annex B. Test Procedures** | `Annex B - Test Procedures/README.md` |
+| **Annex C. Bibliography** | `Annex C - Bibliography/README.md` |
+
+The `Unsorted/` directory is an archival working area for source contributions, extracted presentations, older material, and background notes. It is useful for editorial research but is not automatically included in the compiled draft.
 
 ## Building the Standard
 
@@ -38,7 +38,7 @@ The complete specification can be compiled from all of the individual clause `RE
 You will need to have [Pandoc](https://pandoc.org/) and a LaTeX distribution (such as MacTeX or TeX Live) installed to perform the build. Specifically, the build utilizes the `xelatex` PDF engine to handle Unicode symbols seamlessly.
 
 ### Build Instructions
-A `Makefile` is provided at the root of the repository to automate compiling the document. 
+A `Makefile` is provided at the root of the repository to automate compiling the document.
 
 To generate the concatenated standard book, simply run:
 ```bash
@@ -56,10 +56,6 @@ To remove the generated PDF and clean up the build output:
 make clean
 ```
 
----
+## Publication Readiness
 
-## Editor To-Do List
-- Incorporate material from PAR into existing structure
-- Iterate to create coherence across overlapping clauses
-
-*(New to Markdown? Check out the [basic syntax guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).)*
+See `PUBLICATION_READINESS.md` for the current editorial gap matrix, remaining working-group decisions, and recommended next actions before IEEE SA publication processing.
