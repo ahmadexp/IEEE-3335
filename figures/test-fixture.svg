@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300">
+  <style>
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+    .dut { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 8; }
+    .text { font: 15px sans-serif; fill: #0f172a; }
+    .small { font: 12px sans-serif; fill: #334155; }
+    .arrow { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect x="30" y="40" width="170" height="70" class="box"/>
+  <text x="115" y="72" text-anchor="middle" class="text">Reference Clock</text>
+  <text x="115" y="95" text-anchor="middle" class="small">UTC(k), GNSSDO, atomic</text>
+
+  <rect x="30" y="190" width="170" height="70" class="box"/>
+  <text x="115" y="222" text-anchor="middle" class="text">Host/BMC</text>
+  <text x="115" y="245" text-anchor="middle" class="small">control and logs</text>
+
+  <rect x="330" y="90" width="210" height="120" class="dut"/>
+  <text x="435" y="145" text-anchor="middle" class="text">Device Under Test</text>
+  <text x="435" y="170" text-anchor="middle" class="small">TimeCard</text>
+
+  <rect x="700" y="40" width="170" height="70" class="box"/>
+  <text x="785" y="72" text-anchor="middle" class="text">Counters / TIC</text>
+  <text x="785" y="95" text-anchor="middle" class="small">time interval error</text>
+
+  <rect x="700" y="190" width="170" height="70" class="box"/>
+  <text x="785" y="222" text-anchor="middle" class="text">Analyzer</text>
+  <text x="785" y="245" text-anchor="middle" class="small">ADEV, TDEV, PN, MTIE</text>
+
+  <path d="M200 75 L330 120" class="arrow"/>
+  <path d="M200 225 L330 180" class="arrow"/>
+  <path d="M540 120 L700 75" class="arrow"/>
+  <path d="M540 180 L700 225" class="arrow"/>
+  <text x="245" y="100" class="small">reference input</text>
+  <text x="245" y="210" class="small">control interface</text>
+  <text x="600" y="100" class="small">1PPS / ToD</text>
+  <text x="600" y="210" class="small">10 MHz / logs</text>
+</svg>

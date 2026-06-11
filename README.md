@@ -59,3 +59,10 @@ make clean
 ## Publication Readiness
 
 See `PUBLICATION_READINESS.md` for the current editorial gap matrix, remaining working-group decisions, and recommended next actions before IEEE SA publication processing.
+
+Supporting readiness artifacts:
+
+- `references/P3335_PAR_SCOPE_PURPOSE.md` records the public PAR scope and purpose trace used for Clause 1.
+- `references/NORMATIVE_REFERENCE_AUDIT.md` records the current Clause 2 reference audit.
+- `figures/` contains source-controlled figure sources and rendered assets used by the draft.
+- `REQUIREMENTS_INDEX.md` is generated from normative clauses with `python3 scripts/requirements_index.py`.

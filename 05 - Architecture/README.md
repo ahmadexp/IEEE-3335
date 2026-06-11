@@ -4,6 +4,8 @@ This clause defines the architectural requirements for a TimeCard. The architect
 
 The architecture separates timing data-plane functions from management and control functions. Timing data-plane functions receive, generate, maintain, timestamp, and provide time, phase, and frequency. Management and control functions configure, monitor, secure, and report the state of those timing functions.
 
+![Figure 5-1 - TimeCard context within a host system](figures/rendered/architecture-context.pdf)
+
 ## 5.1 Architectural Overview
 
 A TimeCard is a timing subsystem that provides time, phase, frequency, or a combination thereof to a host system or downstream consumer. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a traceable timing service.
@@ -77,6 +79,8 @@ At least one control interface shall be implemented. A control interface may be 
 ## 5.4 Unified Timescale
 
 A TimeCard shall generate one unified timescale for each conforming TimeCard instance. All providing interfaces of that instance shall publish, encode, or derive from that unified timescale.
+
+![Figure 5-2 - Unified timescale flow](figures/rendered/unified-timescale-flow.pdf)
 
 The implementation shall document:
 

@@ -15,6 +15,8 @@ Comprehensive validation of a TimeCard architecture encompasses three primary te
 
 To satisfy traceability requirements, it is strongly recommended that all tests be conducted utilizing equipment recently calibrated against recognized national metrology standards.
 
+![Figure B-1 - Representative TimeCard test fixture](figures/rendered/test-fixture.pdf)
+
 ---
 
 ## B.2 General Test Conditions
@@ -40,14 +42,40 @@ Instrumentation utilized in performance validation should possess a noise floor 
 
 Functional tests validate the logical operations and state transitions of the TimeCard without necessarily grading sub-nanosecond physical precision.
 
+Each functional test should document:
+
+- **Applicability:** The conformance profile, optional feature, or interface under test.
+- **Entrance criteria:** DUT configuration, firmware revision, reference state, warm-up condition, and test equipment state required before the test begins.
+- **Method:** Steps performed by the test operator or automation.
+- **Pass/fail basis:** Observable result required to pass the test.
+- **Evidence:** Logs, screenshots, instrument captures, register dumps, or other artifacts retained in the test report.
+
 ### B.3.1 Receive (Inbound) Interface Tests
-1. **Reference Detection:** Sequentially apply valid external references (e.g., GNSS antenna input, PTP network feed, external 1PPS) and verify via the management telemetry that the TimeCard correctly recognizes the presence of the physical signal.
-2. **Lock Acquisition:** Monitor the management plane to record the time taken for the TimeCard's internal Phase-Locked Loop (PLL) or disciplining mechanism to transition from "Free-Run" to "Locked" status. Compare this to the vendor's specified acquisition time limit.
-3. **Failover Response:** While actively locked to a primary reference, abruptly disconnect the primary input. Verify that the hardware deterministically enters the "Holdover" state or smoothly transitions to a secondary reference without causing a systemic reboot or crashing the host driver.
+
+| Test | Applicability | Method | Pass/fail basis |
+|------|---------------|--------|-----------------|
+| Reference detection | Each implemented receive interface | Sequentially apply valid external references (e.g., GNSS antenna input, PTP network feed, external 1PPS) and observe control telemetry. | The DUT reports the physical signal present, identifies the source type, and does not report a false loss-of-signal alarm. |
+| Lock acquisition | Each reference source used for locked operation | Apply the reference after warm-up and record transition from free-running or holdover to locked state. | The DUT reaches locked state within the declared acquisition time and reports the active source. |
+| Failover response | Implementations with multiple receive references | Disconnect or degrade the active primary reference while a secondary reference is valid. | The DUT enters holdover or switches to the secondary source according to the declared policy and does not reboot or lose control-interface access. |
+| Holdover entry | Implementations claiming holdover | Remove all valid external references. | The DUT reports holdover state and exposes elapsed holdover time or equivalent telemetry. |
 
 ### B.3.2 Providing (Outbound) Interface Tests
-1. **PPS Amplitude and Polarity:** Utilizing an oscilloscope bridged with a $50\,\Omega$ terminator, capture the 1PPS output edge. Verify the correct edge polarity (rising vs. falling), the slew rate (rise time), and the high/low voltage thresholds against standard CMOS/LVTTL specifications.
-2. **PCIe PTM Validation:** If supported, execute host-side software to trigger Precision Time Measurement (PTM) dialogs across the PCIe bus. Correlate the returned PTM hardware timestamps against the physical 1PPS output to verify systemic, in-band latency and offset behavior.
+
+| Test | Applicability | Method | Pass/fail basis |
+|------|---------------|--------|-----------------|
+| 1PPS amplitude and polarity | Physical Timing Output profile | Capture the 1PPS output edge using an oscilloscope with the declared termination. | On-time edge, pulse width, rise time, and voltage levels match the declaration and 7.3.2. |
+| 1PPS alignment | Physical Timing Output profile with multiple providing interfaces | Compare each providing interface to the 1PPS output at the declared measurement points. | Alignment is within the declared bound and within the profile limit when one applies. |
+| PCIe PTM validation | PCIe Host Mapping profile with PTM | Execute host-side PTM transactions and correlate returned timestamps against the declared unified-timescale reference. | Returned timestamps use the declared epoch/timescale and remain within declared latency and correction bounds. |
+| Time of Day output | ToD output implementations | Decode the ToD stream while comparing against the selected reference source. | ToD values are syntactically valid, monotonically advance according to the declared timescale, and align to the declared output edge or message marker. |
+
+### B.3.3 Control Interface Tests
+
+| Test | Applicability | Method | Pass/fail basis |
+|------|---------------|--------|-----------------|
+| Baseline object readout | All conforming implementations | Read the required objects listed in 8.10.2 through at least one control interface. | Each object returns a valid value or a documented unsupported/unavailable value. |
+| Reserved value handling | All implementations exposing enumerations or bitmaps | Attempt to write a reserved value to writable fields in a non-destructive test configuration. | The DUT rejects the reserved value or ignores it according to documented behavior; reserved read values are ignored by the client. |
+| Event logging | Implementations with event logs | Cause a non-destructive event such as reference loss or lock acquisition. | Event record includes timestamp, severity, and source identifier. |
+| Security access control | Managed or Secure Infrastructure profiles | Attempt read-only and configuration operations using credentials with different privilege levels. | Operations are allowed or denied according to the claimed security profile. |
 
 ---
 

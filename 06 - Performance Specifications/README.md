@@ -1,6 +1,6 @@
 # 6. Performance Specifications (Normative)
 
-This clause defines the performance reporting and characterization requirements for TimeCard implementations. The standard does not define a single universal numeric performance class for all use cases. Instead, it requires performance claims to be stated using common metrics, defined measurement points, traceable methods, and declared operating conditions.
+This clause defines the performance reporting and characterization requirements for TimeCard implementations. Base conformance does not define a single universal numeric performance class for all use cases. Instead, it requires performance claims to be stated using common metrics, defined measurement points, traceable methods, and declared operating conditions.
 
 ## 6.1 Performance Declaration Model
 
@@ -17,7 +17,13 @@ Manufacturers shall publish performance declarations for each conforming TimeCar
 
 Performance values should be stated as bounded claims rather than typical-only values. Typical values may be provided in addition to bounded claims.
 
-## 6.2 General Measurement Requirements
+## 6.2 Performance Classes
+
+This draft uses a reporting-only base performance model. A TimeCard conforms to the base performance requirements when it reports the applicable metrics in this clause using the declared measurement methods and operating conditions.
+
+Named numeric performance classes are not defined by this draft. A manufacturer, procurement profile, or application profile may define additional numeric classes. If an implementation claims such a class, the class shall identify all applicable metric limits, measurement points, operating states, and environmental conditions.
+
+## 6.3 General Measurement Requirements
 
 All measurements used to support conformance claims shall be made with equipment traceable to a recognized national metrology institute or other declared primary reference. Measurement methods shall conform to the applicable definitions in IEEE Std 1139, IEEE Std 1193, ITU-T G.810, or ITU-T G.8260 when those metrics are used.
 
@@ -25,7 +31,7 @@ The measurement uncertainty, instrument noise floor, measurement bandwidth, aver
 
 If the term **jitter** is used, the implementation documentation shall define the exact jitter metric, measurement bandwidth, sample population, and statistical calculation. Time jitter, phase noise, MTIE, TDEV, and ADEV shall not be used interchangeably.
 
-## 6.3 Time Accuracy
+## 6.4 Time Accuracy
 
 Time accuracy declarations shall state the error of a TimeCard output or timestamp relative to a declared reference timescale or source.
 
@@ -42,7 +48,7 @@ For each time accuracy declaration, the manufacturer shall document:
 
 If an implementation reports IEEE 1588 clockAccuracy values, the values shall correspond to the measured or declared accuracy range for the applicable operating mode.
 
-## 6.4 Time Stability
+## 6.5 Time Stability
 
 Time stability declarations shall characterize variation of the TimeCard time output or timestamp stream over a defined observation interval.
 
@@ -50,7 +56,7 @@ Manufacturers shall report MTIE for time outputs or timestamp streams for which 
 
 Manufacturers should report TDEV for time outputs or timestamp streams where stochastic time deviation is operationally relevant. TDEV declarations shall include averaging intervals and the method used to compute the result.
 
-## 6.5 Frequency Stability and Phase Noise
+## 6.6 Frequency Stability and Phase Noise
 
 Frequency stability declarations shall characterize the frequency output or local timing function over one or more averaging intervals.
 
@@ -60,7 +66,7 @@ Manufacturers should report ADEV for frequency outputs or oscillator functions w
 
 For periodic outputs such as 10 MHz, manufacturers should report phase noise as a function of offset frequency. Phase-noise declarations shall identify carrier frequency, offset-frequency range, measurement bandwidth, instrument configuration, and measurement point.
 
-## 6.6 Pulse and Event Timing
+## 6.7 Pulse and Event Timing
 
 For pulse outputs such as 1PPS, manufacturers shall document:
 
@@ -74,7 +80,7 @@ For pulse outputs such as 1PPS, manufacturers shall document:
 
 For event-capture or timestamping inputs, manufacturers shall document the event measurement point, timestamp resolution, granularity, latency, fixed corrections, and known uncertainty contributors.
 
-## 6.7 Holdover Performance
+## 6.8 Holdover Performance
 
 Holdover declarations shall characterize accumulated time error after loss of all applicable external synchronization references.
 
@@ -90,7 +96,7 @@ For each holdover declaration, the manufacturer shall document:
 
 MTIE as defined by ITU-T G.810 or ITU-T G.8260 shall be used when reporting bounded holdover time error. Other holdover indicators, such as aging rate or estimated drift, may be reported in addition to MTIE.
 
-## 6.8 Dynamic Operation
+## 6.9 Dynamic Operation
 
 Manufacturers shall characterize timing behavior during operational transitions that can affect output phase, frequency, or timestamp values. The characterization shall include, where applicable:
 
@@ -103,7 +109,7 @@ Manufacturers shall characterize timing behavior during operational transitions 
 
 For each transition, the manufacturer shall document whether the unified timescale remains continuous, whether an output phase step can occur, and how the condition is reported through the control interface.
 
-## 6.9 Environmental and System-Integration Effects
+## 6.10 Environmental and System-Integration Effects
 
 Performance declarations shall identify the environmental and host-system conditions under which the declared values apply. The following effects shall be characterized when applicable to the declared deployment profile:
 
@@ -115,7 +121,7 @@ Performance declarations shall identify the environmental and host-system condit
 
 If performance is declared only for a subset of the environmental range specified in Clause 9, that subset shall be explicitly stated.
 
-## 6.10 Performance Documentation Checklist
+## 6.11 Performance Documentation Checklist
 
 The performance section of a datasheet or conformance statement shall include the following items when applicable:
 

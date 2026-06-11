@@ -1,4 +1,9 @@
 OUTPUT = IEEE3335.pdf
+METADATA = metadata.yaml
+LATEX_SCRATCH = *.aux *.log *.out *.toc
+FIGURE_CONVERTER ?= $(shell command -v magick 2>/dev/null || command -v convert 2>/dev/null || true)
+FIGURE_SVGS := $(wildcard figures/*.svg)
+FIGURE_PDFS := $(patsubst figures/%.svg,figures/rendered/%.pdf,$(FIGURE_SVGS))
 
 # Try to find xelatex in PATH, then in the default macOS MacTeX install location, fallback to pdflatex
 PDF_ENGINE ?= $(shell command -v xelatex 2>/dev/null || (test -x /Library/TeX/texbin/xelatex && echo "/Library/TeX/texbin/xelatex") || echo "pdflatex")
@@ -7,7 +12,15 @@ PDF_ENGINE ?= $(shell command -v xelatex 2>/dev/null || (test -x /Library/TeX/te
 
 all: $(OUTPUT)
 
-$(OUTPUT):
+figures/rendered/%.pdf: figures/%.svg
+	@if [ -z "$(FIGURE_CONVERTER)" ]; then \
+		echo "No SVG-to-PDF converter found. Install ImageMagick or commit rendered figure PDFs."; \
+		exit 1; \
+	fi
+	@mkdir -p figures/rendered
+	@$(FIGURE_CONVERTER) "$<" "$@"
+
+$(OUTPUT): $(METADATA) $(FIGURE_PDFS)
 	@echo "Gathering chapter files to build $(OUTPUT)..."
 	@bash -c ' \
 		FILES=() ; \
@@ -19,14 +32,13 @@ $(OUTPUT):
 		echo "Using PDF Engine: $(PDF_ENGINE)" ; \
 		pandoc "$${FILES[@]}" -o $(OUTPUT) \
 			--toc \
+			--toc-depth=3 \
+			--metadata-file=$(METADATA) \
 			--pdf-engine=$(PDF_ENGINE) \
-			-V geometry:margin=1in \
-			-V title="IEEE P3335 Standard" \
-			-V author="IEEE-3335 Working Group" \
+			-V geometry:margin=1in ; \
+		rm -f $(LATEX_SCRATCH) \
 	'
 
 clean:
-	rm -f $(OUTPUT)
-
-
+	rm -f $(OUTPUT) $(LATEX_SCRATCH)
 

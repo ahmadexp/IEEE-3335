@@ -58,7 +58,25 @@ Typical providing interfaces include, but are not limited to:
 - **Synchronous Clocks:** Discrete phase-aligned clocks for driving localized FPGA or SoC logic domains.
 - **IRIG Time Codes:** AM or DCLS time-code outputs. If implemented, IRIG time-code outputs shall conform to IRIG Standard 200-16 for the claimed format.
 
-### 7.3.2 Electrical and Protocol Standards
+### 7.3.2 One Pulse Per Second (1PPS) Providing Profile
+
+An implementation claiming the Physical Timing Output conformance profile shall provide at least one 1PPS output.
+
+The 1PPS output shall meet the following requirements at the declared measurement point:
+
+- The connector shall be an SMA female connector or a mechanically retained connector supplied with an adapter to SMA female.
+- The output shall be capable of driving a 50 ohm load.
+- The rising edge shall be the on-time mark.
+- The pulse width shall be at least 1 us and not greater than 500 ms.
+- The 10% to 90% rise time of the on-time edge shall be less than 10 ns.
+- The low output level and high output level into the declared load shall be documented.
+- RMS time jitter, peak-to-peak time variation or bounded time variation, and measurement bandwidth shall be documented as required by Clause 6.
+
+The manufacturer shall state the maximum time alignment error between the 1PPS output and each other providing interface implemented by the same TimeCard. For physical timing outputs that claim alignment to the 1PPS output, the declared maximum alignment error shall be less than 100 ns unless a different application profile is explicitly claimed.
+
+If a 1PPS receive interface is implemented, the manufacturer shall document input impedance, valid low/high voltage range, pulse width range, edge definition, rise-time tolerance, and loss-of-signal detection thresholds.
+
+### 7.3.3 Electrical and Protocol Standards
 All physical outputs shall comply with the following baseline signaling levels unless otherwise documented for specialized physical environments:
 - **PPS and frequency outputs:** 3.3 V CMOS or LVTTL utilizing 50 Ω source impedance.
 - **ToD / Serial outputs:** RS-232, RS-422, or RS-485 compliant signaling levels.
@@ -69,12 +87,12 @@ For each implemented providing interface, the manufacturer shall document the si
 
 If a PPS or frequency output claims compliance with ITU-T G.703 synchronous signaling, that output shall conform to the applicable ITU-T G.703 requirements at the declared measurement point.
 
-### 7.3.3 Synchronization Accuracy
+### 7.3.4 Synchronization Accuracy
 All output signals shall align coherently with the single unified timescale generated natively by the TimeCard, as described in Clause 5.
 
 The manufacturer shall declare the maximum alignment error between each providing interface and the unified timescale. If an implementation claims alignment among multiple providing interfaces, the manufacturer shall declare the measurement points, bounded alignment error, statistic used, and operating conditions. Output clocks should exhibit deterministic phase behavior and bounded frequency deviation during an internal source failover event.
 
-### 7.3.4 Hardware Timestamping
+### 7.3.5 Hardware Timestamping
 Providing interfaces shall support hardware-assisted timestamping where technically feasible within the protocol, including:
 - Direct physical PPS edge capture.
 - In-band PCIe PTM transaction stamping.

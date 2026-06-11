@@ -42,34 +42,35 @@ The pass used the following IEEE SA guidance as the editorial baseline:
 
 ## Gap Closure Action Items
 
-The following action items convert the remaining gaps into assignable work. Owners are intentionally listed as `TBD` until the working group assigns names.
+The following action items convert the remaining gaps into assignable work. Owners are intentionally listed as `TBD` until the working group assigns names. The status column records the draft resolution attempted in this pass.
 
-| ID | Priority | Owner | Action item | Deliverable | Acceptance criteria | Dependencies |
-|----|----------|-------|-------------|-------------|---------------------|--------------|
-| AI-001 | P0 | TBD | Obtain the approved PAR scope and purpose text. | PAR excerpt checked into `references/` or captured in a working-group minutes note. | Source, approval date, and exact text are traceable. | None |
-| AI-002 | P0 | TBD | Align Clause 1 with the approved PAR. | Patch to `01 - Overview/README.md`. | Scope and purpose match the PAR; any broader explanatory text is clearly informative and does not expand scope. | AI-001 |
-| AI-003 | P0 | TBD | Decide the base conformance status of 1PPS. | Working-group decision recorded as: base requirement, named profile requirement, or optional feature. | Clause 4, Clause 5, Clause 6, and Clause 7 all use the same 1PPS conformance model. | None |
-| AI-004 | P0 | TBD | Draft the 1PPS requirement package after the decision. | Patch to Clauses 4, 6, and 7. | Requirement includes connector, edge definition, electrical limits, pulse width/rise time, measurement point, alignment reporting, and test reference. | AI-003 |
-| AI-005 | P0 | TBD | Define the baseline host interface mapping. | New normative subclause or annex for the baseline host mapping, likely PCIe/PTM. | Includes discovery, enumeration, register/API model, timestamp format, units, endianness, error handling, interrupt/polling behavior, and correction terms. | AI-003 if 1PPS alignment is used as a cross-check |
-| AI-006 | P0 | TBD | Promote the control information model from source material. | Patch to Clause 8 or a new normative annex. | Defines object/register naming, data types, access mode, reserved values, units, versioning, and at least source, state, offset, alarm, firmware, and traceability objects. | AI-005 for host-mapping alignment |
-| AI-007 | P0 | TBD | Audit every Clause 2 normative reference. | Reference audit table. | Each Clause 2 entry is cited by normative text, has a clear role, is available, and has no known commercial-term issue; unused entries are demoted to Annex C. | AI-004, AI-005, AI-006 may add citations |
-| AI-008 | P1 | TBD | Decide performance class strategy. | Working-group decision recorded as no numeric minima, one baseline minimum, or optional named classes. | Clause 4 and Clause 6 can state exactly how a product claims performance conformance. | None |
-| AI-009 | P1 | TBD | Draft performance profiles or reporting-only confirmation. | Patch to Clause 6 and, if needed, a new normative table. | Time accuracy, time stability, frequency stability, phase noise, pulse timing, holdover, and environment each have clear reporting or class requirements. | AI-008 |
-| AI-010 | P1 | TBD | Decide status of Annex B test procedures. | Working-group decision recorded as informative, normative, or externally referenced conformance-test suite. | Clause 4 test-evidence language and Annex B title/status are consistent. | AI-008, AI-009 |
-| AI-011 | P1 | TBD | Convert test coverage into pass/fail procedures where required. | Patch to Annex B or a new normative test annex. | Each test has applicability, entrance criteria, setup, method, measurement point, and pass/fail criteria. | AI-010 |
-| AI-012 | P1 | TBD | Create source-controlled figures. | Figure source files and rendered assets. | Includes architecture context, unified timescale/time-flow, and representative test fixture; all figures have captions and are referenced in text. | AI-005 and AI-011 for accurate diagrams |
-| AI-013 | P1 | TBD | Add requirement IDs or a generated requirements index. | Requirement ID convention plus index artifact or script. | Every `shall` in normative clauses has a stable identifier or can be traced by generated clause/line output. | Major normative text should be stable first |
-| AI-014 | P1 | TBD | Define security profiles. | Patch to Clause 4, Clause 8, and possibly Clause 10. | Profiles distinguish baseline, managed, and secure infrastructure behavior; optional security claims have clear mandatory requirements. | AI-006 |
-| AI-015 | P2 | TBD | Improve the publication build package. | Makefile/template updates and draft front-matter placeholders. | `make` produces a review PDF with correct metadata, front matter placeholders, clause order, and no scratch files left in the root. | None |
-| AI-016 | P2 | TBD | Triage `Unsorted/` without losing provenance. | Directory reorganization proposal and migration patch. | Contributions, archives, extracted sources, and generated media are separated; original filenames/provenance remain recoverable. | None |
+| ID | Priority | Status | Owner | Action item | Deliverable | Acceptance criteria | Dependencies |
+|----|----------|--------|-------|-------------|-------------|---------------------|--------------|
+| AI-001 | P0 | Closed | TBD | Obtain the approved PAR scope and purpose text. | `references/P3335_PAR_SCOPE_PURPOSE.md`. | Source, approval date, and exact text are traceable. | None |
+| AI-002 | P0 | Closed | TBD | Align Clause 1 with the approved PAR. | Patch to `01 - Overview/README.md`. | Scope and purpose are aligned to public PAR text; broader explanatory text is informative. | AI-001 |
+| AI-003 | P0 | Draft-resolved; WG ratification needed | TBD | Decide the base conformance status of 1PPS. | Clause 4 conformance profiles. | 1PPS is required for Physical Timing Output profile; logical-only Base TimeCard conformance remains possible without physical 1PPS. | None |
+| AI-004 | P0 | Draft-resolved; WG ratification needed | TBD | Draft the 1PPS requirement package after the decision. | Patch to Clause 7. | Requirement includes connector, edge definition, load, pulse width, rise time, measurement point, alignment reporting, and test reference. | AI-003 |
+| AI-005 | P0 | Draft-resolved | TBD | Define the baseline host interface mapping. | Clause 8.9. | Includes discovery, enumeration, register/API model, timestamp format, units, endianness, error handling, interrupt/polling behavior, and correction terms. | AI-003 if 1PPS alignment is used as a cross-check |
+| AI-006 | P0 | Draft-resolved | TBD | Promote the control information model from source material. | Clause 8.10. | Defines object/register naming, data types, access mode, reserved values, units, versioning, and source, state, offset, alarm, firmware, GNSS, and traceability objects. | AI-005 for host-mapping alignment |
+| AI-007 | P0 | Initial audit complete; legal/editorial review pending | TBD | Audit every Clause 2 normative reference. | `references/NORMATIVE_REFERENCE_AUDIT.md`. | Each Clause 2 entry is cited by normative text and has a clear role; final commercial-terms review remains. | AI-004, AI-005, AI-006 may add citations |
+| AI-008 | P1 | Draft-resolved; WG ratification needed | TBD | Decide performance class strategy. | Clause 4.6 and Clause 6.2. | Base conformance is reporting-only; named numeric performance classes may be externally or vendor-defined but are not universal minima in this draft. | None |
+| AI-009 | P1 | Closed | TBD | Draft performance profiles or reporting-only confirmation. | Patch to Clause 6. | Time accuracy, stability, frequency, phase noise, pulse timing, holdover, and environment have clear reporting requirements. | AI-008 |
+| AI-010 | P1 | Draft-resolved; WG ratification needed | TBD | Decide status of Annex B test procedures. | Clause 4.8 and Annex B title/status. | Annex B remains informative and is not a normative conformance-test suite in this draft. | AI-008, AI-009 |
+| AI-011 | P1 | Draft-resolved | TBD | Convert test coverage into pass/fail procedures where required. | Patch to Annex B. | Functional/control tests now include applicability, method, and pass/fail basis; performance tests retain metric-based evaluation. | AI-010 |
+| AI-012 | P1 | Closed | TBD | Create source-controlled figures. | `figures/*.svg`, `figures/rendered/*.pdf`, Clause 5 and Annex B references. | Includes architecture context, unified timescale/time-flow, and representative test fixture; all figures have captions and are referenced in text. | AI-005 and AI-011 for accurate diagrams |
+| AI-013 | P1 | Closed | TBD | Add requirement IDs or a generated requirements index. | `scripts/requirements_index.py` and `REQUIREMENTS_INDEX.md`. | Every current `shall` in normative clauses is indexed with a generated identifier, source, line, and text. | Major normative text should be stable first |
+| AI-014 | P1 | Draft-resolved | TBD | Define security profiles. | Clause 4.4 and Clause 8.11. | Profiles distinguish baseline, managed, and secure infrastructure behavior; optional security claims have clear mandatory requirements. | AI-006 |
+| AI-015 | P2 | Closed | TBD | Improve the publication build package. | `metadata.yaml` and Makefile updates. | `make` uses metadata, builds a deeper TOC, and removes LaTeX scratch files from the root. | None |
+| AI-016 | P2 | Partially resolved | TBD | Triage `Unsorted/` without losing provenance. | `Unsorted/README.md`. | Triage classes and migration rules are documented; bulk file moves deferred to a separate provenance-preserving patch. | None |
 
 ## Recommended Sequencing
 
-1. Close decision items first: AI-001, AI-003, AI-008, and AI-010.
-2. Draft the interoperability core: AI-004, AI-005, AI-006, and AI-014.
-3. Normalize references and tests: AI-007, AI-009, and AI-011.
-4. Add publication polish and traceability: AI-012, AI-013, AI-015, and AI-016.
+1. Ratify or amend draft-resolved decisions: AI-003, AI-004, AI-008, and AI-010.
+2. Review the new interoperability core: AI-005, AI-006, and AI-014.
+3. Complete final editorial/legal reference review for AI-007.
+4. Regenerate `REQUIREMENTS_INDEX.md` after each normative edit using `python3 scripts/requirements_index.py`.
 5. Rebuild `IEEE3335.pdf`, run the editorial checks below, and review the generated PDF before ballot-facing circulation.
+6. Perform the `Unsorted/` migration in a separate provenance-preserving patch after approving the triage plan.
 
 ## Editorial Checks to Repeat Before Ballot
 

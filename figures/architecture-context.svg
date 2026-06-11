@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+  <style>
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+    .host { fill: #eef6ff; stroke: #1d4ed8; stroke-width: 2; rx: 8; }
+    .tc { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 8; }
+    .text { font: 16px sans-serif; fill: #0f172a; }
+    .small { font: 13px sans-serif; fill: #334155; }
+    .arrow { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect x="30" y="80" width="170" height="170" class="box"/>
+  <text x="115" y="125" text-anchor="middle" class="text">Time Sources</text>
+  <text x="115" y="155" text-anchor="middle" class="small">GNSS, PTP, PPS</text>
+  <text x="115" y="178" text-anchor="middle" class="small">10 MHz, IRIG, NTP</text>
+
+  <rect x="285" y="35" width="310" height="290" class="tc"/>
+  <text x="440" y="70" text-anchor="middle" class="text">TimeCard</text>
+  <rect x="315" y="95" width="250" height="50" class="box"/>
+  <text x="440" y="125" text-anchor="middle" class="small">Receive Interfaces</text>
+  <rect x="315" y="160" width="250" height="50" class="box"/>
+  <text x="440" y="190" text-anchor="middle" class="small">Unified Timescale</text>
+  <rect x="315" y="225" width="250" height="50" class="box"/>
+  <text x="440" y="255" text-anchor="middle" class="small">Providing and Control Interfaces</text>
+
+  <rect x="690" y="80" width="180" height="170" class="host"/>
+  <text x="780" y="125" text-anchor="middle" class="text">Host System</text>
+  <text x="780" y="155" text-anchor="middle" class="small">CPU, OS, BMC</text>
+  <text x="780" y="178" text-anchor="middle" class="small">Applications</text>
+
+  <path d="M200 165 L285 120" class="arrow"/>
+  <path d="M595 250 L690 165" class="arrow"/>
+  <path d="M690 205 L595 270" class="arrow"/>
+  <text x="240" y="115" class="small">references</text>
+  <text x="615" y="232" class="small">time, phase, frequency</text>
+  <text x="615" y="292" class="small">control, telemetry</text>
+</svg>

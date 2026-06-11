@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260">
+  <style>
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+    .main { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 8; }
+    .text { font: 15px sans-serif; fill: #0f172a; }
+    .small { font: 12px sans-serif; fill: #334155; }
+    .arrow { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="90" width="120" height="70" class="box"/>
+  <text x="80" y="122" text-anchor="middle" class="text">Ingress</text>
+  <text x="80" y="145" text-anchor="middle" class="small">references</text>
+
+  <rect x="180" y="90" width="135" height="70" class="box"/>
+  <text x="247" y="122" text-anchor="middle" class="text">Selection</text>
+  <text x="247" y="145" text-anchor="middle" class="small">health, priority</text>
+
+  <rect x="355" y="90" width="135" height="70" class="box"/>
+  <text x="422" y="122" text-anchor="middle" class="text">Discipline</text>
+  <text x="422" y="145" text-anchor="middle" class="small">PLL or equivalent</text>
+
+  <rect x="530" y="70" width="150" height="110" class="main"/>
+  <text x="605" y="114" text-anchor="middle" class="text">Unified</text>
+  <text x="605" y="137" text-anchor="middle" class="text">Timescale</text>
+  <text x="605" y="160" text-anchor="middle" class="small">single source of truth</text>
+
+  <rect x="720" y="90" width="150" height="70" class="box"/>
+  <text x="795" y="122" text-anchor="middle" class="text">Egress</text>
+  <text x="795" y="145" text-anchor="middle" class="small">PPS, ToD, PTM, PTP</text>
+
+  <path d="M140 125 L180 125" class="arrow"/>
+  <path d="M315 125 L355 125" class="arrow"/>
+  <path d="M490 125 L530 125" class="arrow"/>
+  <path d="M680 125 L720 125" class="arrow"/>
+
+  <path d="M430 165 C430 225, 790 225, 790 165" class="arrow"/>
+  <text x="610" y="222" text-anchor="middle" class="small">holdover continues from local timing function when references are unavailable</text>
+</svg>

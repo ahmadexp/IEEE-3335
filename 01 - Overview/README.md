@@ -2,7 +2,7 @@
 
 This document defines the architectural framework, performance expectations, and interoperability objectives for **TimeCard** devices; modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to a host system.
 
-The primary purpose of this specification is to establish a consistent structural and logical framework that accommodates various hardware implementation approaches (e.g., PCIe add-in cards, deeply embedded silicon IP, or external modules) while facilitating broad industry interoperability. This interoperability enables diverse TimeCard implementations to be seamlessly swapped, with minimal to no changes required in the host system, empowering the scalable deployment of precision timing in hyperscale computing, telecommunications, and distributed Artificial Intelligence (AI) infrastructure.
+The primary purpose of this specification is to establish a consistent structural and logical framework that accommodates various hardware implementation approaches (e.g., PCIe add-in cards, deeply embedded silicon IP, or external modules) while facilitating broad industry interoperability. This interoperability enables diverse TimeCard implementations to be compared, integrated, and replaced with minimal changes required in the host system.
 
 As an introductory and informative clause, the concepts presented herein provide context for the standard and do not contain normative conformance requirements.
 
@@ -10,9 +10,17 @@ As an introductory and informative clause, the concepts presented herein provide
 
 ## 1.1 Scope
 
-The **IEEE P3335 TimeCard Specification** establishes the structural, electrical, software, and performance characteristics of TimeCard-based architectures. It describes how hardware subsystems acquire external time references, maintain temporal stability during reference loss (holdover), and accurately distribute disciplined phase and frequency outputs to computing hosts and downstream networks.
+This standard defines the generic architecture and interfaces of a TimeCard system, which constitutes a traceable source of time-of-day to heterogeneous systems that distribute and/or use that time. It also defines figures of merit that characterize the relevant performance of a TimeCard.
 
-The scope of this standardization effort encompasses:
+A TimeCard provides traceable time-of-day for systems directly attached to it, as well as networked distributed systems. Such systems include, but are not limited to, servers hosting the TimeCard, and servers synchronized with the TimeCard using protocols such as Precision Time Protocol (PTP) or Network Time Protocol (NTP).
+
+This standard defines the basic building blocks of the TimeCard and their interfaces to allow modularization. The main building blocks include time source, local oscillator, and time processor.
+
+This standard also defines interfaces between the TimeCard and other systems. These interfaces include physical interfaces that allow input and output of time-related signals and logical interfaces that are compatible with Portable Operating System Interface for UNIX (POSIX), including interfaces to share a Physical Hardware Clock (PHC). The logical interface definitions allow a variety of TimeCard form factors, such as Peripheral Component Interconnect Express (PCIe), while supporting uniform operating-system integration.
+
+Devices that conform to this standard provide performance figures obtained according to the specifications of this standard so that different TimeCard implementations can be compared in terms of performance.
+
+This standardization effort therefore encompasses:
 - Hardware and software architecture definitions, including unified timescale generation and holdover behavior.
 - Receive (inbound) and Providing (outbound) timing interface behaviors (e.g., GNSS, PTP, 1PPS, and PCIe PTM).
 - Out-of-band and in-band management, telemetry, and security mechanisms (e.g., I²C, IPMI, REST).
@@ -30,7 +38,11 @@ By defining a **standardized timing subsystem interface**, the specification est
 
 ## 1.2 Purpose
 
-The purpose of this standard is to enable interoperable TimeCard implementations, modular timing subsystem integration, and unambiguous comparison of TimeCard performance claims. It does so by defining common architecture, conformance, interface, control, performance-reporting, environmental, and test-method expectations.
+The purpose of this standard is to provide:
+
+- Interoperability of different TimeCard implementations with the systems, and their operating systems, that use them as a source of time-of-day, supporting plug-and-play integration.
+- Modular implementation of the TimeCard to allow customization to industry needs.
+- Unambiguous comparison of different TimeCard implementations in terms of relevant performance metrics.
 
 ---
 
