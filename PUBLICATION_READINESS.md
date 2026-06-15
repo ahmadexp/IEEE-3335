@@ -9,7 +9,7 @@ The pass used the following IEEE SA guidance as the editorial baseline:
 - IEEE SA Standards Board Operations Manual, Clause 6: normative material defines conformance, informative material is provided for information only, and normative references are indispensable and cited where they apply. <https://standards.ieee.org/about/policies/opman/sect6/>
 - IEEE SA Normative References FAQ: Clause 2 should include only references that are indispensable for applying the standard, and each should be cited as a source of mandatory requirements. <https://standards.ieee.org/faqs/references/>
 
-## Completed in This Pass
+## Completed Tasks
 
 | Area | Status | Notes |
 |------|--------|-------|
