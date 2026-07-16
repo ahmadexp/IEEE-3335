@@ -1,5 +1,6 @@
 OUTPUT = IEEE3335.pdf
 METADATA = metadata.yaml
+LINE_NUMBER_HEADER = latex/review-line-numbers.tex
 LATEX_SCRATCH = *.aux *.log *.out *.toc
 FIGURE_CONVERTER ?= $(shell command -v magick 2>/dev/null || command -v convert 2>/dev/null || true)
 FIGURE_SVGS := $(wildcard figures/*.svg)
@@ -28,7 +29,7 @@ figures/rendered/%.pdf: figures/%.svg
 	@mkdir -p figures/rendered
 	@$(FIGURE_CONVERTER) "$<" "$@"
 
-$(OUTPUT): $(METADATA) $(FIGURE_PDFS)
+$(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FIGURE_PDFS)
 	@echo "Gathering chapter files to build $(OUTPUT)..."
 	@bash -c ' \
 		FILES=() ; \
@@ -42,6 +43,7 @@ $(OUTPUT): $(METADATA) $(FIGURE_PDFS)
 			--toc \
 			--toc-depth=3 \
 			--metadata-file=$(METADATA) \
+			--include-in-header=$(LINE_NUMBER_HEADER) \
 			--pdf-engine=$(PDF_ENGINE) \
 			-V geometry:margin=1in ; \
 		rm -f $(LATEX_SCRATCH) \

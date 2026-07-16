@@ -56,7 +56,8 @@ This command will:
 1. Dynamically find the front matter, all `01` through `10` clauses, and all annex `README.md` files.
 2. Sort them numerically and alphabetically.
 3. Pass them logically to `pandoc`.
-4. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.
+4. Add pagewise review line numbers, labeled every fifth line after the front matter.
+5. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.
 
 To remove the generated PDF and clean up the build output:
 ```bash
