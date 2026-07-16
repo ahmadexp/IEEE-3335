@@ -56,7 +56,7 @@ This command will:
 1. Dynamically find the front matter, all `01` through `10` clauses, and all annex `README.md` files.
 2. Sort them numerically and alphabetically.
 3. Pass them logically to `pandoc`.
-4. Add pagewise review line numbers to every text line after the front matter.
+4. Add pagewise review line numbers to every text line from the Abstract onward.
 5. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.
 
 To remove the generated PDF and clean up the build output:
