@@ -28,7 +28,7 @@ A claim of conformance shall identify:
 - The control interfaces implemented.
 - The optional feature sets claimed.
 - The declared operating environment and environmental limits.
-- The performance metrics, measurement points, measurement methods, and limits declared by the manufacturer.
+- The performance metrics, measurement points, measurement methods, and limits declared by the supplier.
 
 ## 4.3 Base Conformance Requirements
 
@@ -47,13 +47,13 @@ An implementation may conform to IEEE P3335 without implementing every optional 
 
 ## 4.4 Conformance Profiles
 
-This standard defines the following conformance profiles:
+This standard defines the following conformance profiles. An implementation claiming a profile shall satisfy the corresponding additional requirements in the following table.
 
 | Profile | Applicability | Additional requirements |
 |---------|---------------|-------------------------|
 | **Base TimeCard** | All conforming implementations | Satisfy the base requirements in 4.3 and all applicable mandatory requirements in Clauses 5 through 9. |
 | **Physical Timing Output** | Implementations with externally accessible physical timing outputs | Provide a 1PPS output that satisfies 7.3.2 and document the alignment of all other physical timing outputs to that 1PPS output. |
-| **PCIe Host Mapping** | Implementations claiming PCIe host integration | Satisfy the baseline PCIe host mapping requirements in 8.9. |
+| **PCIe Host Mapping** | Implementations claiming PCIe host integration | Satisfy the PCIe host interface profile requirements in 8.9. |
 | **Managed TimeCard** | Implementations claiming remote or fleet management | Satisfy the managed security profile in 8.11.2. |
 | **Secure Infrastructure TimeCard** | Implementations marketed or designated for secure infrastructure deployments | Satisfy the secure infrastructure profile in 8.11.3. |
 
@@ -77,7 +77,7 @@ Each optional feature claim shall identify the clause or subclause that defines 
 
 ## 4.6 Performance Conformance Strategy
 
-Base conformance to this standard requires complete and reproducible performance reporting. It does not require a universal numeric minimum time-accuracy, frequency-stability, phase-noise, jitter, or holdover class.
+Base conformance to this standard requires the bounded and reproducible performance reporting specified in Clause 6. It does not require a universal numeric minimum time-accuracy, frequency-stability, phase-noise, jitter, or holdover class.
 
 An implementation may claim a vendor-defined or application-defined performance class. If such a class is claimed, the conformance statement shall identify the class, the metric limits, the measurement points, and the conditions under which the class applies.
 
@@ -103,7 +103,7 @@ Conformance can be evaluated by functional testing, performance testing, documen
 
 Functional testing verifies that the implemented interfaces, state transitions, control operations, and fault responses behave as specified. Performance testing verifies that declared timing, frequency, holdover, and environmental metrics meet the supplier's stated limits using the measurement methods declared for the implementation.
 
-Test evidence should identify:
+When test evidence is used to support a conformance claim, the evidence shall identify:
 
 - The device under test and configuration under test.
 - The applicable IEEE P3335 clauses and optional feature claims.
@@ -112,10 +112,8 @@ Test evidence should identify:
 - Pass/fail criteria and measured results.
 - Any deviations, waivers, or limitations of the test method.
 
-Informative Annex B provides example test procedures that can be used as a starting point for such evidence. Annex B is not a normative conformance-test suite in this draft unless a future revision explicitly changes its status.
+Annex B provides informative example test procedures that can be used as a starting point for such evidence. Its procedures do not add to or replace the normative conformance criteria.
 
-## 4.9 Protocol Implementation Conformance Statement
+## 4.9 Conformance Statement Proforma
 
-A Protocol Implementation Conformance Statement (PICS) is not defined in this draft. The working group should add a PICS only after the normative requirements are stable enough to avoid divergence between the PICS and the body of the standard.
-
-If a PICS is added in a later draft, the normative clauses shall remain the controlling source of conformance requirements.
+Annex D provides an informative proforma for organizing the conformance statement required by 4.7. Use of the proforma is optional. The requirements in this clause and the applicable technical clauses remain the controlling source for conformance.

@@ -1,279 +1,256 @@
 # 8. Control Interfaces (Normative)
 
-This chapter defines the physical, logical, and protocol-level **control interfaces** used to configure, monitor, and manage TimeCard devices.
+This clause specifies the control-plane requirements used to discover, configure, monitor, update, and manage a TimeCard. Every conforming implementation provides at least one control interface. A control interface can be local, host-integrated, out-of-band, remotely networked, or a combination of these forms.
 
----
+## 8.1 Control-interface classes
 
-## 8.1 Overview
+| Class | Examples | Principal use |
+|-------|----------|---------------|
+| Local hardware control | SMBus, I2C, I3C, GPIO | Board-level configuration and telemetry. |
+| Host-integrated control | PCIe MMIO, command queues, driver APIs, USB | Host discovery, configuration, time access, and status. |
+| Out-of-band control | IPMI, NC-SI, serial | Management independent of the host operating system. |
+| Remote network control | REST, gRPC, Redfish, SNMP | Fleet management and remote telemetry. |
 
-Control interfaces form the out-of-band and in-band **management plane** of the TimeCard architecture. Unlike the timing interfaces defined in Clause 7, which operate strictly within the data plane to deliver phase and frequency synchronization, control interfaces are responsible for:
-- Configuration of synchronization parameters and state machines.
-- Status monitoring, health telemetry, and fault reporting.
-- Firmware provisioning and lifecycle security management.
-- Traceability reporting and calibration operations.
+An implementation can expose the same baseline information through more than one class. The semantic value of an object shall not change solely because a different control interface is used.
 
-Every compliant TimeCard implementation shall provide at least one accessible control interface. This interface may be exposed through a physical baseboard connector, a host-exposed bus interface, or a network-based protocol suite.
+## 8.2 Baseline control capabilities
 
----
+At least one implemented control interface shall provide access to the required baseline objects in 8.10.2. Collectively, the implemented control interfaces shall provide the following capabilities:
 
-## 8.2 Control Interface Classes
+- Read implementation identity, revision, profile, and capability information.
+- Read the unified-timescale state and a coherent time value.
+- Read active and available synchronization-source information.
+- Read active alarm and security-state information.
+- Discover whether conditional configuration, telemetry, event, update, and sanitization operations are supported.
 
-Control interfaces are categorized based on their communication topology and data granularity.
+A writable operation is required only when the corresponding configurable feature is implemented or a conformance profile explicitly requires it.
 
-| Class | Description | Typical Use |
-|--------|--------------|--------------|
-| **Local Hardware Control** | Direct access via SMBus, I²C, I3C, or GPIO. | Baseboard-level configuration, power sequencing, or low-level telemetry by a BMC. |
-| **Host-Integrated Control** | In-band access via PCIe MMIO or USB. | Runtime synchronization control by host OS software or drivers. |
-| **Out-of-Band (OOB) Control** | NC-SI, IPMI, or dedicated serial interface. | Independent platform management regardless of the host OS state. |
-| **Remote Network Control** | REST, gRPC, Redfish, or SNMP. | Distributed system orchestration or cloud-scale management. |
+## 8.3 Protocol mappings
 
-A TimeCard may implement one or more of these control classes simultaneously to support sophisticated datacenter abstraction models.
+### 8.3.1 SMBus, I2C, and I3C
 
----
+An SMBus implementation shall conform to the SMBus specification cited in Clause 2 for the version identified in the conformance statement. An I3C implementation shall conform to the MIPI I3C Basic specification cited in Clause 2 for the version identified in the conformance statement.
 
-## 8.3 Minimum Functional Requirements
+An I2C-only implementation shall identify the I2C specification and revision used. For each local hardware control mapping, the supplier shall document addressing, bus speed, transfer size, byte order, clock-stretching behavior, timeout behavior, reset behavior, and the mapping of baseline objects.
 
-Where a control interface is implemented, it shall expose at least the following minimum common set of capabilities, restricted by the bandwidth and constraints of the specific medium:
+### 8.3.2 PCIe configuration and MMIO
 
-| Function | Description |
-|-----------|--------------|
-| **Source Selection** | Select, prioritize, or configure the active synchronization reference (e.g., GNSS, PTP, PPS). |
-| **Mode Control** | Read and modify the current operational state machine (e.g., Locked, Holdover, Free-running, Warm-up). |
-| **Clock Discipline Settings** | Adjust PLL or disciplining loop time constants and bandwidth parameters. |
-| **Telemetry Access** | Retrieve metrics such as fractional frequency offset, internal temperatures, instantaneous phase error, and stability statistics. |
-| **Alarm and Event Logs** | Report critical operational events such as loss of reference, spoofing detection, or firmware integrity faults. |
-| **Firmware Management** | Support cryptographic firmware update triggers, version reporting, and rollback. |
+A PCIe control mapping shall satisfy 8.9. If PCIe PTM is implemented, the PCIe function shall expose the PTM capability structures required by the PCI-SIG PCI Express Base Specification Revision 5.0.
 
----
+### 8.3.3 IPMI and NC-SI
 
-## 8.4 Communication Protocols
+An implementation claiming IPMI control shall conform to DMTF DSP0236 for the IPMI version and command scope identified in the conformance statement. Vendor or P3335-specific commands shall use an assigned or documented extension mechanism and shall not redefine standard commands.
 
-### 8.4.1 SMBus / I²C / I3C
-- Provides low-speed, low-latency configuration and sensor access, typically used by a Baseboard Management Controller (BMC).
-- The address space and register map should be modeled consistently across compliant implementations to ease integration.
-- Bus arbitration, clock stretching, and timing compliance shall follow the respective SMBus or MIPI I3C specifications.
+An NC-SI mapping shall identify the NC-SI specification revision, package and channel discovery behavior, command set, and mapping of baseline objects.
 
-### 8.4.2 PCIe Configuration and MMIO
-- Allows in-band, high-speed access to TimeCard control registers directly from the host CPU.
-- The register layout should comply with recognized industry standard memory maps (such as the OCP-TAP Control Register Map) where applicable.
-- If the TimeCard supports PCIe Precision Time Measurement (PTM), the control interface shall present the necessary standard capability structures to the host to enable PTM negotiation.
+### 8.3.4 REST, gRPC, SNMP, and Redfish
 
-### 8.4.3 IPMI / NC-SI
-- Enables robust out-of-band control independent of the host processor or operating system.
-- IPMI implementations shall conform to DMTF DSP0236 for the claimed IPMI version and command scope.
-- TimeCard devices establishing IPMI communication should implement an extended command set for time synchronization management (e.g., querying clock state, initiating reference failover).
-- IPMI commands may support authenticated sessions utilizing pre-shared platform credentials.
+A network API shall publish a machine-readable schema or object description that identifies its version and maps operations to the baseline objects in 8.10.
 
-### 8.4.4 REST / gRPC / SNMP / Redfish
-- Used for high-level, network-based management and large-scale telemetry aggregation.
-- REST, Redfish, and gRPC APIs should conform to established management schemas where such schemas apply.
-- SNMP implementations shall conform to the SNMP architecture defined by IETF RFC 3411 for the claimed SNMP version and management scope.
-- SNMP implementations should expose standard OIDs for timing health, synchronization source, and hardware/firmware versions.
+An implementation claiming SNMP control shall conform to the architecture in IETF RFC 3411 for the SNMP version and management scope identified in the conformance statement. The supplier shall identify the management information base modules and object identifiers used.
 
-### 8.4.5 Serial and USB
-- Serial (RS-232/RS-422/RS-485) interfaces should provide a human-readable command-line shell or SCPI-like syntax for localized debugging.
-- USB connections may present as standardized Communications Device Class (CDC) / virtual COM ports to facilitate maintenance or localized firmware provisioning.
+REST, gRPC, and Redfish mappings shall document resource or service discovery, schema versioning, error responses, authentication method, and update compatibility.
 
----
+### 8.3.5 Serial and USB
 
-## 8.5 Control Register Structure
+A serial or USB mapping shall document physical or USB class behavior, framing, command syntax or schema, encoding, flow control, timeout behavior, and the mapping of baseline objects. A human-readable command interface can be provided in addition to a machine-readable mapping.
 
-The logical control registers listed below represent the fundamental baseline for low-level interaction between the host/BMC and the TimeCard. While physical implementations differ (e.g., I2C addresses vs. PCIe MMIO offsets), the logical concepts shall be present:
+## 8.4 Common mapping requirements
 
-| Logical Register Concept | Description | Access | Example Units |
-|-----------|--------------|---------|----------------|
-| `SYNC_SRC` | Active external synchronization source ID | R/W | Enumeration |
-| `PLL_STATE` | Current disciplining state (Locked, Holdover, Free) | R | Enumeration |
-| `PHASE_ERR` | Instantaneous phase error relative to the primary reference | R | nanoseconds |
-| `TEMP` | Active local oscillator temperature | R | °C |
-| `MTIE_EST` | Current estimated holdover drift/MTIE boundary | R | nanoseconds |
-| `FIRMWARE_VER` | Active running firmware version string | R | ASCII / Hex |
-| `UPDATE_CMD` | Trigger flag for firmware update sequences | W | Boolean |
-| `SECURE_MODE` | Runtime security lockdown indicator | R/W | Boolean |
+Each control-interface mapping shall define:
 
-All registers should adhere to consistent endianness and word alignment across a vendor's product line.
-
-Reserved values are reserved for future use by IEEE P3335. A reserved value shall not be configured by an implementation or management client. If a reserved value is read from a field, the management client shall ignore that value unless a later revision of this standard defines it.
-
----
-
-## 8.6 Security and Access Control
-
-*Note: The requirements in this subclause apply conditionally. They are required only for TimeCards marketed or designated for secure infrastructure deployments. For isolated or lab-grade physical environments, these features may be omitted to reduce complexity.*
-
-Where security hardening is implemented, control interfaces operate as primary attack surfaces and require robust cryptographic protection.
-
-### 8.6.1 Authentication and Authorization
-- Networked control protocols shall support user or machine authentication.
-- Privilege levels should distinguish between read-only monitoring access, operator configuration access, and administrator provisioning access.
-- Access credentials and cryptographic keys should be stored securely within a hardware-backed enclave or discrete TPM.
-
-### 8.6.2 Secure Firmware and Configuration
-- Firmware payload images shall be digitally signed using verifiable certificates.
-- A secure boot sequence should verify firmware integrity (cryptographic hash matches) at initialization before granting control to the TimeCard operating logic.
-
-### 8.6.3 Network Security
-- Remote IP-based interfaces (REST, Redfish, gRPC) should utilize encrypted transport layers (e.g., TLS).
-- Replay and injection protection should be implemented for operations traversing shared networking environments.
-
----
-
-## 8.7 Event and Telemetry Management
-
-To facilitate continuous performance observability, the control interface should support structured event and telemetry generation.
-
-### 8.7.1 Event Reporting
-- Generated operational events shall include a local timestamp, a severity classification, and a source identifier.
-- Critical events should include, but are not limited to:
-  - Reference loss (LOS)
-  - Phase lock achieved or lost
-  - Holdover entry or exit
-  - Temperature threshold alarms
-  - Firmware update success or failure.
-
-### 8.7.2 Telemetry Streaming
-- Continuous telemetry may be streamed via IPMI, REST, or gRPC for integration into centralized infrastructure dashboards.
-- Telemetry generation rates shall be configurable by the administrator.
-- Time synchronization statistics (such as ADEV or instantaneous phase offsets) should be strictly timestamped and aligned to the TimeCard's unified timescale.
-
-### 8.7.3 Logging and Traceability
-- Critical alarm logs should be preserved in non-volatile memory across power cycles.
-- Exported log files may include cryptographic signatures to validate log integrity during forensic analysis.
-- Traceability metadata (such as calibration constants and firmware build hashes) should be accessible to support operational compliance audits.
-
----
-
-## 8.8 Interoperability and Extensions
-
-All implemented control interfaces shall comply with the baseline schema defined by the overarching IEEE P3335 architecture.
-
-Manufacturers may implement proprietary extensions, custom registers, or vendor-specific telemetry strings. These optional extensions shall not compromise or interfere with the baseline interoperability of the standardized registers and capabilities.
-
----
-
-## 8.9 Baseline PCIe Host Interface Mapping
-
-An implementation claiming the PCIe Host Mapping conformance profile shall expose a PCIe function that can be discovered by the host operating system and associated with the TimeCard control and timing functions.
-
-The PCIe host mapping shall document:
-
-- PCIe vendor ID, device ID, class code, subsystem identifiers, and revision identification.
+- A mapping name and major and minor version.
 - Discovery and enumeration behavior.
-- Base Address Register (BAR) usage and memory type.
-- Register block version, size, endianness, alignment, and access width.
-- Interrupt mechanism, if interrupts are implemented.
-- Reset behavior and persistence of configuration across reset.
-- Error-reporting behavior for unsupported, reserved, or malformed accesses.
-- Timestamp format, epoch, timescale, granularity, and rollover behavior.
-- Correction terms required to relate PCIe/PTM timestamps to the unified timescale and to other providing interfaces.
+- Data encoding, byte order, alignment, transfer size, and string encoding.
+- Mapping of required and conditional objects.
+- Object support, validity, stale-data, unavailable, and fault reporting.
+- Error responses for unsupported operations, invalid values, reserved values, malformed requests, and access denial.
+- Concurrency and atomicity behavior for multi-field values and configuration changes.
+- Reset, restart, and persistence behavior.
+- Compatibility behavior for unknown objects, fields, enumeration values, and extensions.
 
-If PCIe Precision Time Measurement (PTM) is implemented, the TimeCard shall expose the standard PCIe PTM capability structures required for host negotiation. The conformance statement shall identify the PCIe Base Specification revision used and the measurement point represented by PTM timestamps.
+A change that removes an object, changes its units or meaning, narrows its valid range, or changes its access semantics shall increment the mapping major version. A backward-compatible addition shall increment the mapping minor version.
 
-The baseline PCIe register block shall provide access to the baseline information model in 8.10. A PCIe implementation may provide additional vendor-specific BARs, registers, queues, or direct-memory-access mechanisms if those extensions do not alter the semantics of the baseline information model.
+Unknown optional objects or fields shall be ignored by a consumer. A consumer shall not write a reserved value. An implementation receiving a reserved or invalid write value shall reject the operation without changing the prior value.
 
-## 8.10 Baseline Control Information Model
+## 8.5 Read consistency and configuration changes
 
-The baseline information model defines semantic objects that shall be available through at least one implemented control interface. A physical register map, memory-mapped interface, command protocol, object model, schema, or API may be used to expose these objects, provided that the semantics, units, access modes, and reserved-value behavior are preserved.
+Values representing one logical observation shall be returned coherently. In particular, a timestamp split across multiple transport words shall use a latch, snapshot command, sequence counter, retry rule, or equivalent mechanism that prevents fields from different seconds or update cycles from being combined.
 
-### 8.10.1 Data Types and Access Modes
+For a configuration operation affecting timing behavior, the interface shall report whether the operation was accepted, when it became effective, and whether it caused or can cause a phase step, frequency transient, loss of lock, restart, or interruption of a providing interface.
 
-The following common data types are used by the baseline information model:
+Configuration writes shall either complete as one documented operation or report partial completion and the resulting state. A failed write shall not silently leave an indeterminate configuration.
+
+## 8.6 Access control and security state
+
+Every control interface shall document its authentication, authorization, transport protection, update authorization, audit, key-storage, and sanitization capabilities. The `SECURITY_STATE` object shall report the mechanisms supported and their current verified or active state.
+
+Requirements for the Managed TimeCard and Secure Infrastructure TimeCard profiles are specified in 8.11. A control interface not claiming either profile can omit authentication only when the omission is declared in the conformance statement.
+
+Security failure shall not be reported as normal successful completion. Authentication failures, authorization denials, firmware verification failures, and sanitization failures shall be distinguishable to an authorized operator.
+
+## 8.7 Events and telemetry
+
+If event reporting is implemented, each event record shall include a timestamp or an explicit indication that valid time was unavailable, a severity, a source, an event type, and event-specific data. The event timestamp measurement point and timescale shall be documented.
+
+The following state changes shall generate an event when the corresponding function and event reporting are implemented:
+
+- Reference acquired, rejected, selected, degraded, or lost.
+- Lock acquired or lost.
+- Holdover entered or exited.
+- Time step, frequency step, or discontinuity detected.
+- Environmental or power threshold crossed.
+- Firmware update, boot-integrity check, authentication, authorization, or sanitization completed or failed.
+
+If telemetry streaming is implemented, the supplier shall document rate limits, timestamp behavior, dropped-sample indication, ordering, backpressure, and the relationship between streamed values and on-demand reads.
+
+## 8.8 Extensions
+
+An implementation can provide vendor-specific objects, commands, registers, messages, and telemetry. Extensions shall use a documented namespace or identifier range and shall not change the meaning of baseline objects.
+
+Unknown extensions shall be safely ignorable. Reserved P3335 identifiers and values shall not be assigned to vendor-specific behavior.
+
+## 8.9 PCIe host interface profile
+
+An implementation claiming the PCIe Host Mapping conformance profile shall expose a discoverable PCIe function associated with the TimeCard timing and control functions.
+
+The PCIe mapping shall document:
+
+- Vendor ID, device ID, class code, subsystem identifiers, and revision identifier.
+- PCIe Base Specification revision and discovery behavior.
+- BAR, capability, command-queue, or driver-API resources used by the mapping.
+- Mapping signature and major and minor version at a documented discovery location.
+- Interrupt or polling behavior.
+- Function-level, fundamental, and software-reset behavior.
+- Persistence of configuration and time state across each reset type.
+- Error reporting for unsupported, malformed, reserved, or unauthorized accesses.
+- Timestamp format, epoch, timescale, granularity, rollover, and atomic-read mechanism.
+- Measurement point and correction terms relating PCIe or PTM time to the unified timescale and other providing interfaces.
+
+The PCIe mapping shall expose all required baseline objects in 8.10.2 through MMIO, a command or queue interface, a driver API, or a documented combination thereof. The conformance statement shall identify which mapping is the interoperable baseline for the implementation.
+
+If PCIe PTM is implemented, the TimeCard shall expose the standard PTM capability structures and shall document the PTM measurement point and correction model.
+
+## 8.10 Baseline control information model
+
+The baseline information model defines transport-neutral object names, data semantics, access modes, and units. A protocol mapping can use registers, messages, resources, attributes, or API calls, provided that it preserves these semantics and satisfies 8.4 and 8.5.
+
+### 8.10.1 Data types and object status
 
 | Type | Description |
 |------|-------------|
-| `bool` | Boolean value, encoded as false or true. |
+| `bool` | Boolean false or true. |
 | `uint8`, `uint16`, `uint32`, `uint64` | Unsigned integer of the indicated width. |
-| `int64` | Signed integer of the indicated width. |
-| `enum` | Unsigned integer value selected from a documented enumeration. |
-| `ascii` | Printable ASCII string with documented maximum length. |
-| `bitmap` | Unsigned integer where individual bits have documented meanings. |
+| `int64` | Signed 64-bit integer. |
+| `enum` | One value from a defined symbolic set. |
+| `string` | UTF-8 string with a mapping-defined maximum length. |
+| `set` | Unordered set of defined symbolic values. |
+| `timestamp` | Atomic structure containing seconds, nanoseconds, timescale, validity, and optional uncertainty. |
+| `record` | Structure whose fields are defined by the object or mapping. |
 
-Access modes are `R` for read-only, `W` for write-only, and `R/W` for read/write.
+Access modes are `R` for read-only, `W` for write-only, and `R/W` for read/write. Every read response shall distinguish `valid`, `unavailable`, `unsupported`, `stale`, and `fault` when those states can occur in the mapping.
 
-### 8.10.2 Required Baseline Objects
+For a `timestamp`, nanoseconds shall be in the range 0 through 999 999 999. The seconds and nanoseconds fields shall represent the same measurement instant and shall satisfy the coherent-read requirement in 8.5.
 
-The following objects shall be exposed by at least one control interface:
+### 8.10.2 Required baseline objects
 
-| Object | Access | Type | Units | Description |
-|--------|--------|------|-------|-------------|
-| `TC_MODEL` | R | ascii | none | Product or implementation model identifier. |
-| `TC_HW_REV` | R | ascii | none | Hardware revision or equivalent implementation revision. |
-| `TC_FW_REV` | R | ascii | none | Active firmware, gateware, or software revision. |
-| `TC_PROFILE` | R | bitmap | none | Claimed conformance profiles and optional feature groups. |
-| `TC_CAPS` | R | bitmap | none | Implemented receive, providing, host, control, security, and telemetry capabilities. |
-| `TC_STATE` | R | enum | none | Overall timing state: initializing, warming up, free-running, locked, holdover, degraded, fault, or reserved. |
-| `TC_TIMESCALE` | R | enum | none | Unified timescale exposed by the TimeCard, such as TAI, UTC, PTP, or implementation-specific. |
-| `TC_TIME_SEC` | R | uint64 | s | Integer seconds of the unified timescale at the declared read measurement point. |
-| `TC_TIME_NS` | R | uint32 | ns | Nanosecond portion of the unified timescale at the declared read measurement point. |
-| `TC_GRANULARITY` | R | uint32 | ps | Timestamp granularity. |
-| `TC_RESOLUTION` | R | uint32 | ps | Declared timestamp resolution. |
-| `SYNC_SRC_ACTIVE` | R/W | enum | none | Active synchronization source selection or configured source selector. |
-| `SYNC_SRC_AVAIL` | R | bitmap | none | Available synchronization sources. |
-| `SYNC_SRC_HEALTH` | R | bitmap | none | Health indication for implemented synchronization sources. |
-| `PHASE_ERR` | R | int64 | ps | Instantaneous phase error relative to the selected reference, if available. |
-| `FREQ_OFFSET` | R | int64 | 1e-15 | Fractional frequency offset relative to the selected reference, if available. |
-| `MTIE_EST` | R | uint64 | ps | Estimated or measured MTIE boundary for the declared interval, if available. |
-| `HOLDOVER_ELAPSED` | R | uint64 | s | Elapsed time since entry into holdover. |
-| `TEMP_LOCAL` | R | int64 | millidegrees C | Local oscillator or timing-function temperature. |
-| `ALARM_ACTIVE` | R | bitmap | none | Active alarm indications. |
-| `EVENT_COUNT` | R | uint32 | count | Count of retained event-log entries. |
-| `EVENT_READ` | R | implementation-specific | none | Mechanism to read timestamped event records. |
-| `TRACEABILITY_STATE` | R | enum | none | Traceability state: unsupported, unknown, traceable, degraded, or reserved. |
-| `UPDATE_CMD` | W | enum | none | Firmware or configuration update command. |
-| `SECURITY_STATE` | R | bitmap | none | Authentication, secure boot, signed firmware, and sanitization state. |
+The following objects shall be exposed through at least one control interface:
 
-If a required object is not meaningful for a specific implementation, it shall be readable and shall return an unsupported or unavailable value from its documented enumeration.
+| Object | Access | Type | Units | Semantics |
+|--------|--------|------|-------|-----------|
+| `TC_MODEL` | R | string | none | Product or implementation model identifier. |
+| `TC_HW_REV` | R | string | none | Hardware or implementation revision; `not-applicable` for an implementation without hardware. |
+| `TC_FW_REV` | R | string | none | Active firmware, gateware, or software revision; `not-applicable` when none exists. |
+| `TC_INFO_MODEL_REV` | R | string | none | P3335 information-model revision implemented. |
+| `TC_PROFILE` | R | set | none | Conformance profiles claimed by the active configuration. |
+| `TC_CAPS` | R | set | none | Implemented interface and feature capabilities. |
+| `TC_STATE` | R | enum | none | Overall unified-timescale operating state. |
+| `TC_TIMESCALE` | R | enum | none | Timescale represented by `TC_TIME` and timing telemetry. |
+| `TC_TIME` | R | timestamp | s, ns | Coherent unified-timescale value at the declared read measurement point. |
+| `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the source currently used to discipline or validate the unified timescale; `none` when no source is active. |
+| `SYNC_SRC_AVAIL` | R | set | none | Identifiers of synchronization sources currently available for selection or monitoring. |
+| `ALARM_ACTIVE` | R | set | none | Active alarm identifiers; an empty set indicates no active alarm. |
+| `SECURITY_STATE` | R | record | none | Supported and active security mechanisms and the result of the most recent integrity verification. |
 
-### 8.10.3 GNSS Optional Objects
+A required baseline object shall not report `unsupported`. It can report `unavailable`, `stale`, or `fault` only when that state is meaningful and distinguishable from a valid value.
 
-If a GNSS receive interface is implemented, the following objects shall be exposed:
+### 8.10.3 Conditional baseline objects
 
-| Object | Access | Type | Units | Description |
-|--------|--------|------|-------|-------------|
-| `GNSS_PRESENT` | R | bool | none | Indicates whether at least one GNSS receiver is present. |
+The following objects are required when the corresponding capability is advertised in `TC_CAPS`:
+
+| Object | Access | Type | Units | Applicability and semantics |
+|--------|--------|------|-------|-----------------------------|
+| `SYNC_SRC_SELECT` | R/W | string | none | Implementations supporting operator source selection; selected source or selection policy. |
+| `SYNC_SRC_HEALTH` | R | record | none | Implementations with receive interfaces; health and rejection reason for each source. |
+| `PHASE_ERR` | R | int64 | ps | Implementations reporting phase error; value relative to the identified source and measurement point. |
+| `FREQ_OFFSET` | R | int64 | 1e-15 | Implementations reporting fractional frequency offset; value relative to the identified source. |
+| `MTIE_EST` | R | uint64 | ps | Implementations reporting estimated or measured MTIE; paired with `MTIE_INTERVAL`. |
+| `MTIE_INTERVAL` | R | uint64 | s | Observation interval associated with `MTIE_EST`. |
+| `HOLDOVER_ELAPSED` | R | uint64 | s | Implementations supporting holdover; elapsed time since holdover entry. |
+| `TEMP_LOCAL` | R | int64 | mdegC | Implementations reporting a local timing-function temperature; sensor location is declared. |
+| `EVENT_COUNT` | R | uint32 | count | Implementations with an event log; number of readable retained events. |
+| `EVENT_READ` | R | record | none | Implementations with an event log; next or selected event record. |
+| `TRACEABILITY_STATE` | R | enum | none | Implementations reporting traceability; current relationship to the declared reference. |
+| `UPDATE_CMD` | W | record | none | Implementations supporting controlled firmware, gateware, or software update. |
+| `SANITIZE_CMD` | W | record | none | Implementations claiming sanitization; scope and authorization parameters. |
+
+A conditional object advertised in `TC_CAPS` shall not report `unsupported`. An unadvertised conditional object can report `unsupported` when addressed through a mapping that permits object probing.
+
+### 8.10.4 Common symbolic values
+
+`TC_PROFILE` shall use the profile names `base`, `physical-timing-output`, `pcie-host-mapping`, `managed-timecard`, and `secure-infrastructure-timecard` for the corresponding profiles in 4.4.
+
+`TC_STATE` shall distinguish at least `unknown`, `initializing`, `warming-up`, `free-running`, `acquiring`, `locked`, `holdover`, `degraded`, and `fault`.
+
+`TC_TIMESCALE` shall distinguish at least `unknown`, `TAI`, `UTC`, `PTP`, and `other-declared`. If `other-declared` is used, the mapping to a declared reference timescale shall be documented.
+
+Unknown symbolic values received by a consumer shall be preserved when forwarding and otherwise treated as unknown. A mapping that encodes symbolic values numerically shall document the numeric assignments and reserve an extension range.
+
+### 8.10.5 GNSS conditional objects
+
+If a GNSS receive capability is advertised in `TC_CAPS`, the following objects shall be exposed:
+
+| Object | Access | Type | Units | Semantics |
+|--------|--------|------|-------|-----------|
 | `GNSS_INSTANCES` | R | uint8 | count | Number of GNSS receiver instances. |
-| `GNSS_ENABLE` | R/W | bool array | none | Enable state for each GNSS receiver instance. |
-| `GNSS_CONST_AVAIL` | R | bitmap | none | Available GNSS constellations for each receiver instance. |
-| `GNSS_CONST_ENABLE` | R/W | bitmap | none | Enabled GNSS constellations for each receiver instance. |
-| `GNSS_LOCK_STATE` | R | enum | none | Receiver lock state. |
-| `GNSS_ANTENNA_STATE` | R | enum | none | Antenna state, including unknown, valid, open, short, degraded, or reserved. |
+| `GNSS_ENABLE` | R/W | set | none | Enabled receiver-instance identifiers, when receiver enable control is supported. |
+| `GNSS_CONST_AVAIL` | R | record | none | Available constellations for each receiver instance. |
+| `GNSS_CONST_ENABLE` | R/W | record | none | Enabled constellations for each receiver instance, when configuration is supported. |
+| `GNSS_LOCK_STATE` | R | record | none | Acquisition or lock state for each receiver instance. |
+| `GNSS_ANTENNA_STATE` | R | record | none | Antenna state for each receiver instance, including unknown, valid, open, short, or degraded when detectable. |
 
-Constellation enumeration values 0 and 9 through 191 are reserved for future standardization. Values 192 through 255 are implementation-specific.
+The common constellation identifiers are `GPS`, `Galileo`, `GLONASS`, `BeiDou`, `QZSS`, and `NavIC`. Additional constellation identifiers shall use the extension mechanism defined by the control mapping.
 
-## 8.11 Security Profiles
+## 8.11 Security profiles
 
-### 8.11.1 Baseline Security Profile
+### 8.11.1 Baseline security declaration
 
-All conforming implementations shall document the security state of each implemented control interface. The documentation shall state whether authentication, authorization, secure boot, signed firmware update, encrypted transport, protected key storage, tamper response, and sanitization are supported.
+All conforming implementations shall document the security properties of each control interface, including physical access assumptions. The documentation shall state whether authentication, authorization, encrypted transport, signed update, boot integrity verification, protected key storage, anti-rollback protection, event auditing, tamper response, and sanitization are supported.
 
-### 8.11.2 Managed Security Profile
+### 8.11.2 Managed TimeCard profile
 
-An implementation claiming the Managed TimeCard conformance profile shall meet the following requirements:
+An implementation claiming the Managed TimeCard profile shall meet the following requirements:
 
-- Networked or remotely reachable control interfaces shall require authentication.
-- The implementation shall distinguish read-only monitoring from configuration operations.
-- Firmware update payloads shall be integrity-checked before installation.
-- Security-relevant events shall be recorded in the event log.
-- Default credentials, if present, shall be changeable.
+- A networked or remotely reachable control interface shall authenticate the user or machine before permitting configuration or update operations.
+- Authorization shall distinguish monitoring, configuration, update, security-administration, and sanitization privileges when those operations are implemented.
+- Default shared credentials shall be replaced or changed before remote configuration is enabled.
+- An update payload shall be integrity-checked before installation.
+- Security-relevant successes and failures shall be recorded when event logging is implemented.
+- The security protocol, version, credential lifecycle, and recovery procedure shall be documented.
 
-### 8.11.3 Secure Infrastructure Profile
+### 8.11.3 Secure Infrastructure TimeCard profile
 
-An implementation claiming the Secure Infrastructure TimeCard conformance profile shall meet the Managed Security Profile requirements and the following additional requirements:
+An implementation claiming the Secure Infrastructure TimeCard profile shall meet the Managed TimeCard profile and the following additional requirements:
 
-- Firmware update payloads shall be digitally signed.
-- A secure boot or measured boot mechanism shall verify firmware or gateware integrity before timing service enters the locked state.
-- Private keys and credentials shall be stored in hardware-backed storage or another documented protected storage mechanism.
-- Remote IP-based management shall use encrypted transport.
-- Privileged operations shall provide replay or injection protection.
-- A sanitization command shall erase sensitive keys, credentials, and security-relevant configuration.
-- Sanitization completion or failure shall be reported through the control interface.
+- Firmware, gateware, and other executable update payloads shall be digitally signed and verified against an authorized trust anchor before activation.
+- The update mechanism shall prevent installation of an unauthorized rollback version unless an explicitly authorized recovery procedure is used.
+- Secure boot or measured boot shall verify executable integrity before the timing service enters the locked state.
+- Private keys and credentials shall be stored in hardware-backed or equivalently protected storage whose protection mechanism is documented.
+- Remote IP-based management shall use an encrypted, peer-authenticated transport.
+- Privileged operations shall provide replay and message-injection protection.
+- Sanitization shall erase the sensitive keys, credentials, and security-relevant configuration identified in the sanitization scope.
+- Sanitization completion or failure shall be reported, and a failed sanitization shall not be reported as successful.
 
 ## 8.12 Summary
 
-Control interfaces provide the framework for secure, consistent, vendor-neutral lifecycle management of TimeCard systems.
-
-By standardizing configuration and telemetry logic, this framework facilitates integrating diverse TimeCards across heterogeneous server fleets and telecommunications infrastructures. This architectural consistency promotes long-term maintainability, traceability, and operational reliability throughout the lifespan of precision time synchronization networks.
-
----
-
-**End of Chapter – Control Interfaces**
+This clause defines a transport-neutral baseline control model and the requirements that each protocol binding preserves. The model supports common integration while allowing transport-specific and vendor-specific extensions to evolve through explicit versioning and namespaces.

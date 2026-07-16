@@ -2,9 +2,9 @@
 
 This clause defines the architectural requirements for a TimeCard. The architecture is specified in terms of externally observable functions, interfaces, behavior, and documentation. A TimeCard may be implemented as a discrete card, an embedded hardware block, an FPGA or ASIC function, an external module, or another implementation form that satisfies the requirements of this standard.
 
-The architecture separates timing data-plane functions from management and control functions. Timing data-plane functions receive, generate, maintain, timestamp, and provide time, phase, and frequency. Management and control functions configure, monitor, secure, and report the state of those timing functions.
+The architecture separates timing data-plane functions from management and control functions. Timing data-plane functions receive, generate, maintain, timestamp, and provide time, phase, and frequency. Management and control functions configure, monitor, secure, and report the state of those timing functions. Figure 1 shows the principal external relationships.
 
-![Figure 5-1 - TimeCard context within a host system](figures/rendered/architecture-context.pdf)
+![TimeCard context within a host system](figures/rendered/architecture-context.pdf)
 
 ## 5.1 Architectural Overview
 
@@ -78,9 +78,9 @@ At least one control interface shall be implemented. A control interface may be 
 
 ## 5.4 Unified Timescale
 
-A TimeCard shall generate one unified timescale for each conforming TimeCard instance. All providing interfaces of that instance shall publish, encode, or derive from that unified timescale.
+A TimeCard shall generate one unified timescale for each conforming TimeCard instance. All providing interfaces of that instance shall publish, encode, or derive from that unified timescale. Figure 2 illustrates the reference-to-egress flow.
 
-![Figure 5-2 - Unified timescale flow](figures/rendered/unified-timescale-flow.pdf)
+![Unified timescale flow](figures/rendered/unified-timescale-flow.pdf)
 
 The implementation shall document:
 

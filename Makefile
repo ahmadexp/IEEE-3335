@@ -8,9 +8,17 @@ FIGURE_PDFS := $(patsubst figures/%.svg,figures/rendered/%.pdf,$(FIGURE_SVGS))
 # Try to find xelatex in PATH, then in the default macOS MacTeX install location, fallback to pdflatex
 PDF_ENGINE ?= $(shell command -v xelatex 2>/dev/null || (test -x /Library/TeX/texbin/xelatex && echo "/Library/TeX/texbin/xelatex") || echo "pdflatex")
 
-.PHONY: all clean $(OUTPUT)
+.PHONY: all check clean requirements $(OUTPUT)
 
 all: $(OUTPUT)
+
+requirements:
+	python3 scripts/requirements_index.py
+
+check:
+	python3 scripts/check_draft.py
+	python3 scripts/requirements_index.py --check
+	python3 -m py_compile scripts/ieee_3335_tools/*.py scripts/check_python.py scripts/check_torch.py scripts/check_draft.py scripts/requirements_index.py
 
 figures/rendered/%.pdf: figures/%.svg
 	@if [ -z "$(FIGURE_CONVERTER)" ]; then \
@@ -26,7 +34,7 @@ $(OUTPUT): $(METADATA) $(FIGURE_PDFS)
 		FILES=() ; \
 		while IFS= read -r line; do \
 			FILES+=("$$line") ; \
-		done < <(find . -maxdepth 2 -name "README.md" | grep -E "^\./([0-9]{2}|Annex)" | sort) ; \
+		done < <(find . -maxdepth 2 -name "README.md" | grep -E "^\./([0-9]{2}|Annex)" | LC_ALL=C sort) ; \
 		echo "Found files:" ; \
 		for file in "$${FILES[@]}"; do echo "  $$file"; done ; \
 		echo "Using PDF Engine: $(PDF_ENGINE)" ; \
@@ -41,4 +49,3 @@ $(OUTPUT): $(METADATA) $(FIGURE_PDFS)
 
 clean:
 	rm -f $(OUTPUT) $(LATEX_SCRATCH)
-

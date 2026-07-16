@@ -14,6 +14,7 @@ Other files (such as references, diagrams, or unstructured notes) may exist in t
 
 | Clause / Annex | Source |
 | :--- | :--- |
+| **Front matter** | `00 - Front Matter/README.md` |
 | **1. Overview** | `01 - Overview/README.md` |
 | **2. Normative References** | `02 - Normative References/README.md` |
 | **3. Definitions, Acronyms, and Abbreviations** | `03 - Definitions, Acronyms and Abbreviations/README.md` |
@@ -27,6 +28,7 @@ Other files (such as references, diagrams, or unstructured notes) may exist in t
 | **Annex A. Metrics** | `Annex A - Metrics/README.md` |
 | **Annex B. Test Procedures** | `Annex B - Test Procedures/README.md` |
 | **Annex C. Bibliography** | `Annex C - Bibliography/README.md` |
+| **Annex D. Conformance Statement Proforma** | `Annex D - Conformance Statement Proforma/README.md` |
 
 The `Unsorted/` directory is an archival working area for source contributions, extracted presentations, older material, and background notes. It is useful for editorial research but is not automatically included in the compiled draft.
 
@@ -40,13 +42,18 @@ You will need to have [Pandoc](https://pandoc.org/) and a LaTeX distribution (su
 ### Build Instructions
 A `Makefile` is provided at the root of the repository to automate compiling the document.
 
-To generate the concatenated standard book, simply run:
+To run editorial and traceability checks:
+```bash
+make check
+```
+
+To generate the complete draft:
 ```bash
 make
 ```
 
 This command will:
-1. Dynamically find all `01` through `10` and `Annex` chapter `README.md` files.
+1. Dynamically find the front matter, all `01` through `10` clauses, and all annex `README.md` files.
 2. Sort them numerically and alphabetically.
 3. Pass them logically to `pandoc`.
 4. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.

@@ -1,144 +1,64 @@
-# 1. Overview (Informative)
-
-This document defines the architectural framework, performance expectations, and interoperability objectives for **TimeCard** devices; modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to a host system.
-
-The primary purpose of this specification is to establish a consistent structural and logical framework that accommodates various hardware implementation approaches (e.g., PCIe add-in cards, deeply embedded silicon IP, or external modules) while facilitating broad industry interoperability. This interoperability enables diverse TimeCard implementations to be compared, integrated, and replaced with minimal changes required in the host system.
-
-As an introductory and informative clause, the concepts presented herein provide context for the standard and do not contain normative conformance requirements.
-
----
+# 1. Overview
 
 ## 1.1 Scope
 
-This standard defines the generic architecture and interfaces of a TimeCard system, which constitutes a traceable source of time-of-day to heterogeneous systems that distribute and/or use that time. It also defines figures of merit that characterize the relevant performance of a TimeCard.
+This standard defines the generic architecture and interfaces of a TimeCard system, which constitutes a traceable source of time-of-day to heterogeneous systems that distribute or use that time. It also defines figures of merit that characterize the relevant performance of a TimeCard.
 
-A TimeCard provides traceable time-of-day for systems directly attached to it, as well as networked distributed systems. Such systems include, but are not limited to, servers hosting the TimeCard, and servers synchronized with the TimeCard using protocols such as Precision Time Protocol (PTP) or Network Time Protocol (NTP).
+A TimeCard provides traceable time-of-day to directly attached systems and to networked distributed systems. Such systems include a host containing the TimeCard and systems synchronized through protocols such as the Precision Time Protocol (PTP) or Network Time Protocol (NTP).
 
-This standard defines the basic building blocks of the TimeCard and their interfaces to allow modularization. The main building blocks include time source, local oscillator, and time processor.
+This standard defines the basic functional building blocks of a TimeCard and the interfaces among those blocks to support modular implementation. The principal functions include a time source, a local timing function, and a time processor.
 
-This standard also defines interfaces between the TimeCard and other systems. These interfaces include physical interfaces that allow input and output of time-related signals and logical interfaces that are compatible with Portable Operating System Interface for UNIX (POSIX), including interfaces to share a Physical Hardware Clock (PHC). The logical interface definitions allow a variety of TimeCard form factors, such as Peripheral Component Interconnect Express (PCIe), while supporting uniform operating-system integration.
+This standard also defines physical and logical interfaces between a TimeCard and other systems. Physical interfaces convey time-related input and output signals. Logical interfaces support host operating-system integration, including access to a PTP hardware clock (PHC). The logical model accommodates form factors such as Peripheral Component Interconnect Express (PCIe), embedded hardware functions, and external timing units.
 
-Devices that conform to this standard provide performance figures obtained according to the specifications of this standard so that different TimeCard implementations can be compared in terms of performance.
-
-This standardization effort therefore encompasses:
-- Hardware and software architecture definitions, including unified timescale generation and holdover behavior.
-- Receive (inbound) and Providing (outbound) timing interface behaviors (e.g., GNSS, PTP, 1PPS, and PCIe PTM).
-- Out-of-band and in-band management, telemetry, and security mechanisms (e.g., I²C, IPMI, REST).
-- Quantifiable performance metrics (e.g., ADEV, TDEV, MTIE) and environmental operating constraints.
-- Structural methodologies for testing and claiming conformance, including functional, performance, and environmental validation procedures based on traceable metrology.
-
-This document is designed to apply equally across:
-- Vendor-specific commercial mass-production implementations.
-- Open-source hardware reference designs.
-- Laboratory, exploratory, or research-grade prototypes.
-
-By defining a **standardized timing subsystem interface**, the specification establishes a foundation for easily interchanging, upgrading across generations, and co-deploying different TimeCards from competing vendors on diverse host platforms while maintaining stringent functional and timing compatibility.
-
----
+Conforming implementations provide performance figures obtained and reported according to this standard so that TimeCard implementations can be evaluated on a common basis.
 
 ## 1.2 Purpose
 
 The purpose of this standard is to provide:
 
-- Interoperability of different TimeCard implementations with the systems, and their operating systems, that use them as a source of time-of-day, supporting plug-and-play integration.
-- Modular implementation of the TimeCard to allow customization to industry needs.
-- Unambiguous comparison of different TimeCard implementations in terms of relevant performance metrics.
+- Interoperability between TimeCard implementations and the systems and operating systems that use them as sources of time-of-day.
+- Modular implementation of TimeCard functions to support different application needs and implementation technologies.
+- Unambiguous comparison of TimeCard implementations using common performance metrics, measurement points, and operating conditions.
 
----
+## 1.3 Need
 
-## 1.3 Motivation
+Distributed computing, telecommunications, industrial control, finance, and scientific measurement can depend on precise and traceable time. Existing implementations often use product-specific signal definitions, control models, and performance claims. These differences increase integration effort and make independent comparison difficult.
 
-Modern computing workloads increasingly depend on highly precise and deterministic hardware timing. Modern applications—such as **AI model training clusters, high-frequency financial trading, globally distributed Spanner-style databases, and 5G/6G cellular networks**—frequently require sub-microsecond or nanosecond-class synchronization across thousands of independent nodes.
+P3335 addresses that need by defining externally observable TimeCard functions, conditional interface profiles, a unified-timescale model, a transport-neutral control information model, and a common performance declaration framework.
 
-Historically, achieving this level of timing required bespoke, vendor-specific implementations or tightly coupled architectures that lacked modularity and scalability. The **TimeCard architecture** addresses these historical bottlenecks by introducing:
-- A standardized hardware abstraction layer and signal footprint (e.g., standardized 1PPS, 10 MHz, and Time of Day bounds).
-- A unified management and telemetry framework supporting diverse transports for configuration and observability.
-- A common timing distribution mechanism capable of bypassing host operating system latencies using hardware-based timestamping (e.g., PCIe Precision Time Measurement or hardware PTP).
-- A clear, falsifiable path for cross-vendor conformance certification, grounded in traceable metrology and repeatable test procedures.
+## 1.4 Applicability and implementation freedom
 
-The ultimate motivation is to foster an open, competitive ecosystem for precision time distribution.
+This standard applies to a TimeCard realized as a discrete add-in card, embedded hardware or gateware, a system-on-chip function, or an external timing unit. Conformance is based on observable behavior, implemented interfaces, and supplier declarations rather than physical form factor.
 
----
+This standard does not prescribe an internal oscillator technology, disciplining algorithm, ensemble algorithm, physical partitioning, or product construction unless that choice affects a claimed interface or externally observable behavior. It does not replace product-safety, electromagnetic-compatibility, environmental, spectrum, export, or other regulatory obligations.
 
-## 1.4 Design Philosophy
+## 1.5 Relationship to other standards
 
-The P3335 TimeCard specification is founded on several core engineering principles:
+P3335 uses established standards where they define a protocol, signal, or metric needed by a claimed TimeCard function. Clause 2 lists the documents that are indispensable to implementing those functions. Annex C lists related documents used for background or deployment guidance.
 
-| Principle | Description |
-|------------|-------------|
-| **Modularity** | The TimeCard operates as a self-contained subsystem that fully abstracts the complexities of oscillator disciplining away from the host CPU. |
-| **Interoperability** | Management and timing interfaces are standardized to facilitate plug-and-play architectural compatibility across different server fleets and boundary clocks. |
-| **Scalability** | The architecture gracefully scales from single-node, isolated edge servers to globally synchronized hyperscale network domains, relying on unified ensemble clocks. |
-| **Determinism** | Hardware-assisted generation and timestamping provide highly predictable, low-jitter, and low-latency outputs, immune to software scheduling variations. |
-| **Traceability** | Subsystem logic supports an unbroken chain of measurements that reflect recognized international standards (e.g., UTC, TAI), measured with calibrated metrology equipment. |
-| **Security and Integrity** | Remote management channels and firmware provisioning protocols rely on modern, authenticated, and cryptographically verifiable mechanisms, including data sanitization. |
+The principal areas of coordination are:
 
----
+- IEEE 1588 and IEEE 802.1AS for packet-based time synchronization.
+- IEEE 1139, IEEE 1193, ITU-T G.810, and ITU-T G.8260 for time and frequency metrology.
+- The PCI Express Base Specification for PCIe and Precision Time Measurement behavior.
+- IRIG Standard 200 for claimed IRIG time-code interfaces.
+- Management protocol specifications for control interfaces that claim those protocols.
 
-## 1.5 Relationship to Other Standards
+## 1.6 Document structure
 
-This specification aligns with and periodically references multiple established global timing and measurement standards. Key related standards include:
-
-- **IEEE Std 1588™-2019 (PTPv2.1):** Precision Time Protocol for generalized network synchronization.
-- **IEEE Std 802.1AS™-2020:** Timing and Synchronization for Time-Sensitive Applications.
-- **ITU-T G.810 / G.8260 / G.8271:** Definitions and boundary parameters for carrier-grade synchronization networks.
-- **IEEE Std 1139™ / IEEE Std 1193™:** Standard definitions and environmental testing methodologies for fundamental frequency metrology quantities (ADEV, TDEV, MTIE).
-- **PCI-SIG PCIe Base Specification:** Specifically outlining Precision Time Measurement (PTM) for in-band hardware timestamping.
-- **Open Compute Project (OCP) Time Appliances Project (TAP):** The foundational open-hardware consortium that incubated the original TimeCard concept.
-
-Where applicable, this document references these standards to ensure technical consistency across the industry.
-
----
-
-## 1.6 Structure of the Specification
-
-The standard is organized sequentially into the following major clauses:
-
-| Chapter | Description |
-|----------|--------------|
-| **1. Overview** | Provides the motivation, high-level scope, and conceptual structure (Informative). |
-| **2. Normative References** | Lists the foundational standards essential for implementing this specification. |
-| **3. Definitions, Acronyms, and Abbreviations** | Clarifies exact terminology and abbreviations utilized throughout the text. |
-| **4. Conformance** | Outlines the formal terminology and methodology for claiming implementation compliance. |
-| **5. Architecture** | Defines the core TimeCard blueprint, oscillator interactions, and boundary definitions. |
-| **6. Performance Specifications** | Details the mathematical metrics and methodologies used to quantify stability and accuracy. |
-| **7. Timing Interfaces** | Specifies the electrical and logical conduits for receiving and providing synchronization. |
-| **8. Control Interfaces** | Defines the data structures required for out-of-band and in-band management. |
-| **9. Environment** | Establishes baselines for physical survivability, thermal tolerance, and RF emissions. |
-| **10. Applications and Best Practices** | Offers structural guidance on real-world deployment and operational optimization (Informative). |
-| **Annex A. Metrics** | Provides definitions and measurement methodologies for timing and frequency metrics (Informative). |
-| **Annex B. Test Procedures** | Provides standardized procedures for functional, performance, and environmental testing (Informative). |
-| **Annex C. Bibliography** | Lists informational references and supplementary reading. |
-
----
-
-## 1.7 Intended Audience
-
-This specification is drafted distinctly for:
-- Hardware, software, and systems engineers developing TimeCard-compatible commercial products or reference designs.
-- Datacenter architects and system integrators designing synchronized infrastructure and planning for scale-out timing topologies.
-- Network operators and site-reliability engineers managing latency-sensitive distributed environments who require granular telemetry.
-- Scientists and researchers requiring high-fidelity timestamping for metrology and specialized physics experimentation.
-- Test and validation engineers utilize the defined procedures to empirically grade hardware performance and claim conformance.
-- Affiliated standards bodies (e.g., ITU-T or OCP) seeking structural harmonization with modern end-system timing frameworks.
-
-Readers are expected to possess a foundational understanding of frequency control, phase-locked loops, phase noise characteristics, and packet-based synchronization (e.g., PTP, NTP).
-
----
-
-## 1.8 Strategic Goals
-
-The widespread adoption of the TimeCard architecture aims to achieve the following outcomes:
-- **Broad vendor-neutral interoperability** among specialized timing payloads and generic host computers, enabling a mature, commercial off-the-shelf (COTS) ecosystem.
-- **Drastically improved absolute precision** within distributed databases, cellular networks, and distributed AI compute clusters by driving the timescale directly to the hardware bus (e.g., PCIe).
-- **Lowered integration friction and cost** resulting from strictly defined hardware abstraction interfaces and deterministic holdover behaviors.
-- **Enhanced operational observability** and traceability to support stringent financial, telecommunications, and governmental regulatory frameworks.
-- **Consistent metrology evaluations** resulting from standardized, falsifiable performance testing and conformance guidelines.
-
----
-
-## 1.9 Document Status and Origin
-
-This architectural framework draws heavily on the pioneering work in the **Open Compute Project (OCP) Time Appliances Project (TAP)**. Moving this architecture into the formal IEEE P3335 standardization process reflects the industry's demand for a rigorously governed, universally recognized timing hardware standard.
-
-Contributors, silicon vendors, and system integrators are actively encouraged to submit empirical performance data, interoperability reports, and technical proposals to inform the ongoing evolution of this specification.
+| Clause or annex | Content |
+|-----------------|---------|
+| Clause 1 | Scope, purpose, need, applicability, and document organization. |
+| Clause 2 | Normative references. |
+| Clause 3 | Terms, definitions, acronyms, and abbreviations. |
+| Clause 4 | Conformance model, profiles, statements, and evidence. |
+| Clause 5 | TimeCard architecture and unified-timescale behavior. |
+| Clause 6 | Performance declaration and characterization requirements. |
+| Clause 7 | Receive and providing timing interfaces. |
+| Clause 8 | Control interfaces and the baseline control information model. |
+| Clause 9 | Environmental, mechanical, electrical, and lifecycle declarations. |
+| Clause 10 | Informative application and deployment guidance. |
+| Annex A | Informative metric background. |
+| Annex B | Informative example test procedures. |
+| Annex C | Bibliography. |
+| Annex D | Informative conformance-statement proforma. |
