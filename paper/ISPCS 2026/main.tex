@@ -17,7 +17,7 @@
 Chair, IEEE P3335 Time Card Working Group\\
 byagowi@turbalance.com}
 % Add working-group co-authors as needed
-\thanks{This abstract describes the unapproved IEEE P3335 draft; content
+\thanks{This paper describes the unapproved IEEE P3335 draft; content
 is subject to change.}
 }
 
@@ -60,7 +60,7 @@ comparison of products is impractical.
 IEEE P3335~\cite{p3335par} (PAR approved December 2022, sponsored by the
 IEEE Instrumentation and Measurement Society) addresses this gap with three
 goals: plug-and-play interoperability between Time Card implementations and
-the hosts and operating systems that consume them, including POSIX
+the hosts and operating systems that support them, including POSIX
 integration via a shared PTP hardware clock (PHC); modular implementation
 around defined building blocks (time source, local oscillator, time
 processor); and unambiguous comparison through common figures of merit,
@@ -70,13 +70,13 @@ to embrace implementation diversity while ensuring interoperability.
 \section{Architecture}
 The draft defines a Time Card by externally observable behavior rather than
 physical construction: one conformance model covers a discrete add-in card,
-embedded gateware, an FPGA or SoC function, and an external timing unit. Internally, the architecture names a local timing function (the oscillator
+embedded gateway, an FPGA or SoC function, and an external timing unit. Internally, the architecture names a local timing function (the oscillator
 state, from quartz to miniaturized atomic references), a time generator, a
 timestamping facility, and receive, providing, and control interfaces
 (Fig.~\ref{fig:arch}); the timing data plane is separated from management
 and control.
 
-\begin{figure}[t]
+\begin{figure}[t]  % Figure is Illegible
 \centering
 \includegraphics[width=0.85\columnwidth]{figures/architecture-context.pdf}
 \caption{Time Card context: external references enter through receive
@@ -100,9 +100,8 @@ outputs, time-of-day messages, PTP, NTP, IRIG, PCIe Precision Time
 Measurement (PTM), and host-bus timestamps) publishes, encodes, or derives
 from it, with a declared alignment error for each time- or phase-bearing
 interface. Ensemble operation must collapse to one selected or synthesized
-reference disciplining that timescale. Cross-output phase coherence thereby
-becomes a conformance property rather than a datasheet claim. Behavior at
-leap events, holdover entry and exit, reference failover, and manual steps
+reference for disciplining that timescale. Behavior at
+leap events, holdover entry and exit, reference failover, and manual phase steps
 must be documented, and continuous-phase outputs may not take undocumented
 phase steps while locked.
 
