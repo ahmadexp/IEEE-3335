@@ -1,0 +1,242 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  conference,
+  a4paper]{IEEEtran}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[numbers,sort&compress]{natbib}
+\bibliographystyle{IEEEtranN}
+\IEEEoverridecommandlockouts
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={IEEE P3335{,} Standard for Architecture and Interfaces for Time Card: Motivation and Progress Report},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{IEEE P3335, Standard for Architecture and Interfaces for Time
+Card:\\
+Motivation and Progress Report}
+\author{\IEEEauthorblockN{Ahmad Byagowi}
+\IEEEauthorblockA{Time Appliance Project\\
+Chair, IEEE P3335 Time Card Working Group\\
+byagowi@turbalance.com}
+
+\thanks{This abstract describes the unapproved IEEE P3335 draft; content
+is subject to change.}}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+IEEE P3335 defines the generic architecture and interfaces of a Time
+Card: a modular timing subsystem that provides traceable time-of-day to
+a host system and, via protocols such as PTP and NTP, to networked
+distributed systems. The project generalizes the Open Compute Project
+(OCP) Time Card, the core of the Open Time Server, into a vendor-neutral
+standard. We report the motivation for the work and its progress as of
+mid-2026: a structurally complete, pre-ballot working draft covering
+conformance, architecture, performance declaration, timing and control
+interfaces, environment, and application guidance. The presentation
+summarizes the draft's key design decisions (a unified-timescale
+invariant, stackable conformance profiles, a transport-neutral control
+model, and declaration-based performance) and invites ISPCS review ahead
+of ballot.
+\end{abstract}
+
+\begin{IEEEkeywords}
+IEEE P3335, Time Card, IEEE 1588, PTP hardware clock, time synchronization,
+conformance, figures of merit
+\end{IEEEkeywords}
+
+\section{Motivation}\label{motivation}
+
+Data centers, telecommunications, industrial control, finance, and
+scientific measurement increasingly depend on precise, traceable
+time-of-day, yet a typical host lacks an adequate local clock, clock
+steering, and time-transfer machinery. The OCP Time Card
+\citep{ocp-timecard} (a PCIe card combining a GNSS receiver, a
+high-stability holdover oscillator, and an FPGA) showed that an open,
+modular timing subsystem can anchor an Open Time Server
+\citep{byagowi2022timecard}, and a diverse ecosystem of commercial and
+open implementations followed. Each uses product-specific signal
+definitions, control models, and performance claims: integration effort
+is duplicated for every card--host pairing, and independent comparison
+of products is impractical.
+
+IEEE P3335 \citep{p3335par} (PAR approved December 2022, sponsored by
+the IEEE Instrumentation and Measurement Society) addresses this gap
+with three goals: plug-and-play interoperability between Time Card
+implementations and the hosts and operating systems that consume them,
+including POSIX integration via a shared PTP hardware clock (PHC);
+modular implementation around defined building blocks (time source,
+local oscillator, time processor); and unambiguous comparison through
+common figures of merit, measurement points, and operating conditions.
+The working group's guiding principle is to embrace implementation
+diversity while ensuring interoperability.
+
+\section{Architecture}\label{architecture}
+
+The draft defines a Time Card by externally observable behavior rather
+than physical construction: one conformance model covers a discrete
+add-in card, embedded gateware, an FPGA or SoC function, and an external
+timing unit. Internally, the architecture names a local timing function
+(the oscillator state, from quartz to miniaturized atomic references), a
+time generator, a timestamping facility, and receive, providing, and
+control interfaces (Fig.~\ref{fig:arch}); the timing data plane is
+separated from management and control.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{figures/architecture-context.pdf}
+\caption{Time Card context: external references enter through receive
+interfaces, discipline one unified timescale, and reach the host through
+providing and control interfaces.}
+\label{fig:arch}
+\end{figure}
+
+Recognized receive interfaces include GNSS (multi-constellation, with
+antenna-state reporting), PTP per IEEE 1588-2019 \citep{ieee1588} or
+IEEE 802.1AS-2025 \citep{ieee8021as}, NTP \citep{rfc5905}, IRIG AM/DCLS,
+discrete 1PPS and frequency inputs, and other time-transfer methods such
+as White Rabbit and wireless time services. Receive-less designs
+(free-running or holdover-only) are permitted when declared, and
+multi-reference designs must document their selection policy (priority,
+validity, failure detection, fallback, recovery).
+
+The central invariant is the unified timescale: a conforming instance
+generates exactly one, and every providing interface (1PPS, frequency
+outputs, time-of-day messages, PTP, NTP, IRIG, PCIe Precision Time
+Measurement (PTM), and host-bus timestamps) publishes, encodes, or
+derives from it, with a declared alignment error for each time- or
+phase-bearing interface. Ensemble operation must collapse to one
+selected or synthesized reference disciplining that timescale.
+Cross-output phase coherence thereby becomes a conformance property
+rather than a datasheet claim. Behavior at leap events, holdover entry
+and exit, reference failover, and manual steps must be documented, and
+continuous-phase outputs may not take undocumented phase steps while
+locked.
+
+Host time transfer receives explicit treatment: mappings must document
+discovery, driver-visible registers or APIs, timestamp formats, and the
+latency, asymmetry, and correction data needed to evaluate time transfer
+into the host. PCIe PTM implementations must state which measurement
+point PTM timestamps represent and the correction terms relating PTM
+time to other providing interfaces, addressing the historically
+underspecified last segment between the timing card and the host
+operating system.
+
+\section{Conformance and Performance
+Declaration}\label{conformance-and-performance-declaration}
+
+Base conformance requires at least one timing providing interface, one
+unified timescale, one accessible control interface, and full
+documentation of interfaces, performance metrics per measurement point,
+environmental limits, and validity conditions (warm-up, lock time,
+reference, temperature, measurement bandwidth). Conditional profiles
+stack on top: a Physical Timing Output profile with concrete 1PPS limits
+(SMA connector into a \(50~\Omega\) load, rising-edge on-time mark,
+10\%--90\% rise time below 10 ns, alignment error below 100 ns between
+the 1PPS output and interfaces claiming alignment to it), a PCIe
+host-mapping profile, and Managed and Secure Infrastructure security
+profiles. The Managed profile requires authenticated, role-separated
+management with integrity-checked updates; Secure Infrastructure adds
+signed update payloads verified against a trust anchor, rollback
+protection, secure or measured boot before the timing service enters the
+locked state, and hardware-backed key storage. Claiming any optional
+feature binds the implementation to that feature's requirements.
+
+Instead of universal numeric product classes, the draft mandates
+bounded, reproducible performance declarations. Each claim states its
+metric, measurement point, operating mode (locked, holdover,
+free-running, warm-up, failover, recovery), reference, environmental
+conditions, observation interval, uncertainty, and decision rule, with
+methods per IEEE 1139-2022 \citep{ieee1139}, IEEE 1193-2022
+\citep{ieee1193}, and ITU-T G.810/G.8260 \citep{itug8260}, and results
+metrologically traceable to a national metrology institute or a declared
+reference. MTIE is required for bounded time-error and holdover claims;
+TDEV, ADEV, phase noise, and a defined pulse-jitter statistic apply
+where relevant. Metrics may not be used interchangeably, and typical
+values cannot replace bounded ones. Informative annexes add
+formula-level metric definitions, a holdover error model, and example
+test procedures.
+
+\section{Control Interfaces}\label{control-interfaces}
+
+A transport-neutral baseline information model keeps object semantics
+identical whether control rides SMBus, I2C, or I3C, PCIe MMIO, IPMI or
+NC-SI, or REST, gRPC, Redfish, or SNMP. Required objects cover identity
+and versioning, device state (initializing through locked, holdover,
+degraded, and fault), timescale identity, sync-source status, alarms,
+security state, and coherent (tear-free) time reads. Conditional
+telemetry spans phase error in picoseconds, fractional frequency offset
+in parts in \(10^{15}\), MTIE estimates, holdover elapsed time, and GNSS
+status. Configuration writes must report acceptance and whether they can
+cause a phase step, loss of lock, or output interruption.
+
+\section{Progress, Process, and Remaining
+Work}\label{progress-process-and-remaining-work}
+
+The working group formed from the OCP time-appliances community after
+PAR approval; contributions on architecture, host integration, use
+cases, and metrics accumulated through 2025, and drafting moved to a
+public git repository \citep{p3335repo} in October 2025. As of July 2026
+the draft is structurally complete and pre-ballot: Clauses 1--10 plus
+metrics and test-procedure annexes compile to a 48-page document
+carrying 411 machine-indexed requirement statements. The draft is
+written as per-clause Markdown with pull-request-based comment
+resolution and a generated requirements index for traceability; the
+comment round from the April 2026 working-group meeting is merged, and
+all 14 normative references passed a technical use audit. Open
+pre-ballot decisions include ratifying the 1PPS electrical and alignment
+limits, choosing between a mandated cross-vendor host ABI (a common
+register layout or OS API) and transport-neutral semantics alone,
+freezing the baseline control vocabulary, ratifying normative-reference
+editions, fixing the security-profile cryptographic suites, and an
+independent timing-metrology review. The presentation will detail these
+decisions, share experience running an IEEE standards project on open
+git tooling, and solicit review and participation from the ISPCS
+community ahead of ballot.
+
+\bibliography{references}
+
+\end{document}
