@@ -1,16 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 900 300">
   <style>
-    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
-    .main { fill: #ecfdf5; stroke: #047857; stroke-width: 2; rx: 8; }
-    .text { font: 15px sans-serif; fill: #0f172a; }
-    .small { font: 12px sans-serif; fill: #334155; }
-    .arrow { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+    .box { fill: #e5e7eb; rx: 4; }
+    .main { fill: #d1d5db; rx: 4; }
+    .text { font-family: sans-serif; font-size: 21px; font-weight: bold; fill: #111827; }
+    .small { font-family: sans-serif; font-size: 17px; fill: #111827; }
   </style>
-  <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
-    </marker>
-  </defs>
 
   <rect x="20" y="90" width="120" height="70" class="box"/>
   <text x="80" y="122" text-anchor="middle" class="text">Ingress</text>
@@ -22,22 +16,33 @@
 
   <rect x="355" y="90" width="135" height="70" class="box"/>
   <text x="422" y="122" text-anchor="middle" class="text">Discipline</text>
-  <text x="422" y="145" text-anchor="middle" class="small">PLL or equivalent</text>
+  <text x="422" y="145" text-anchor="middle" class="small">local timing</text>
 
   <rect x="530" y="70" width="150" height="110" class="main"/>
   <text x="605" y="114" text-anchor="middle" class="text">Unified</text>
   <text x="605" y="137" text-anchor="middle" class="text">Timescale</text>
-  <text x="605" y="160" text-anchor="middle" class="small">single source of truth</text>
+  <text x="605" y="158" text-anchor="middle" class="small">maintained</text>
+  <text x="605" y="178" text-anchor="middle" class="small">timebase</text>
 
   <rect x="720" y="90" width="150" height="70" class="box"/>
   <text x="795" y="122" text-anchor="middle" class="text">Egress</text>
-  <text x="795" y="145" text-anchor="middle" class="small">PPS, ToD, PTM, PTP</text>
+  <text x="795" y="144" text-anchor="middle" class="small">PPS, ToD</text>
+  <text x="795" y="165" text-anchor="middle" class="small">PTM, PTP</text>
 
-  <path d="M140 125 L180 125" class="arrow"/>
-  <path d="M315 125 L355 125" class="arrow"/>
-  <path d="M490 125 L530 125" class="arrow"/>
-  <path d="M680 125 L720 125" class="arrow"/>
+  <rect x="140" y="122" width="33" height="6" fill="#111827"/>
+  <polygon points="180,125 169,119 169,131" fill="#111827"/>
+  <rect x="315" y="122" width="33" height="6" fill="#111827"/>
+  <polygon points="355,125 344,119 344,131" fill="#111827"/>
+  <rect x="490" y="122" width="33" height="6" fill="#111827"/>
+  <polygon points="530,125 519,119 519,131" fill="#111827"/>
+  <rect x="680" y="122" width="33" height="6" fill="#111827"/>
+  <polygon points="720,125 709,119 709,131" fill="#111827"/>
 
-  <path d="M430 165 C430 225, 790 225, 790 165" class="arrow"/>
-  <text x="610" y="222" text-anchor="middle" class="small">holdover continues from local timing function when references are unavailable</text>
+  <rect x="427" y="160" width="6" height="65" fill="#111827"/>
+  <rect x="430" y="219" width="360" height="6" fill="#111827"/>
+  <rect x="787" y="172" width="6" height="53" fill="#111827"/>
+  <polygon points="790,165 783,178 797,178" fill="#111827"/>
+  <rect x="285" y="240" width="540" height="54" class="box"/>
+  <text x="555" y="263" text-anchor="middle" class="small">Holdover uses the local timing function</text>
+  <text x="555" y="285" text-anchor="middle" class="small">when references are unavailable</text>
 </svg>

@@ -1,6 +1,6 @@
 # Annex A: Metrics (Informative)
 
-This annex summarizes timing and frequency metrics used by the normative performance declarations in Clause 6. The controlling definitions and calculation methods are those in the normative references cited by the applicable requirement.
+This annex summarizes timing and frequency metrics used by the normative performance declarations in Clause 6. The controlling definitions and calculation methods are those in the normative references cited by the applicable requirement. The environmental-sensitivity discussion in A.10 condenses concepts from IEEE Std 1193-2022 [3] for convenient application to TimeCards; IEEE Std 1193-2022 remains the controlling source where a normative requirement cites it.
 
 ## A.1 Metric selection
 
@@ -77,6 +77,10 @@ Peak-to-peak observed range depends strongly on sample count and observation tim
 | Granularity | Smallest step representable by an encoding or interface. |
 
 A fine timestamp granularity does not by itself imply equally fine resolution, precision, or accuracy.
+
+These terms define P3335 performance-declaration semantics and are aligned with the corresponding measurement concepts used by IEEE Std 1588-2019 [4]. When an implementation claims an IEEE 1588 mapping, IEEE Std 1588-2019 governs the protocol fields and state-machine behavior, while the definitions in Clause 3 govern P3335 conformance and performance declarations. Under 4.7 and 7.3.3, an implementation-specific departure is identified in the conformance statement and is not represented as IEEE 1588 conformance.
+
+P3335 uses *accuracy* qualitatively and requires a quantitative claim to be expressed as a defined error or uncertainty bound. An IEEE 1588 `clockAccuracy` value is a protocol encoding that is mapped to the applicable measured or declared range under 6.4. P3335 uses *precision* for repeatability, *resolution* for the smallest perceptible change in indication, and *granularity* for the smallest representable encoding step. These four terms are not interchangeable, and an IEEE 1588 timestamp field width or scaling does not, by itself, establish P3335 resolution, precision, or accuracy.
 
 ## A.8 Holdover time error
 

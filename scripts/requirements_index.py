@@ -41,6 +41,7 @@ def clause_id(relative_path: str) -> str:
 
 def normalize(text: str) -> str:
     text = re.sub(r"\s+", " ", text.strip())
+    text = re.sub(r"\*\*(shall)\*\*", r"\1", text, flags=re.IGNORECASE)
     return text.replace("|", "\\|")
 
 

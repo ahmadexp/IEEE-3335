@@ -4,7 +4,7 @@
 
 This standard defines the generic architecture and interfaces of a TimeCard system, which constitutes a traceable source of time-of-day to heterogeneous systems that distribute or use that time. It also defines figures of merit that characterize the relevant performance of a TimeCard.
 
-A TimeCard provides traceable time-of-day to directly attached systems and to networked distributed systems. Such systems include a host containing the TimeCard and systems synchronized through protocols such as the Precision Time Protocol (PTP) or Network Time Protocol (NTP).
+A TimeCard provides time-of-day to directly attached systems and to networked distributed systems. Such systems include a host containing the TimeCard and systems synchronized through protocols such as the Precision Time Protocol (PTP) or Network Time Protocol (NTP). P3335 requires the reference relationships, measurement points, uncertainty information, and supporting evidence needed to evaluate the TimeCard contribution to a system-level traceability analysis. Conformance to P3335 does not, by itself, establish end-to-end traceability for an integrated system.
 
 This standard defines the basic functional building blocks of a TimeCard and the interfaces among those blocks to support modular implementation. The principal functions include a time source, a local timing function, and a time processor.
 
@@ -38,10 +38,10 @@ P3335 uses established standards where they define a protocol, signal, or metric
 
 The principal areas of coordination are:
 
-- IEEE 1588 and IEEE 802.1AS for packet-based time synchronization.
-- IEEE 1139, IEEE 1193, ITU-T G.810, and ITU-T G.8260 for time and frequency metrology.
-- The PCI Express Base Specification for PCIe and Precision Time Measurement behavior.
-- IRIG Standard 200 for claimed IRIG time-code interfaces.
+- IEEE Std 1588-2019 [4] and IEEE Std 802.1AS-2025 [5] for packet-based time synchronization.
+- IEEE Std 1139-2022 [2], IEEE Std 1193-2022 [3], ITU-T Recommendation G.810 (08/1996) [10], and ITU-T Recommendation G.8260 (11/2022) [11] for time and frequency metrology.
+- The PCI Express Base Specification, Revision 5.0, Version 1.0 [13], for PCIe and Precision Time Measurement behavior.
+- IRIG Standard 200-16 [8] for claimed IRIG time-code interfaces.
 - Management protocol specifications for control interfaces that claim those protocols.
 
 ## 1.6 Document structure

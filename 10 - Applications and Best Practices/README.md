@@ -1,6 +1,6 @@
 # 10. Applications and Best Practices (Informative)
 
-This clause provides deployment considerations for TimeCard systems. It does not add conformance requirements. Application-specific accuracy, availability, security, safety, and regulatory limits remain the responsibility of the system designer and operator.
+This clause provides deployment considerations for TimeCard systems. It does not add or alter conformance requirements. Application-specific accuracy, availability, security, safety, and regulatory limits remain the responsibility of the system designer and operator.
 
 ## 10.1 Selecting a TimeCard
 
@@ -13,7 +13,7 @@ A useful selection process begins with the system timing requirement and works b
 - Environmental and host-integration conditions.
 - Monitoring, update, access-control, and recovery needs.
 
-Timestamp granularity or oscillator type alone does not establish end-to-end accuracy. The complete error and uncertainty path should be evaluated.
+Timestamp granularity or oscillator type alone does not establish end-to-end accuracy. The complete error and uncertainty path and budget should be evaluated.
 
 ## 10.2 Application considerations
 
@@ -41,15 +41,15 @@ Scientific applications can prioritize phase coherence, low phase noise, long ob
 
 ### 10.3.1 Thermal and mechanical integration
 
-The host should provide the airflow, inlet temperature, orientation, and mounting conditions used by the supplier's full-performance declaration. Large local heat sources and changing fan policies can introduce thermal gradients that are not represented by ambient temperature alone.
+The host should provide the airflow, inlet temperature, orientation, and mounting conditions used by the supplier's full-performance declaration. Large local heat sources and changing fan policies can introduce thermal gradients and timing effects that vary independently of ambient temperature.
 
 ### 10.3.2 Cabling and delay
 
-Cable type, length, temperature coefficient, connector condition, termination, and adapter delay can materially affect a physical timing measurement point. Fixed corrections should use a consistent sign convention and should be recorded with uncertainty. Installation changes that alter the timing path should trigger review or recalibration.
+Cable type, length, temperature coefficient, connector condition, termination, and adapter delay can materially affect a physical timing measurement point. Fixed corrections should use a consistent sign convention and should be recorded with uncertainty. Installation changes, including connector replacement, cable rerouting, adapter changes, or altered strain relief, should trigger review or recalibration.
 
 ### 10.3.3 Antenna and RF paths
 
-GNSS antenna placement should provide the required sky view and should account for cable loss, antenna power, lightning protection, RF interference, jamming, spoofing, and shared-failure risks. Antenna delay and receiver configuration should be included in the declared reference path.
+GNSS antenna placement should provide the required sky view and should account for cable loss, antenna power, lightning protection, RF interference, jamming, spoofing, and correlated-failure risks. Antenna delay and receiver configuration should be included in the declared reference path.
 
 ## 10.4 Operation and maintenance
 
@@ -59,7 +59,7 @@ Reference priorities and qualification thresholds should reflect independence, a
 
 ### 10.4.2 Monitoring and alarms
 
-Operators should monitor source availability, active source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit can be exceeded, not only to device state names.
+Operators should monitor at least source availability, active source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit can be exceeded, not only to device state names.
 
 ### 10.4.3 Updates and configuration
 
@@ -74,8 +74,8 @@ Calibration and verification intervals should be based on the declared performan
 | Symptom | Possible cause | Investigation |
 |---------|----------------|---------------|
 | Constant offset | Cable or antenna delay, wrong edge, epoch mismatch, or unapplied correction | Trace the measurement point and correction sign through the complete timing path. |
-| Intermittent source loss | Marginal signal level, RF interference, packet loss, threshold hysteresis, or shared infrastructure | Correlate source health, raw signal indicators, network data, and event logs. |
+| Intermittent source loss | Marginal signal level, RF interference, packet loss, threshold hysteresis, loose or poorly retained connectors, broken or intermittent cabling, or shared infrastructure | Inspect and mechanically verify connectors and cabling, then correlate source health, raw signal indicators, network data, and event logs. |
 | Excessive holdover error | Initial frequency offset, temperature change, aging, insufficient preconditioning, or model error | Compare the holdover test conditions with the supplier declaration and recorded environment. |
 | Host timestamp disagreement | Different epochs or timescales, non-atomic reads, host-bus delay, or software conversion error | Validate the timestamp mapping, rollover behavior, atomicity, and correction model. |
 | Unexpected phase step | Reference switch, manual adjustment, restart, or invalid continuity assumption | Correlate physical outputs with control state and transition events. |
-| Management loss during host fault | Control path shares host power, software, or network dependencies | Review the intended out-of-band boundary and shared-failure assumptions. |
+| Management loss during host fault | Control path shares host power, software, or network dependencies | Review the intended out-of-band boundary and correlated-failure assumptions. |

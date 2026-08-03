@@ -2,7 +2,7 @@
 
 ## 3.1 Definitions
 
-For the purposes of this document, the following terms and definitions apply. The IEEE Standards Dictionary Online should be consulted for terms not defined in this clause.
+For the purposes of this document, the following terms and definitions apply.
 
 - **accuracy:** Qualitative closeness of agreement between a measured quantity value and a reference quantity value. A numerical accuracy claim is expressed in this standard as time error, frequency offset, uncertainty, or another defined metric.
 - **conformance profile:** Named set of mandatory requirements that applies when the profile is claimed by an implementation.
@@ -11,8 +11,9 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **data plane:** Logical or physical path that conveys time, phase, frequency, or event-timestamp information.
 - **declared:** Stated in the conformance statement or in supplier documentation referenced by that statement.
 - **disciplining:** Steering a local timing function using observations of one or more reference signals.
-- **ensemble operation:** Selection or combination of multiple references to produce the reference used by the unified timescale.
-- **granularity:** Smallest step in the representation or encoding of a reported value.
+- **ensemble operation:** Combination of selected reference observations to produce a synthesized reference used to discipline or validate the unified timescale.
+- **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
+- **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, or accuracy.
 - **holdover:** Operating state in which a TimeCard maintains its timescale after loss or rejection of the external reference used for synchronization, using its local timing function and available historical information.
 - **host system:** Computing, telecommunications, measurement, or control platform that integrates or consumes the services of a TimeCard.
 - **lock time:** Elapsed time from a declared starting condition until a TimeCard enters the declared locked state.
@@ -20,16 +21,18 @@ For the purposes of this document, the following terms and definitions apply. Th
 - **measurement uncertainty:** Non-negative parameter characterizing the dispersion of quantity values attributed to a measurand.
 - **optional feature:** Feature, interface, protocol, environmental profile, or security function not required for base conformance that becomes subject to its applicable mandatory requirements when claimed.
 - **phase alignment:** Specified phase relationship between corresponding timing markers on two interfaces. Alignment error is the measured difference from that relationship.
+- **precision:** Closeness of agreement among repeated indications under stated conditions.
 - **providing interface:** Outbound physical or logical interface through which a TimeCard distributes time, phase, frequency, or timestamp information.
-- **receive interface:** Inbound physical or logical interface through which a TimeCard acquires a reference representation.
-- **reference signal:** External signal or data stream used to initialize, discipline, validate, or monitor the unified timescale.
+- **receive interface:** Inbound physical or logical interface and its defined measurement point through which a TimeCard acquires observations of an external reference signal or data stream.
+- **reference signal:** External physical signal or data stream whose defined timing marker or encoded time value can be used to initialize, discipline, validate, or monitor the unified timescale.
 - **resolution:** Smallest change in a measured quantity that causes a perceptible change in the corresponding indication.
 - **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
 - **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
 - **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
 - **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
-- **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty.
+- **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty. In this standard, a TimeCard supplies declarations and evidence that support system-level traceability analysis; the term does not assert that a TimeCard alone establishes end-to-end traceability.
 - **unavailable:** Status indicating that a supported object or measurement does not currently have a valid value.
+- **unspecified:** Status indicating that the applicable interface mapping defines a field or property but the implementation has not assigned a value. `unspecified` is distinct from `unknown`, `unavailable`, and `unsupported`.
 - **unified timescale:** Single timescale maintained by a TimeCard instance from which all of that instance's providing interfaces derive their time, phase, frequency, or timestamp information.
 - **unsupported:** Status indicating that an object, operation, or feature is not implemented.
 - **valid:** Status indicating that a value satisfies the freshness, state, and integrity conditions defined by its interface mapping.
@@ -38,52 +41,75 @@ For the purposes of this document, the following terms and definitions apply. Th
 
 - **1PPS:** one pulse per second
 - **ADEV:** Allan deviation
+- **AM:** amplitude modulation
 - **API:** application programming interface
 - **ASIC:** application-specific integrated circuit
+- **BAR:** base address register
 - **BMC:** baseboard management controller
 - **CFM:** cubic feet per minute
 - **CSAC:** chip-scale atomic clock
-- **DCLS:** direct current level shift
+- **DCLS:** direct current level shift (IRIG time-code modulation)
 - **DDS:** direct digital synthesizer
+- **DMTF:** Distributed Management Task Force
 - **EMC:** electromagnetic compatibility
 - **EMI:** electromagnetic interference
 - **ESD:** electrostatic discharge
 - **FPGA:** field-programmable gate array
+- **GLONASS:** Global Navigation Satellite System of the Russian Federation
 - **GNSS:** global navigation satellite system
 - **GPIO:** general-purpose input/output
+- **GPS:** Global Positioning System
 - **gRPC:** Google Remote Procedure Call
 - **I2C:** Inter-Integrated Circuit
 - **I3C:** Improved Inter-Integrated Circuit
+- **ID:** identifier
+- **IEEE:** Institute of Electrical and Electronics Engineers
+- **IEEE SA:** IEEE Standards Association
+- **IETF:** Internet Engineering Task Force
+- **IP:** Internet Protocol
 - **IPMI:** Intelligent Platform Management Interface
 - **IRIG:** Inter-Range Instrumentation Group
+- **ITU-T:** International Telecommunication Union Telecommunication Standardization Sector
 - **LFM:** linear feet per minute
 - **LOS:** loss of signal
 - **MMIO:** memory-mapped input/output
+- **MIPI:** MIPI Alliance
 - **MTBF:** mean time between failures
 - **MTIE:** maximum time interval error
 - **NC-SI:** Network Controller Sideband Interface
+- **NavIC:** Navigation with Indian Constellation
 - **NMI:** national metrology institute
 - **NTP:** Network Time Protocol
+- **OCP:** Open Compute Project
 - **OCP TAP:** Open Compute Project Time Appliances Project
 - **OCXO:** oven-controlled crystal oscillator
+- **PCI:** Peripheral Component Interconnect
 - **PCIe:** Peripheral Component Interconnect Express
+- **PCI-SIG:** Peripheral Component Interconnect Special Interest Group
 - **PHC:** PTP hardware clock
 - **PLL:** phase-locked loop
+- **PPS:** pulse per second
 - **PTM:** Precision Time Measurement
 - **PTP:** Precision Time Protocol
+- **QZSS:** Quasi-Zenith Satellite System
 - **REST:** representational state transfer
 - **RF:** radio frequency
+- **RFC:** Request for Comments
 - **RMS:** root mean square
 - **SMA:** SubMiniature version A connector
 - **SMBus:** System Management Bus
 - **SNMP:** Simple Network Management Protocol
 - **TAI:** International Atomic Time
+- **TAP:** Time Appliances Project
 - **TCXO:** temperature-compensated crystal oscillator
 - **TDEV:** time deviation
 - **TIC:** time interval counter
 - **TIE:** time interval error
 - **TLS:** Transport Layer Security
+- **TNC:** Threaded Neill-Concelman connector
 - **ToD:** time of day
 - **USB:** Universal Serial Bus
 - **UTC:** Coordinated Universal Time
+- **UTF-8:** Unicode Transformation Format, 8-bit
 - **WR:** White Rabbit
+- **WWVB:** United States long-wave time-signal station WWVB

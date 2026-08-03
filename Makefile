@@ -1,8 +1,12 @@
 OUTPUT = IEEE3335.pdf
 METADATA = metadata.yaml
 LINE_NUMBER_HEADER = latex/review-line-numbers.tex
+FOOTER_HEADER = latex/review-footer.tex
+LAYOUT_HEADER = latex/standards-layout.tex
+TABLE_FILTER = scripts/ieee_table_layout.lua
 LATEX_SCRATCH = *.aux *.log *.out *.toc
 FIGURE_CONVERTER ?= $(shell command -v magick 2>/dev/null || command -v convert 2>/dev/null || true)
+FIGURE_DENSITY ?= 72
 FIGURE_SVGS := $(wildcard figures/*.svg)
 FIGURE_PDFS := $(patsubst figures/%.svg,figures/rendered/%.pdf,$(FIGURE_SVGS))
 
@@ -27,9 +31,9 @@ figures/rendered/%.pdf: figures/%.svg
 		exit 1; \
 	fi
 	@mkdir -p figures/rendered
-	@$(FIGURE_CONVERTER) "$<" "$@"
+	@$(FIGURE_CONVERTER) -density $(FIGURE_DENSITY) "$<" "$@"
 
-$(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FIGURE_PDFS)
+$(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $(TABLE_FILTER) $(FIGURE_PDFS)
 	@echo "Gathering chapter files to build $(OUTPUT)..."
 	@bash -c ' \
 		FILES=() ; \
@@ -43,6 +47,9 @@ $(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FIGURE_PDFS)
 			--toc \
 			--toc-depth=3 \
 			--metadata-file=$(METADATA) \
+			--lua-filter=$(TABLE_FILTER) \
+			--include-in-header=$(LAYOUT_HEADER) \
+			--include-in-header=$(FOOTER_HEADER) \
 			--include-in-header=$(LINE_NUMBER_HEADER) \
 			--pdf-engine=$(PDF_ENGINE) \
 			-V geometry:margin=1in ; \

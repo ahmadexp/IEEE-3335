@@ -31,3 +31,7 @@ This bibliography identifies background material useful for designing, applying,
 - **[B19]** Network Time Foundation, *Network Time Protocol project documentation and reference implementation*. [<https://www.ntp.org/>]
 - **[B20]** Open Compute Project Time Appliances Project, *TimeCard hardware, gateware, software, and documentation repository*. [<https://github.com/Time-Appliances-Project/Time-Card>]
 - **[B21]** Open Compute Project, *Time Appliances Project public project page*. [<https://www.opencompute.org/wiki/Time_Appliances_Project>]
+
+## C.4 Transaction Processing Reference
+
+- **[B22]** IBM, *ACID properties of transactions*, CICS Transaction Server for z/OS 5.4. [IBM documentation](https://www.ibm.com/docs/en/cics-ts/5.4.0?topic=processing-acid-properties-transactions).

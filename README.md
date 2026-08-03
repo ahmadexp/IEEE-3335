@@ -57,7 +57,8 @@ This command will:
 2. Sort them numerically and alphabetically.
 3. Pass them logically to `pandoc`.
 4. Add pagewise review line numbers to every text line from the Abstract onward.
-5. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.
+5. Add the current build date to the footer of every page.
+6. Output a single table-of-contents included document called `IEEE3335.pdf` at the root directory.
 
 To remove the generated PDF and clean up the build output:
 ```bash

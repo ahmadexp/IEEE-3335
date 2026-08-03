@@ -11,14 +11,14 @@ This clause specifies the control-plane requirements used to discover, configure
 | Out-of-band control | IPMI, NC-SI, serial | Management independent of the host operating system. |
 | Remote network control | REST, gRPC, Redfish, SNMP | Fleet management and remote telemetry. |
 
-An implementation can expose the same baseline information through more than one class. The semantic value of an object shall not change solely because a different control interface is used.
+An implementation can expose the same baseline information through more than one class. The semantic value of an object **shall** not change solely because a different control interface is used.
 
 ## 8.2 Baseline control capabilities
 
-At least one implemented control interface shall provide access to the required baseline objects in 8.10.2. Collectively, the implemented control interfaces shall provide the following capabilities:
+At least one implemented control interface **shall** provide access to the required baseline objects in 8.10.2. Collectively, the implemented control interfaces **shall** provide the following capabilities:
 
 - Read implementation identity, revision, profile, and capability information.
-- Read the unified-timescale state and a coherent time value.
+- Read the unified-timescale state and an atomic time value.
 - Read active and available synchronization-source information.
 - Read active alarm and security-state information.
 - Discover whether conditional configuration, telemetry, event, update, and sanitization operations are supported.
@@ -29,35 +29,35 @@ A writable operation is required only when the corresponding configurable featur
 
 ### 8.3.1 SMBus, I2C, and I3C
 
-An SMBus implementation shall conform to the SMBus specification cited in Clause 2 for the version identified in the conformance statement. An I3C implementation shall conform to the MIPI I3C Basic specification cited in Clause 2 for the version identified in the conformance statement.
+An SMBus implementation **shall** conform to the System Management Bus Specification, Version 3.2 [14]. An I3C implementation **shall** conform to the MIPI I3C Basic specification, Version 1.2 [12].
 
-An I2C-only implementation shall identify the I2C specification and revision used. For each local hardware control mapping, the supplier shall document addressing, bus speed, transfer size, byte order, clock-stretching behavior, timeout behavior, reset behavior, and the mapping of baseline objects.
+An I2C-only implementation **shall** identify the I2C specification and revision used. For each local hardware control mapping, the supplier **shall** document addressing, bus speed, transfer size, byte order, clock-stretching behavior, timeout behavior, reset behavior, and the mapping of baseline objects.
 
 ### 8.3.2 PCIe configuration and MMIO
 
-A PCIe control mapping shall satisfy 8.9. If PCIe PTM is implemented, the PCIe function shall expose the PTM capability structures required by the PCI-SIG PCI Express Base Specification Revision 5.0.
+Each implemented PCIe control mapping **shall** satisfy 8.9. If PCIe PTM is implemented, the PCIe function **shall** expose the PTM capability structures required by the PCI Express Base Specification, Revision 5.0, Version 1.0 [13].
 
 ### 8.3.3 IPMI and NC-SI
 
-An implementation claiming IPMI control shall conform to DMTF DSP0236 for the IPMI version and command scope identified in the conformance statement. Vendor or P3335-specific commands shall use an assigned or documented extension mechanism and shall not redefine standard commands.
+An implementation claiming IPMI control **shall** conform to DMTF DSP0236 [1] for the IPMI version and command scope identified in the conformance statement. Vendor or P3335-specific commands **shall** use an assigned or documented extension mechanism, **shall** have identifiers unique within the applicable command namespace, and **shall** not redefine, alias, or overlap standard command identifiers.
 
-An NC-SI mapping shall identify the NC-SI specification revision, package and channel discovery behavior, command set, and mapping of baseline objects.
+An NC-SI mapping **shall** identify the NC-SI specification revision, package and channel discovery behavior, command set, and mapping of baseline objects.
 
 ### 8.3.4 REST, gRPC, SNMP, and Redfish
 
-A network API shall publish a machine-readable schema or object description that identifies its version and maps operations to the baseline objects in 8.10.
+A network API **shall** publish a machine-readable schema or object description that identifies its version and maps operations to the baseline objects in 8.10.
 
-An implementation claiming SNMP control shall conform to the architecture in IETF RFC 3411 for the SNMP version and management scope identified in the conformance statement. The supplier shall identify the management information base modules and object identifiers used.
+An implementation claiming SNMP control **shall** identify the SNMP version and **shall** implement the message-processing, security, access-control, and management-information elements of the IETF RFC 3411 [6] framework that apply to the claimed management scope. The supplier **shall** identify the management information base modules, object identifiers, security model, and access-control model used.
 
-REST, gRPC, and Redfish mappings shall document resource or service discovery, schema versioning, error responses, authentication method, and update compatibility.
+REST, gRPC, and Redfish mappings **shall** document resource or service discovery, schema versioning, error responses, authentication method, and update compatibility.
 
 ### 8.3.5 Serial and USB
 
-A serial or USB mapping shall document physical or USB class behavior, framing, command syntax or schema, encoding, flow control, timeout behavior, and the mapping of baseline objects. A human-readable command interface can be provided in addition to a machine-readable mapping.
+A serial or USB mapping **shall** document physical or USB class behavior, framing, command syntax or schema, encoding, flow control, timeout behavior, and the mapping of baseline objects. A human-readable command interface can be provided in addition to a machine-readable mapping.
 
 ## 8.4 Common mapping requirements
 
-Each control-interface mapping shall define:
+Each control-interface mapping **shall** define:
 
 - A mapping name and major and minor version.
 - Discovery and enumeration behavior.
@@ -69,31 +69,33 @@ Each control-interface mapping shall define:
 - Reset, restart, and persistence behavior.
 - Compatibility behavior for unknown objects, fields, enumeration values, and extensions.
 
-A change that removes an object, changes its units or meaning, narrows its valid range, or changes its access semantics shall increment the mapping major version. A backward-compatible addition shall increment the mapping minor version.
+A change that removes an object, changes its units or meaning, narrows its valid range, or changes its access semantics **shall** increment the mapping major version. A backward-compatible addition **shall** increment the mapping minor version.
 
-Unknown optional objects or fields shall be ignored by a consumer. A consumer shall not write a reserved value. An implementation receiving a reserved or invalid write value shall reject the operation without changing the prior value.
+A receiving implementation **shall** process the recognized portion of a message or object without interpreting an unknown optional object or field. It **shall** preserve an unknown optional value when forwarding is supported and **shall** report an incompatibility if the unknown element prevents the requested operation. A receiving implementation **shall** not write a reserved value. An implementation receiving a reserved or invalid write value **shall** reject the operation without changing the prior value.
 
-## 8.5 Read consistency and configuration changes
+## 8.5 Atomic reads and configuration changes
 
-Values representing one logical observation shall be returned coherently. In particular, a timestamp split across multiple transport words shall use a latch, snapshot command, sequence counter, retry rule, or equivalent mechanism that prevents fields from different seconds or update cycles from being combined.
+Values representing one logical observation **shall** be returned atomically. In particular, a timestamp split across multiple transport words **shall** use a latch, snapshot command, sequence counter, retry rule, or equivalent mechanism that prevents fields from different seconds or update cycles from being combined.
 
-For a configuration operation affecting timing behavior, the interface shall report whether the operation was accepted, when it became effective, and whether it caused or can cause a phase step, frequency transient, loss of lock, restart, or interruption of a providing interface.
+For background on transaction atomicity, see [B22].
 
-Configuration writes shall either complete as one documented operation or report partial completion and the resulting state. A failed write shall not silently leave an indeterminate configuration.
+For a configuration operation affecting timing behavior, the interface **shall** report whether the operation was accepted, when it became effective, and whether it caused or can cause a phase step, frequency transient, loss of lock, restart, or interruption of a providing interface.
+
+Configuration writes **shall** either complete as one documented operation or report partial completion and the resulting state. A failed write **shall** not silently leave an indeterminate configuration.
 
 ## 8.6 Access control and security state
 
-Every control interface shall document its authentication, authorization, transport protection, update authorization, audit, key-storage, and sanitization capabilities. The `SECURITY_STATE` object shall report the mechanisms supported and their current verified or active state.
+Every control interface **shall** document its authentication, authorization, transport protection, update authorization, audit, key-storage, and sanitization capabilities. The `SECURITY_STATE` object **shall** report the mechanisms supported and their current verified or active state. If no security mechanism is implemented for a control interface, the documentation and `SECURITY_STATE` object **shall** state `none` and **shall** identify the physical-access or deployment assumptions on which that choice depends.
 
 Requirements for the Managed TimeCard and Secure Infrastructure TimeCard profiles are specified in 8.11. A control interface not claiming either profile can omit authentication only when the omission is declared in the conformance statement.
 
-Security failure shall not be reported as normal successful completion. Authentication failures, authorization denials, firmware verification failures, and sanitization failures shall be distinguishable to an authorized operator.
+Security failure **shall** not be reported as normal successful completion. Authentication failures, authorization denials, firmware verification failures, and sanitization failures **shall** be distinguishable to an authorized operator.
 
 ## 8.7 Events and telemetry
 
-If event reporting is implemented, each event record shall include a timestamp or an explicit indication that valid time was unavailable, a severity, a source, an event type, and event-specific data. The event timestamp measurement point and timescale shall be documented.
+If event reporting is implemented, each event record **shall** include a timestamp or an explicit indication that valid time was unavailable, a severity, a source, an event type, and event-specific data. The event timestamp measurement point and timescale **shall** be documented.
 
-The following state changes shall generate an event when the corresponding function and event reporting are implemented:
+The following state changes **shall** generate an event when the corresponding function and event reporting are implemented:
 
 - Reference acquired, rejected, selected, degraded, or lost.
 - Lock acquired or lost.
@@ -102,19 +104,19 @@ The following state changes shall generate an event when the corresponding funct
 - Environmental or power threshold crossed.
 - Firmware update, boot-integrity check, authentication, authorization, or sanitization completed or failed.
 
-If telemetry streaming is implemented, the supplier shall document rate limits, timestamp behavior, dropped-sample indication, ordering, backpressure, and the relationship between streamed values and on-demand reads.
+If telemetry streaming is implemented, the supplier **shall** document rate limits, timestamp behavior, dropped-sample indication, ordering, backpressure, and the relationship between streamed values and on-demand reads.
 
 ## 8.8 Extensions
 
-An implementation can provide vendor-specific objects, commands, registers, messages, and telemetry. Extensions shall use a documented namespace or identifier range and shall not change the meaning of baseline objects.
+An implementation can provide vendor-specific objects, commands, registers, messages, and telemetry. Extensions **shall** use a documented namespace or identifier range and **shall** not change the meaning of baseline objects.
 
-Unknown extensions shall be safely ignorable. Reserved P3335 identifiers and values shall not be assigned to vendor-specific behavior.
+A receiving implementation that does not advertise support for an extension **shall** be able to process the baseline object or message without interpreting that extension. Reserved P3335 identifiers and values **shall** not be assigned to vendor-specific behavior.
 
 ## 8.9 PCIe host interface profile
 
-An implementation claiming the PCIe Host Mapping conformance profile shall expose a discoverable PCIe function associated with the TimeCard timing and control functions.
+An implementation claiming the PCIe Host Mapping conformance profile **shall** expose a discoverable PCIe function associated with the TimeCard timing and control functions.
 
-The PCIe mapping shall document:
+The PCIe mapping **shall** document:
 
 - Vendor ID, device ID, class code, subsystem identifiers, and revision identifier.
 - PCIe Base Specification revision and discovery behavior.
@@ -127,9 +129,9 @@ The PCIe mapping shall document:
 - Timestamp format, epoch, timescale, granularity, rollover, and atomic-read mechanism.
 - Measurement point and correction terms relating PCIe or PTM time to the unified timescale and other providing interfaces.
 
-The PCIe mapping shall expose all required baseline objects in 8.10.2 through MMIO, a command or queue interface, a driver API, or a documented combination thereof. The conformance statement shall identify which mapping is the interoperable baseline for the implementation.
+The PCIe mapping **shall** expose all required baseline objects in 8.10.2 through MMIO, a command or queue interface, a driver API, or a documented combination thereof. The conformance statement **shall** identify which mapping is the interoperable baseline for the implementation.
 
-If PCIe PTM is implemented, the TimeCard shall expose the standard PTM capability structures and shall document the PTM measurement point and correction model.
+If PCIe PTM is implemented, the TimeCard **shall** expose the standard PTM capability structures and **shall** document the PTM measurement point and correction model.
 
 ## 8.10 Baseline control information model
 
@@ -148,13 +150,13 @@ The baseline information model defines transport-neutral object names, data sema
 | `timestamp` | Atomic structure containing seconds, nanoseconds, timescale, validity, and optional uncertainty. |
 | `record` | Structure whose fields are defined by the object or mapping. |
 
-Access modes are `R` for read-only, `W` for write-only, and `R/W` for read/write. Every read response shall distinguish `valid`, `unavailable`, `unsupported`, `stale`, and `fault` when those states can occur in the mapping.
+Access modes are `R` for read-only, `W` for write-only, and `R/W` for read/write. Every read response **shall** distinguish `valid`, `unavailable`, `unsupported`, `unspecified`, `stale`, and `fault` when those states can occur in the mapping.
 
-For a `timestamp`, nanoseconds shall be in the range 0 through 999 999 999. The seconds and nanoseconds fields shall represent the same measurement instant and shall satisfy the coherent-read requirement in 8.5.
+For a `timestamp`, nanoseconds **shall** be in the range 0 through 999 999 999. The seconds and nanoseconds fields **shall** represent the same measurement instant and **shall** satisfy the atomic-read requirement in 8.5.
 
 ### 8.10.2 Required baseline objects
 
-The following objects shall be exposed through at least one control interface:
+The following objects **shall** be exposed through at least one control interface:
 
 | Object | Access | Type | Units | Semantics |
 |--------|--------|------|-------|-----------|
@@ -166,13 +168,13 @@ The following objects shall be exposed through at least one control interface:
 | `TC_CAPS` | R | set | none | Implemented interface and feature capabilities. |
 | `TC_STATE` | R | enum | none | Overall unified-timescale operating state. |
 | `TC_TIMESCALE` | R | enum | none | Timescale represented by `TC_TIME` and timing telemetry. |
-| `TC_TIME` | R | timestamp | s, ns | Coherent unified-timescale value at the declared read measurement point. |
+| `TC_TIME` | R | timestamp | s, ns | Atomic unified-timescale value at the declared read measurement point. |
 | `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the source currently used to discipline or validate the unified timescale; `none` when no source is active. |
 | `SYNC_SRC_AVAIL` | R | set | none | Identifiers of synchronization sources currently available for selection or monitoring. |
 | `ALARM_ACTIVE` | R | set | none | Active alarm identifiers; an empty set indicates no active alarm. |
 | `SECURITY_STATE` | R | record | none | Supported and active security mechanisms and the result of the most recent integrity verification. |
 
-A required baseline object shall not report `unsupported`. It can report `unavailable`, `stale`, or `fault` only when that state is meaningful and distinguishable from a valid value.
+A required baseline object **shall** not report `unsupported` or `unspecified` as its object-level status. An optional field within that object can report `unspecified` when the mapping permits it. A required baseline object can report `unavailable`, `stale`, or `fault` only when that state is meaningful and distinguishable from a valid value.
 
 ### 8.10.3 Conditional baseline objects
 
@@ -187,28 +189,28 @@ The following objects are required when the corresponding capability is advertis
 | `MTIE_EST` | R | uint64 | ps | Implementations reporting estimated or measured MTIE; paired with `MTIE_INTERVAL`. |
 | `MTIE_INTERVAL` | R | uint64 | s | Observation interval associated with `MTIE_EST`. |
 | `HOLDOVER_ELAPSED` | R | uint64 | s | Implementations supporting holdover; elapsed time since holdover entry. |
-| `TEMP_LOCAL` | R | int64 | mdegC | Implementations reporting a local timing-function temperature; sensor location is declared. |
+| `TEMP_LOCAL` | R | int64 | mdeg C | Implementations reporting a local timing-function temperature in millidegrees Celsius; sensor location is declared. |
 | `EVENT_COUNT` | R | uint32 | count | Implementations with an event log; number of readable retained events. |
 | `EVENT_READ` | R | record | none | Implementations with an event log; next or selected event record. |
-| `TRACEABILITY_STATE` | R | enum | none | Implementations reporting traceability; current relationship to the declared reference. |
+| `REFERENCE_EVIDENCE` | R | record | none | Implementations reporting reference-chain evidence; identifiers and availability of source, calibration, measurement-point, and uncertainty information without asserting end-to-end traceability. |
 | `UPDATE_CMD` | W | record | none | Implementations supporting controlled firmware, gateware, or software update. |
 | `SANITIZE_CMD` | W | record | none | Implementations claiming sanitization; scope and authorization parameters. |
 
-A conditional object advertised in `TC_CAPS` shall not report `unsupported`. An unadvertised conditional object can report `unsupported` when addressed through a mapping that permits object probing.
+A conditional object advertised in `TC_CAPS` **shall** not report `unsupported`. An unadvertised conditional object can report `unsupported` when addressed through a mapping that permits object probing.
 
 ### 8.10.4 Common symbolic values
 
-`TC_PROFILE` shall use the profile names `base`, `physical-timing-output`, `pcie-host-mapping`, `managed-timecard`, and `secure-infrastructure-timecard` for the corresponding profiles in 4.4.
+`TC_PROFILE` **shall** use the profile names `base`, `physical-timing-output`, `pcie-host-mapping`, `managed-timecard`, and `secure-infrastructure-timecard` for the corresponding profiles in 4.4.
 
-`TC_STATE` shall distinguish at least `unknown`, `initializing`, `warming-up`, `free-running`, `acquiring`, `locked`, `holdover`, `degraded`, and `fault`.
+`TC_STATE` **shall** distinguish at least `unknown`, `initializing`, `warming-up`, `free-running`, `acquiring`, `locked`, `holdover`, `degraded`, and `fault`.
 
-`TC_TIMESCALE` shall distinguish at least `unknown`, `TAI`, `UTC`, `PTP`, and `other-declared`. If `other-declared` is used, the mapping to a declared reference timescale shall be documented.
+`TC_TIMESCALE` **shall** distinguish at least `unknown`, `TAI`, `UTC`, `PTP`, and `other-declared`. If `other-declared` is used, the mapping to a declared reference timescale **shall** be documented.
 
-Unknown symbolic values received by a consumer shall be preserved when forwarding and otherwise treated as unknown. A mapping that encodes symbolic values numerically shall document the numeric assignments and reserve an extension range.
+Unknown symbolic values received by a receiving implementation **shall** be preserved when forwarding and otherwise treated as unknown. A mapping that encodes symbolic values numerically **shall** document the numeric assignments and reserve an extension range.
 
 ### 8.10.5 GNSS conditional objects
 
-If a GNSS receive capability is advertised in `TC_CAPS`, the following objects shall be exposed:
+If a GNSS receive capability is advertised in `TC_CAPS`, the following objects **shall** be exposed:
 
 | Object | Access | Type | Units | Semantics |
 |--------|--------|------|-------|-----------|
@@ -219,37 +221,37 @@ If a GNSS receive capability is advertised in `TC_CAPS`, the following objects s
 | `GNSS_LOCK_STATE` | R | record | none | Acquisition or lock state for each receiver instance. |
 | `GNSS_ANTENNA_STATE` | R | record | none | Antenna state for each receiver instance, including unknown, valid, open, short, or degraded when detectable. |
 
-The common constellation identifiers are `GPS`, `Galileo`, `GLONASS`, `BeiDou`, `QZSS`, and `NavIC`. Additional constellation identifiers shall use the extension mechanism defined by the control mapping.
+The common constellation identifiers are `GPS`, `Galileo`, `GLONASS`, `BeiDou`, `QZSS`, and `NavIC`. Additional constellation identifiers **shall** use the extension mechanism defined by the control mapping.
 
 ## 8.11 Security profiles
 
 ### 8.11.1 Baseline security declaration
 
-All conforming implementations shall document the security properties of each control interface, including physical access assumptions. The documentation shall state whether authentication, authorization, encrypted transport, signed update, boot integrity verification, protected key storage, anti-rollback protection, event auditing, tamper response, and sanitization are supported.
+All conforming implementations **shall** document the security properties of each control interface, including physical-access assumptions. The documentation **shall** state whether authentication, authorization, encrypted transport, signed update, boot integrity verification, protected key storage, anti-rollback protection, event auditing, tamper response, and sanitization are supported. This declaration requirement does not require a security mechanism unless the implementation claims a profile or feature whose applicable requirements specify that mechanism. When no security mechanism is implemented, the documentation **shall** state `none` and identify the deployment assumptions.
 
 ### 8.11.2 Managed TimeCard profile
 
-An implementation claiming the Managed TimeCard profile shall meet the following requirements:
+An implementation claiming the Managed TimeCard profile **shall** meet the following requirements:
 
-- A networked or remotely reachable control interface shall authenticate the user or machine before permitting configuration or update operations.
-- Authorization shall distinguish monitoring, configuration, update, security-administration, and sanitization privileges when those operations are implemented.
-- Default shared credentials shall be replaced or changed before remote configuration is enabled.
-- An update payload shall be integrity-checked before installation.
-- Security-relevant successes and failures shall be recorded when event logging is implemented.
-- The security protocol, version, credential lifecycle, and recovery procedure shall be documented.
+- A networked or remotely reachable control interface **shall** authenticate the user or machine before permitting configuration or update operations.
+- Authorization **shall** distinguish monitoring, configuration, update, security-administration, and sanitization privileges when those operations are implemented.
+- Default shared credentials **shall** be replaced or changed before remote configuration is enabled.
+- An update payload **shall** be integrity-checked before installation.
+- Security-relevant successes and failures **shall** be recorded when event logging is implemented.
+- The security protocol, version, credential lifecycle, and recovery procedure **shall** be documented.
 
 ### 8.11.3 Secure Infrastructure TimeCard profile
 
-An implementation claiming the Secure Infrastructure TimeCard profile shall meet the Managed TimeCard profile and the following additional requirements:
+An implementation claiming the Secure Infrastructure TimeCard profile **shall** meet the Managed TimeCard profile and the following additional requirements:
 
-- Firmware, gateware, and other executable update payloads shall be digitally signed and verified against an authorized trust anchor before activation.
-- The update mechanism shall prevent installation of an unauthorized rollback version unless an explicitly authorized recovery procedure is used.
-- Secure boot or measured boot shall verify executable integrity before the timing service enters the locked state.
-- Private keys and credentials shall be stored in hardware-backed or equivalently protected storage whose protection mechanism is documented.
-- Remote IP-based management shall use an encrypted, peer-authenticated transport.
-- Privileged operations shall provide replay and message-injection protection.
-- Sanitization shall erase the sensitive keys, credentials, and security-relevant configuration identified in the sanitization scope.
-- Sanitization completion or failure shall be reported, and a failed sanitization shall not be reported as successful.
+- Firmware, gateware, and other executable update payloads **shall** be digitally signed and verified against an authorized trust anchor before activation.
+- The update mechanism **shall** prevent installation of an unauthorized rollback version unless an explicitly authorized recovery procedure is used.
+- Secure boot or measured boot **shall** verify executable integrity before the timing service enters the locked state.
+- Private keys and credentials **shall** be stored in hardware-backed or equivalently protected storage whose protection mechanism is documented.
+- Remote IP-based management **shall** use an encrypted, peer-authenticated transport.
+- Privileged operations **shall** provide replay and message-injection protection.
+- Sanitization **shall** erase the sensitive keys, credentials, and security-relevant configuration identified in the sanitization scope.
+- Sanitization completion or failure **shall** be reported, and a failed sanitization **shall** not be reported as successful.
 
 ## 8.12 Summary
 
