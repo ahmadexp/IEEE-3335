@@ -15,12 +15,12 @@ This file is the working-group action register for the Markdown draft. It is not
 | Draft status | Front matter identifies the document as unapproved, subject to change, and not for conformance or compliance use. Official IEEE copyright, patents, participant, and template material remains external. |
 | Scope and purpose | Clause 1 is aligned to the public PAR and separates scope, purpose, need, and implementation freedom. |
 | Conformance | Clause 4 defines base conformance, conditional profiles, supplier statements, evidence, and an informative Annex D proforma. |
-| Architecture | Clause 5 specifies externally observable boundaries, one unified timescale, source selection, host transfer, measurement points, and documentation. |
+| Architecture | Clause 5 specifies externally observable boundaries, one unified timescale, source selection, host transfer, stable instance selection, host lifecycle behavior, measurement points, and documentation. |
 | Performance | Clause 6 uses bounded declarations, traceable methods, uncertainty, and explicit decision rules rather than unsupported universal product classes. |
 | Timing interfaces | Clause 7 defines common receive/provide declarations, conditional protocol conformance, concrete 1PPS output limits, continuity, and timing-interface status. |
-| Control interfaces | Clause 8 separates transport bindings from the baseline semantic model, defines atomic time reads, required and conditional objects, versioning, extension behavior, and security profiles. |
+| Control interfaces | Clause 8 separates transport bindings from the baseline semantic model, defines atomic time reads, a portable PCIe discovery descriptor, binary ABI validation, stable identity, bounded host-time correlation, time-control ownership, lifecycle recovery, required and conditional objects, versioning, extension behavior, and security profiles. |
 | Environment | Clause 9 uses implementation-neutral operating, full-performance, storage, survival, qualification, and lifecycle declarations. |
-| Informative material | Clauses and annexes use neutral examples without arbitrary universal limits; Annexes A and B explain metrics and test evidence, and Annex C contains a focused, source-checked bibliography. |
+| Informative material | Clauses and annexes use neutral examples without arbitrary universal limits; Annexes A and B explain metrics and test evidence, Annex C contains a focused, source-checked bibliography, and Annex E maps the host requirements to Windows, macOS, and Linux. |
 | Traceability tooling | `make check` validates the manuscript and verifies that `REQUIREMENTS_INDEX.md` matches the normative sources. |
 | Build | `make` builds source-controlled figures, front matter, clauses, and annexes into the review PDF. |
 
@@ -29,7 +29,7 @@ This file is the working-group action register for the Markdown draft. It is not
 | Priority | Decision or external dependency | Why it remains |
 |----------|---------------------------------|----------------|
 | P0 | Ratify the Physical Timing Output profile and its 1PPS electrical and alignment limits. | The text is a complete draft candidate derived from contributions, but it changes product conformance scope. |
-| P0 | Decide whether P3335 defines a mandatory cross-vendor host ABI in addition to the transport-neutral information model. | Clause 8 now defines semantic and mapping requirements, but no single PCIe register layout, class-code allocation, object-ID registry, or operating-system API is mandatory. |
+| P0 | Ratify the P3335 PCIe discovery-descriptor locator and serialized binary encoding. | Clause 8 now defines mandatory descriptor content and receiver behavior, but the fixed locator, field encoding, identifier allocations, and migration policy require working-group ownership. |
 | P0 | Freeze the baseline control vocabulary and extension policy. | Object names and semantics are usable draft text; stable numeric encodings or a registry require WG ownership and compatibility policy. |
 | P0 | Complete IEEE SA editorial/legal review of every Clause 2 reference. | The technical-use audit is complete, but availability and commercial-terms review cannot be closed solely in the repository. |
 | P0 | Obtain official IEEE SA front matter and publication template. | The draft notice is present; copyright, patents, participants, trademarks, and final IEEE production formatting require IEEE SA input. |
@@ -50,8 +50,8 @@ This file is the working-group action register for the Markdown draft. It is not
 | AI-002 | P0 | Closed | TBD | Align Clause 1 with the PAR. | Scope and purpose are aligned; explanatory content is clearly separated. |
 | AI-003 | P0 | Draft candidate; WG vote needed | TBD | Decide the base-conformance status of 1PPS. | WG accepts, rejects, or revises the Physical Timing Output profile in 4.4. |
 | AI-004 | P0 | Draft candidate; WG vote needed | TBD | Ratify the 1PPS requirement package. | Connector, load, voltage, edge, width, rise time, measurement point, uncertainty, and alignment limit are approved in 7.3.2. |
-| AI-005 | P0 | Partially resolved | TBD | Define the host interoperability boundary. | WG chooses transport-neutral semantics only or approves at least one mandatory discoverable binary/API binding with versioning and allocation ownership. |
-| AI-006 | P0 | Draft candidate; WG review needed | TBD | Freeze the baseline control information model. | Required and conditional objects, state vocabulary, support/validity semantics, atomic timestamp behavior, and extension rules are approved. |
+| AI-005 | P0 | Draft candidate; encoding vote needed | TBD | Define the host interoperability boundary. | WG approves the P3335 discovery descriptor, baseline host mapping, ABI rules, and allocation ownership or records the remaining permitted binding choices. |
+| AI-006 | P0 | Draft candidate; WG review needed | TBD | Freeze the baseline control information model. | Required and conditional objects, stable identity, host-time correlation, time-control status, state vocabulary, support/validity semantics, atomic timestamp behavior, and extension rules are approved. |
 | AI-007 | P0 | Technical audit complete; legal/editorial review pending | TBD | Complete Clause 2 reference review. | Every reference passes edition, availability, commercial-terms, citation, and normative-use review; results update `references/NORMATIVE_REFERENCE_AUDIT.md`. |
 | AI-008 | P1 | Draft candidate; WG vote needed | TBD | Decide the performance-class strategy. | WG approves reporting-only base conformance or supplies numeric classes with measurement conditions. |
 | AI-009 | P1 | Closed | TBD | Define bounded performance reporting. | Clause 6 covers time, stability, frequency, phase noise, pulse timing, holdover, transitions, environment, uncertainty, and decision rules. |
@@ -69,11 +69,14 @@ This file is the working-group action register for the Markdown draft. It is not
 | AI-021 | P1 | Open | TBD | Conduct independent metrology review. | Named reviewers confirm Clause 6 and Annexes A and B or record and resolve technical comments. |
 | AI-022 | P1 | Draft candidate; requirement freeze needed | TBD | Finalize the conformance-statement proforma. | Annex D is checked against the frozen requirements and its normative or informative status is approved. |
 | AI-023 | P1 | Closed | TBD | Audit the informative bibliography. | Misattributed or untraceable entries are removed; retained technical publications include sufficient bibliographic data and publisher or DOI links. |
+| AI-024 | P0 | Draft candidate; WG vote needed | TBD | Ratify the portable PCIe discovery descriptor. | WG approves the locator, signature, header and entry encoding, resource types, capability allocation, consistency mechanism, and fail-closed compatibility behavior in 8.9.1. |
+| AI-025 | P0 | Draft candidate; host-time review needed | TBD | Ratify host-time correlation and discipline eligibility. | WG approves the `HOST_TIME_CORRELATION` fields, clock and timescale semantics, discontinuity handling, freshness and window limits, and eligibility rules in 8.10.4. |
+| AI-026 | P1 | Draft candidate; cross-platform validation needed | TBD | Validate host lifecycle, identity, ABI, and ownership requirements. | Annex B host tests are executed on representative Windows, macOS, and Linux implementations, with limitations and resulting normative comments recorded. |
 
 ## Recommended sequence
 
-1. Resolve AI-003, AI-004, AI-005, AI-006, AI-017, and AI-018 as the interoperability core.
-2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, and AI-022 as the validation and profile layer.
+1. Resolve AI-003, AI-004, AI-005, AI-006, AI-017, AI-018, AI-024, and AI-025 as the interoperability core.
+2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, AI-022, and AI-026 as the validation and profile layer.
 3. Complete AI-007 and AI-019 with the IEEE SA program manager and project editor.
 4. Regenerate the requirements index after every normative edit using `make requirements`.
 5. Run `make check`, rebuild with `make`, and visually review the PDF before each ballot-facing circulation.

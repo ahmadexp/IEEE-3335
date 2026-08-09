@@ -51,6 +51,20 @@ Cable type, length, temperature coefficient, connector condition, termination, a
 
 GNSS antenna placement should provide the required sky view and should account for cable loss, antenna power, lightning protection, RF interference, jamming, spoofing, and correlated-failure risks. Antenna delay and receiver configuration should be included in the declared reference path.
 
+### 10.3.4 Host software and driver integration
+
+Host software should begin with the declared mapping and capability information, validate every resource range, and keep optional resources inaccessible until the active implementation or image establishes their semantics. Successful reads from guessed MMIO locations, PCI identifiers, or core-version values alone are not reliable evidence that an optional feature is implemented.
+
+Multi-card software should select a card using `TC_INSTANCE_ID` or `TC_SERIAL` when available. An enumeration index or operating-system device number can change after removal, reinsertion, firmware update, or inventory changes and should not be used as the persistent key for configuration or calibration data.
+
+Software correlating TimeCard time with a host clock should preserve both host bounds, the correlation window, capture and discontinuity sequences, card state, source validity, sample age, and the card and host timescales. A raw hardware counter should not be labeled UTC, or used to discipline a host clock, until the timescale relationship and applicable leap information are valid.
+
+Only one authorized component should control time setting or discipline at a time. Monitoring applications, command-line tools, background discipline services, and host time providers should share the ownership and authorization mechanism defined by the mapping rather than applying independent steering actions.
+
+Sleep, wake, hibernation, driver restart, orderly removal, surprise removal, and tunneled-PCIe disconnection should be treated as normal lifecycle cases. Software should cancel bounded operations, stop hardware access when resources disappear, revalidate discovery after recovery, and reject samples captured before an intervening host-clock discontinuity.
+
+Annex E gives platform-specific examples for Windows, macOS, and Linux.
+
 ## 10.4 Operation and maintenance
 
 ### 10.4.1 Reference policy

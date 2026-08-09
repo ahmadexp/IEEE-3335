@@ -108,6 +108,10 @@ Suppliers **shall** characterize timing behavior during operational transitions 
 - Reference failover between two valid sources.
 - Manual time step or frequency steering command.
 - Firmware update or restart behavior if timing service is interrupted or degraded.
+- Host entry into and recovery from a low-power, sleep, or hibernation state.
+- Orderly removal, surprise removal, hot-plug disconnection, and reinsertion of a host-connected TimeCard.
+- Driver, host service, or time-provider unload, reload, failure, and restart.
+- A host-clock discontinuity that invalidates a host-time correlation or a sample awaiting delivery.
 
 For each transition, the supplier **shall** document whether the unified timescale remains continuous and whether a discontinuity can occur in phase or in a time derivative of phase. The documentation **shall** bound applicable phase steps, frequency steps, frequency-slope changes, kinks or corners, and recovery transients, and **shall** identify how each condition is reported through the control interface.
 
@@ -120,8 +124,12 @@ Performance declarations **shall** identify the environmental and host-system co
 - Vibration sensitivity.
 - Airflow and host thermal loading.
 - Host-bus activity, electromagnetic interference, or crosstalk that can affect timing outputs.
+- Host scheduling, interrupt or polling latency, driver and service processing, and host power-management policy when performance is declared at a host API or software measurement point.
+- Virtualization, I/O translation, or resource sharing when those host mechanisms are present in the declared deployment profile.
 
 If performance is declared only for a subset of the environmental range specified in Clause 9, that subset **shall** be explicitly stated.
+
+When time-transfer performance is declared at a host API or software measurement point, the supplier **shall** characterize the applicable software-path latency, asymmetry, dispersion, sample age, and host-time correlation window. The declaration **shall** identify the host clock, operating-system and driver revisions, power state, load conditions, and measurement method.
 
 ## 6.11 Performance Documentation Checklist
 

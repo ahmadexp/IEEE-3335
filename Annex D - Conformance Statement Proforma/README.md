@@ -14,6 +14,9 @@ The completed proforma should identify each claimed profile and optional feature
 | Supplier | To be completed |
 | Hardware or implementation revision | To be completed |
 | Firmware, gateware, and software revisions | To be completed |
+| Host operating systems and versions | To be completed / not applicable |
+| Driver, service, and time-provider revisions | To be completed / not applicable |
+| Host API or ABI name and revision | To be completed / not applicable |
 | Configuration identifier | To be completed |
 | Form factor | To be completed |
 | Date of statement | To be completed |
@@ -41,11 +44,35 @@ Complete one record for each claimed interface or optional feature:
 | Standard, profile, or mapping revision | To be completed |
 | Connector or logical endpoint | To be completed |
 | Measurement point | To be completed |
+| Instance identifier and stability scope | To be completed / not applicable |
+| Discovery descriptor or baseline locator | To be completed / not applicable |
 | Evidence or limitation | To be completed |
 
 Examples include GNSS, PTP, NTP, 1PPS, frequency outputs, Time of Day, IRIG, PCIe PTM, host timestamping, reference selection, ensemble processing, firmware update, and sanitization.
 
-## D.5 Performance declarations
+## D.5 Host-interface and driver declarations
+
+Complete this section for each claimed host interface mapping:
+
+| Field | Supplier response |
+|-------|-------------------|
+| Host interface and mapping revision | To be completed |
+| Supported operating systems, releases, and architectures | To be completed |
+| Driver model, package, and signing or authorization status | To be completed |
+| Driver, service, host time-provider, and API or ABI revisions | To be completed |
+| P3335 discovery-descriptor locator, revision, and encoding | To be completed |
+| Supported PCI or implementation identities and board profiles | To be completed |
+| `TC_INSTANCE_ID` derivation and stability scope | To be completed |
+| `TC_SERIAL` namespace and availability | To be completed / not implemented |
+| Host clock identifier, epoch, timescale, units, and adjustment behavior | To be completed |
+| Host-time correlation method, measurement point, and maximum window | To be completed / not implemented |
+| Sample-age, uncertainty or dispersion, and discipline-eligibility policy | To be completed / not implemented |
+| Time-control ownership, arbitration, timeout, and recovery | To be completed / not implemented |
+| Sleep, hibernation, wake, removal, reconnection, reboot, and driver-restart behavior | To be completed |
+| Read, time-control, configuration, update, and security privileges | To be completed |
+| Physical validation coverage and known limitations | To be completed |
+
+## D.6 Performance declarations
 
 | Metric | Declaration record |
 |--------|--------------------|
@@ -59,7 +86,7 @@ Examples include GNSS, PTP, NTP, 1PPS, frequency outputs, Time of Day, IRIG, PCI
 | Holdover error | Entry condition: ___; point: ___; bound versus elapsed time: ___; environment: ___; method and uncertainty: ___; evidence: ___ |
 | Transition behavior | Transition: ___; point: ___; phase/frequency bound: ___; conditions: ___; method and uncertainty: ___; evidence: ___ |
 
-## D.6 Environment and lifecycle declarations
+## D.7 Environment and lifecycle declarations
 
 | Category | Declaration and evidence |
 |----------|--------------------------|
@@ -69,13 +96,14 @@ Examples include GNSS, PTP, NTP, 1PPS, frequency outputs, Time of Day, IRIG, PCI
 | Altitude or pressure | Range and derating: ___; evidence: ___ |
 | Airflow or cooling assumptions | Requirement and condition: ___; evidence: ___ |
 | Input power, sequencing, and interruption | Limits and behavior: ___; evidence: ___ |
+| Host power-state and disconnect behavior | State retention and transition behavior: ___; evidence: ___ |
 | Shock and vibration, if applicable | Profile and limit: ___; evidence: ___ |
 | EMC and ESD conformity claims | Standard, edition, level, and configuration: ___; evidence: ___ |
 | Reliability model or field-data basis | Metric and method: ___; evidence: ___ |
 | Service-life items | Item, interval, and maintenance action: ___; evidence: ___ |
 | Calibration interval or method | Interval, reference, method, and uncertainty: ___; evidence: ___ |
 
-## D.7 Test evidence and deviations
+## D.8 Test evidence and deviations
 
 Complete one record for each applicable clause, profile, or declared limit:
 

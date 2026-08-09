@@ -17,7 +17,10 @@ For the purposes of this document, the following terms and definitions apply.
 - **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
 - **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, or accuracy.
 - **holdover:** Operating state in which a TimeCard maintains its timescale after loss or rejection of the external reference used for synchronization, using its local timing function and available historical information.
+- **host clock:** Clock maintained or exposed by a host system and identified by its clock domain, epoch, timescale, and adjustment behavior.
 - **host system:** Computing, telecommunications, measurement, or control platform that integrates or consumes the services of a TimeCard.
+- **host-time correlation:** Bounded observation that associates a TimeCard timestamp with host-clock readings taken around the same TimeCard measurement operation.
+- **instance identifier:** Mapping-scoped identifier used to select one TimeCard when one or more TimeCard instances are accessible through the same host or control environment. The identifier has a declared stability scope.
 - **lock time:** Elapsed time from a declared starting condition until a TimeCard enters the declared locked state.
 - **measurement point:** Physical connector, logical boundary, register access point, packet event, or other defined location to which a measured or declared value applies.
 - **measurement uncertainty:** Non-negative parameter characterizing the dispersion of quantity values attributed to a measurand.
@@ -33,6 +36,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
 - **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
 - **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
+- **time-control ownership:** Arbitration state that grants one authorized client exclusive permission to perform operations that set or discipline the unified timescale or its local timing function.
 - **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty. In this standard, a TimeCard supplies declarations and evidence that support system-level traceability analysis; the term does not assert that a TimeCard alone establishes end-to-end traceability.
 - **unavailable:** Status indicating that a supported object or measurement does not currently have a valid value.
 - **unified timescale:** Single timescale maintained by a TimeCard instance from which all of that instance's providing interfaces derive their time, phase, frequency, or timestamp information.
@@ -44,6 +48,7 @@ For the purposes of this document, the following terms and definitions apply.
 
 - **1PPS:** one pulse per second
 - **ADEV:** Allan deviation
+- **ABI:** application binary interface
 - **AM:** amplitude modulation
 - **API:** application programming interface
 - **ASIC:** application-specific integrated circuit

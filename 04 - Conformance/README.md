@@ -91,6 +91,8 @@ The supplier of a conforming implementation **shall** provide a conformance stat
 - Claimed IEEE P3335 conformance scope.
 - Supported timing receive interfaces and providing interfaces.
 - Supported host interface mapping and control interface classes.
+- Host driver, service, API, and ABI revisions required for each claimed host mapping.
+- Instance-identifier stability, host lifecycle behavior, and host-time correlation capabilities for each claimed host mapping.
 - Claimed conformance profiles from 4.4.
 - Supported optional feature sets.
 - Declared performance metrics and measurement points.

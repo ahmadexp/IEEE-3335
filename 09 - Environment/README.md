@@ -57,6 +57,8 @@ For each power source, the supplier **shall** document nominal voltage, operatin
 
 An implementation powered through a standardized host interface **shall** conform to the power, sequencing, reset, and current limits of the identified host-interface specification. The supplier **shall** document which state, configuration, time, and calibration information persists through each power interruption or reset condition.
 
+For a host-connected implementation, the supplier **shall** document whether the TimeCard remains powered, maintains the unified timescale, or retains time-control ownership while the host enters a low-power, sleep, hibernation, shutdown, or disconnected state. The documentation **shall** identify the timing-service and control-interface behavior during transition and recovery.
+
 ### 9.4.2 Supply sensitivity and interruption
 
 The effect of input-voltage variation and supply noise on declared timing performance **shall** be characterized when applicable. If ride-through, backup energy, or uninterrupted holdover is claimed, the supplier **shall** declare the interruption profile, supported duration, load condition, output behavior, and recovery behavior.

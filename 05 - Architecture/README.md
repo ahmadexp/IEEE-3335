@@ -113,12 +113,22 @@ Each host interface mapping **shall** document:
 
 - Physical and logical interface standards used.
 - Discovery and enumeration behavior.
+- Per-instance selection, instance-identifier derivation, and identifier stability across restart, removal, reinsertion, and host reboot.
 - Required driver-visible registers, messages, commands, or API elements.
 - Endianness, alignment, units, and timestamp formats.
 - Interrupts, polling requirements, and error reporting.
+- Concurrency, time-control ownership, and behavior when more than one host client can issue timing-affecting operations.
+- Behavior during host low-power states, sleep, hibernation, wake, orderly or surprise removal, hot plug, driver or service restart, and outstanding-operation cancellation.
 - Latency, asymmetry, and correction information required for time-transfer evaluation.
+- Host-clock identity, epoch, timescale, discontinuity behavior, and freshness information used for host-time correlation.
+
+A host interface mapping that can expose more than one TimeCard **shall** provide unambiguous per-instance selection. An enumeration index **shall** not be the sole persistent selector when a stable supplier-assigned or implementation-derived identity is available.
+
+A mapping that implements host-time correlation **shall** preserve the semantics and validity rules in 8.10.4. A mapping that permits more than one client to set or discipline time **shall** implement the arbitration requirements in 8.5.
 
 If PCIe PTM is implemented, the implementation **shall** document the PTM capability defined by the PCI Express Base Specification, Revision 5.0, Version 1.0 [13], the measurement point represented by PTM timestamps, and any correction terms needed to relate PTM time to other providing interfaces.
+
+Annex E provides informative examples of applying these requirements to Windows, macOS, and Linux host software.
 
 ## 5.7 Performance and Measurement Architecture
 

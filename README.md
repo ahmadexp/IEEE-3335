@@ -29,6 +29,7 @@ Other files (such as references, diagrams, or unstructured notes) may exist in t
 | **Annex B. Test Procedures** | `Annex B - Test Procedures/README.md` |
 | **Annex C. Bibliography** | `Annex C - Bibliography/README.md` |
 | **Annex D. Conformance Statement Proforma** | `Annex D - Conformance Statement Proforma/README.md` |
+| **Annex E. Host Operating-System Integration** | `Annex E - Host Operating-System Integration/README.md` |
 
 The `Unsorted/` directory is an archival working area for source contributions, extracted presentations, older material, and background notes. It is useful for editorial research but is not automatically included in the compiled draft.
 

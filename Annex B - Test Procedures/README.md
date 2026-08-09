@@ -62,6 +62,19 @@ P3335 does not prescribe a universal test that proves a reference valid under ev
 | Reset and persistence | Reset-capable mappings | Exercise each documented reset type. | Discovery, state, persisted configuration, and time behavior agree with the mapping declaration. |
 | Access control | Managed or Secure Infrastructure profile | Exercise monitoring, configuration, update, and security roles with authorized and unauthorized identities. | Each operation is allowed or denied according to the claimed profile and is reported unambiguously. |
 
+### B.3.4 Host and driver mappings
+
+| Test | Applicability | Method | Example pass/fail basis |
+|------|---------------|--------|-------------------------|
+| Discovery descriptor | PCIe Host Mapping profile | Locate the descriptor using only the declared baseline locator; validate signature, version, lengths, consistency generation, and every advertised range. | The descriptor is found without guessed MMIO probing, and every resource lies within an assigned BAR and matches its declared capability. |
+| Ambiguous or unknown implementation | PCIe Host Mapping profile | Present an unsupported mapping version, inconsistent image identity, out-of-range entry, unknown optional entry, and unrecognized board profile using a fixture or controlled fault injection. | Baseline access is limited to unambiguously valid resources; optional access is rejected without an undocumented MMIO transaction. |
+| Binary ABI framing | Binary host mappings | Exercise exact, shorter, longer, unsupported-version, inconsistent-length, and nonzero-reserved-field requests. | Accepted and rejected cases match the documented compatibility rules, and rejected requests do not change device state. |
+| Multi-card identity | Host mappings supporting multiple TimeCards | Enumerate at least two instances, record identifiers, reorder or remove them, restart the driver, and reinsert a card. | Selection remains unambiguous; persistent state follows the declared stable identity rather than an enumeration index. |
+| Host-time correlation | Mappings advertising host-time correlation | Capture repeated records under normal load and at a second boundary; independently instrument the host calls where practical. | The card read is bounded by the two host readings, sequences advance as declared, the correlation window is consistent, and all timescales and measurement points are identified. |
+| Timescale and eligibility safety | Mappings offering samples for host discipline | Invalidate source state, timescale correction, freshness, correlation-window, and uncertainty inputs one at a time. Cause a host-clock discontinuity. | Ineligible or pre-discontinuity samples are reported stale or unavailable and are not submitted as valid discipline samples. |
+| Time-control ownership | Host mappings permitting multiple timing-control clients | Race two authorized clients for ownership; exercise non-owner writes, timeout, client termination, reset, sleep, and removal. | At most one client controls timing state; non-owner writes have no effect; release and recovery follow the declared rules. |
+| Power and removal lifecycle | Host-connected implementations | Exercise supported sleep, hibernation, wake, orderly removal, surprise removal or tunnel disconnect, reinsertion, and driver reload while reads, events, and a bounded write are outstanding. | Operations complete or cancel within declared bounds, no stale sample is returned as current, resources are not accessed while absent, and discovery is revalidated before optional access resumes. |
+
 ## B.4 Performance measurements
 
 ### B.4.1 Time accuracy
@@ -92,7 +105,7 @@ Lock the TimeCard for at least the declared preconditioning interval, record ini
 
 Environmental tests should follow the supplier-declared profile and the reporting fields in 9.5. Timing measurements should continue during the applied stimulus when the claim concerns operational performance, rather than relying only on a post-test functional check.
 
-Transition testing should cover each state change identified in 6.9. The record should correlate physical outputs, digital timestamps, control state, alarms, and events so that continuity and reporting behavior can be evaluated against the same timeline.
+Transition testing should cover each state change identified in 6.9. The record should correlate physical outputs, digital timestamps, host-time correlations, control state, ownership, alarms, events, and host lifecycle state so that continuity and reporting behavior can be evaluated against the same timeline.
 
 ## B.6 Reporting
 

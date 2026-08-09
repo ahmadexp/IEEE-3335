@@ -27,6 +27,7 @@ MANUSCRIPT_FILES = [
     ROOT / "Annex B - Test Procedures/README.md",
     ROOT / "Annex C - Bibliography/README.md",
     ROOT / "Annex D - Conformance Statement Proforma/README.md",
+    ROOT / "Annex E - Host Operating-System Integration/README.md",
 ]
 NORMATIVE_FILES = MANUSCRIPT_FILES[4:10]
 INFORMATIVE_TECHNICAL_FILES = [MANUSCRIPT_FILES[10], *MANUSCRIPT_FILES[11:]]
