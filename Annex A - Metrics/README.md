@@ -16,7 +16,7 @@ No single metric characterizes every aspect of a TimeCard. A useful declaration 
 | Short-term edge variation | A specifically defined time-jitter statistic |
 | Reference-loss behavior | Time error or MTIE versus elapsed holdover time |
 
-The metric name alone is insufficient. The measurement point, operating state, averaging or observation interval, bandwidth, environmental conditions, and uncertainty determine what a result means.
+The metric name alone is insufficient. The measurement point, operating state, averaging or observation interval, bandwidth, environmental conditions, and uncertainty determine what a result means and therefore should be documented with the result.
 
 ## A.2 Allan deviation
 
@@ -69,7 +69,7 @@ Peak-to-peak observed range depends strongly on sample count and observation tim
 
 ## A.7 Accuracy, precision, resolution, and granularity
 
-| Term | Use in this standard |
+| Term | Use in IEEE P3335 |
 |------|----------------------|
 | Accuracy | Qualitative closeness to a reference value; numerical claims are expressed using a defined error and uncertainty. |
 | Precision | Closeness of agreement among repeated indications under stated conditions. |
@@ -78,7 +78,7 @@ Peak-to-peak observed range depends strongly on sample count and observation tim
 
 A fine timestamp granularity does not by itself imply equally fine resolution, precision, or accuracy.
 
-These terms define P3335 performance-declaration semantics and are aligned with the corresponding measurement concepts used by IEEE Std 1588-2019 [4]. When an implementation claims an IEEE 1588 mapping, IEEE Std 1588-2019 governs the protocol fields and state-machine behavior, while the definitions in Clause 3 govern P3335 conformance and performance declarations. Under 4.7 and 7.3.3, an implementation-specific departure is identified in the conformance statement and is not represented as IEEE 1588 conformance.
+These terms define P3335 performance-declaration semantics and are aligned with the corresponding measurement concepts used by IEEE Std 1588-2019 [4]. When an implementation claims an IEEE 1588 mapping, IEEE Std 1588-2019 governs the protocol fields and state-machine behavior, while the definitions in Clause 3 govern P3335 conformance and performance declarations. Under 4.7 and 7.3.3, an implementation-specific departure is identified in the conformance statement and is not to be represented or interpreted as IEEE 1588 conformance.
 
 P3335 uses *accuracy* qualitatively and requires a quantitative claim to be expressed as a defined error or uncertainty bound. An IEEE 1588 `clockAccuracy` value is a protocol encoding that is mapped to the applicable measured or declared range under 6.4. P3335 uses *precision* for repeatability, *resolution* for the smallest perceptible change in indication, and *granularity* for the smallest representable encoding step. These four terms are not interchangeable, and an IEEE 1588 timestamp field width or scaling does not, by itself, establish P3335 resolution, precision, or accuracy.
 
@@ -96,9 +96,9 @@ A holdover declaration should therefore identify the prior lock duration and sou
 
 ## A.9 Ensemble and correlation considerations
 
-For $N$ independent sources with equal variance, ideal averaging reduces standard deviation by a factor of $\sqrt{N}$, giving an ensemble deviation proportional to $1/\sqrt{N}$. Real sources can share environmental, receiver, antenna, power, or network errors, so correlation reduces or eliminates that benefit.
+For $N$ independent sources with equal variance, ideal averaging reduces standard deviation by a factor of $\sqrt{N}$, giving an ensemble deviation proportional to $1/\sqrt{N}$. Real sources can share environmental, receiver, antenna, power, or network errors, so error correlation reduces or eliminates that benefit.
 
-An ensemble result should identify the source population, weighting or selection method, correlation assumptions, rejection criteria, and behavior as sources become unavailable or degraded.
+An ensemble result should identify the source population, weighting or selection method, error-correlation assumptions, rejection criteria, and behavior as sources become unavailable or degraded.
 
 ## A.10 Environmental sensitivity
 

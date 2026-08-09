@@ -15,7 +15,7 @@ Suppliers **shall** publish performance declarations for each conforming TimeCar
 - The observation interval, averaging time, bandwidth, sample count, or statistical confidence basis used.
 - The measurement equipment class and traceability path.
 
-Each required performance declaration **shall** include at least one bounded value or limit. Typical values can be provided in addition to, but not instead of, the bounded value.
+Each required performance declaration **shall** include at least one bounded value or limit. Typical values may be provided in addition to, but not instead of, the bounded value.
 
 ## 6.2 Performance Classes
 

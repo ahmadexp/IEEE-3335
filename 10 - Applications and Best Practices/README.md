@@ -59,7 +59,7 @@ Reference priorities and qualification thresholds should reflect independence, a
 
 ### 10.4.2 Monitoring and alarms
 
-Operators should monitor at least source availability, active source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit can be exceeded, not only to device state names.
+Operators should monitor at least source availability, active source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit might be exceeded, not only to device state names.
 
 ### 10.4.3 Updates and configuration
 
@@ -69,13 +69,13 @@ Configuration and update changes should be staged, authorized, recorded, and eva
 
 Calibration and verification intervals should be based on the declared performance, observed aging, environmental exposure, and application risk. Records should preserve the device identity, configuration, reference chain, uncertainty, result, and processing method.
 
-## 10.5 Common integration failures
+## 10.5 Common failure syndromes
 
 | Symptom | Possible cause | Investigation |
 |---------|----------------|---------------|
-| Constant offset | Cable or antenna delay, wrong edge, epoch mismatch, or unapplied correction | Trace the measurement point and correction sign through the complete timing path. |
-| Intermittent source loss | Marginal signal level, RF interference, packet loss, threshold hysteresis, loose or poorly retained connectors, broken or intermittent cabling, or shared infrastructure | Inspect and mechanically verify connectors and cabling, then correlate source health, raw signal indicators, network data, and event logs. |
+| Constant offset | Cable or antenna delay, wrong edge, epoch mismatch, or unapplied correction | Trace the measurement point, correction sign, and correction value through the complete timing path. |
+| Intermittent source loss | Marginal signal level, RF interference, packet loss, threshold hysteresis, loose or poorly retained connectors, broken or intermittent cabling, or lack of needed redundancy | Inspect and mechanically verify connectors and cabling, then correlate source health, raw signal indicators, network data, and event logs. |
 | Excessive holdover error | Initial frequency offset, temperature change, aging, insufficient preconditioning, or model error | Compare the holdover test conditions with the supplier declaration and recorded environment. |
-| Host timestamp disagreement | Different epochs or timescales, non-atomic reads, host-bus delay, or software conversion error | Validate the timestamp mapping, rollover behavior, atomicity, and correction model. |
+| Host timestamp disagreement | Different epochs or timescales, non-atomic reads, host-bus delay, or conversion error | Validate the timestamp mapping, rollover behavior, atomicity, and correction model. |
 | Unexpected phase step | Reference switch, manual adjustment, restart, or invalid continuity assumption | Correlate physical outputs with control state and transition events. |
 | Management loss during host fault | Control path shares host power, software, or network dependencies | Review the intended out-of-band boundary and correlated-failure assumptions. |

@@ -34,10 +34,12 @@ Cable delay, connector adapters, splitters, terminations, and reference-distribu
 | Test | Applicability | Method | Example pass/fail basis |
 |------|---------------|--------|-------------------------|
 | Discovery and declaration | Each receive interface | Inspect documentation and control capabilities, then compare them with the physical or logical interface. | Type, direction, protocol or signal, limits, measurement point, and source identifier are consistent. |
-| Valid-signal detection | Each receive interface | Apply a valid reference near nominal conditions and observe state. | Presence, validity, and source identity are reported without a false alarm. |
+| Reference qualification and status | Each receive interface | Apply supplier-declared acceptable conditions and selected unacceptable counterexamples, then observe state. | Reported acceptance, rejection, source identity, and alarms agree with the declared qualification rules for the tested conditions. |
 | Boundary behavior | Physical receive interfaces | Exercise declared amplitude, frequency, pulse, or protocol acceptance boundaries without exceeding protection limits. | Accepted and rejected conditions agree with the declared thresholds and hysteresis. |
 | Loss and reacquisition | Each receive interface used for synchronization | Remove or invalidate the active reference, then restore it. | State, alarms, transition behavior, and reacquisition time agree with the declaration. |
 | Source selection | Multiple-reference implementations | Exercise automatic and operator-controlled selection policies. | Active source and selection mode agree with the documented policy. |
+
+P3335 does not prescribe a universal test that proves a reference valid under every possible condition. Reference qualification is evaluated using a finite, declared set of acceptable conditions and counterexamples. The test record should identify that set, the implemented qualification rules, and the limits of the resulting evidence.
 
 ### B.3.2 Providing interfaces
 
