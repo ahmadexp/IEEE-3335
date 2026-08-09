@@ -1,48 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 900 300">
   <style>
-    .box { fill: #e5e7eb; rx: 4; }
-    .main { fill: #d1d5db; rx: 4; }
-    .text { font-family: sans-serif; font-size: 21px; font-weight: bold; fill: #111827; }
-    .small { font-family: sans-serif; font-size: 17px; fill: #111827; }
+    .box { fill: #ffffff; stroke: #000000; stroke-width: 2; rx: 4; }
+    .main { fill: #ffffff; stroke: #000000; stroke-width: 2; rx: 4; }
+    .text { font-family: sans-serif; font-size: 21px; font-weight: bold; fill: #000000; }
+    .small { font-family: sans-serif; font-size: 17px; fill: #000000; }
   </style>
 
-  <rect x="20" y="90" width="120" height="70" class="box"/>
+  <rect x="20" y="90" width="120" height="70" fill="#000000"/>
+  <rect x="22" y="92" width="116" height="66" fill="#ffffff"/>
   <text x="80" y="122" text-anchor="middle" class="text">Ingress</text>
   <text x="80" y="145" text-anchor="middle" class="small">references</text>
 
-  <rect x="180" y="90" width="135" height="70" class="box"/>
+  <rect x="180" y="90" width="135" height="70" fill="#000000"/>
+  <rect x="182" y="92" width="131" height="66" fill="#ffffff"/>
   <text x="247" y="122" text-anchor="middle" class="text">Selection</text>
   <text x="247" y="145" text-anchor="middle" class="small">health, priority</text>
 
-  <rect x="355" y="90" width="135" height="70" class="box"/>
+  <rect x="355" y="90" width="135" height="70" fill="#000000"/>
+  <rect x="357" y="92" width="131" height="66" fill="#ffffff"/>
   <text x="422" y="122" text-anchor="middle" class="text">Discipline</text>
   <text x="422" y="145" text-anchor="middle" class="small">local timing</text>
 
-  <rect x="530" y="70" width="150" height="110" class="main"/>
+  <rect x="530" y="65" width="150" height="120" fill="#000000"/>
+  <rect x="532" y="67" width="146" height="116" fill="#ffffff"/>
   <text x="605" y="114" text-anchor="middle" class="text">Unified</text>
   <text x="605" y="137" text-anchor="middle" class="text">Timescale</text>
   <text x="605" y="158" text-anchor="middle" class="small">maintained</text>
   <text x="605" y="178" text-anchor="middle" class="small">timebase</text>
 
-  <rect x="720" y="90" width="150" height="70" class="box"/>
-  <text x="795" y="122" text-anchor="middle" class="text">Egress</text>
-  <text x="795" y="144" text-anchor="middle" class="small">PPS, ToD</text>
-  <text x="795" y="165" text-anchor="middle" class="small">PTM, PTP</text>
+  <rect x="720" y="78" width="150" height="96" fill="#000000"/>
+  <rect x="722" y="80" width="146" height="92" fill="#ffffff"/>
+  <text x="795" y="116" text-anchor="middle" class="text">Egress</text>
+  <text x="795" y="139" text-anchor="middle" class="small">PPS, ToD</text>
+  <text x="795" y="159" text-anchor="middle" class="small">PTM, PTP</text>
 
-  <rect x="140" y="122" width="33" height="6" fill="#111827"/>
-  <polygon points="180,125 169,119 169,131" fill="#111827"/>
-  <rect x="315" y="122" width="33" height="6" fill="#111827"/>
-  <polygon points="355,125 344,119 344,131" fill="#111827"/>
-  <rect x="490" y="122" width="33" height="6" fill="#111827"/>
-  <polygon points="530,125 519,119 519,131" fill="#111827"/>
-  <rect x="680" y="122" width="33" height="6" fill="#111827"/>
-  <polygon points="720,125 709,119 709,131" fill="#111827"/>
+  <rect x="140" y="122" width="33" height="6" fill="#000000"/>
+  <polygon points="180,125 169,119 169,131" fill="#000000"/>
+  <rect x="315" y="122" width="33" height="6" fill="#000000"/>
+  <polygon points="355,125 344,119 344,131" fill="#000000"/>
+  <rect x="490" y="122" width="33" height="6" fill="#000000"/>
+  <polygon points="530,125 519,119 519,131" fill="#000000"/>
+  <rect x="680" y="122" width="33" height="6" fill="#000000"/>
+  <polygon points="720,125 709,119 709,131" fill="#000000"/>
 
-  <rect x="427" y="160" width="6" height="65" fill="#111827"/>
-  <rect x="430" y="219" width="360" height="6" fill="#111827"/>
-  <rect x="787" y="172" width="6" height="53" fill="#111827"/>
-  <polygon points="790,165 783,178 797,178" fill="#111827"/>
-  <rect x="285" y="240" width="540" height="54" class="box"/>
+  <rect x="427" y="160" width="6" height="65" fill="#000000"/>
+  <rect x="430" y="219" width="360" height="6" fill="#000000"/>
+  <rect x="787" y="172" width="6" height="53" fill="#000000"/>
+  <polygon points="790,165 783,178 797,178" fill="#000000"/>
+  <rect x="285" y="240" width="540" height="54" fill="#000000"/>
+  <rect x="287" y="242" width="536" height="50" fill="#ffffff"/>
   <text x="555" y="263" text-anchor="middle" class="small">Holdover uses the local timing function</text>
   <text x="555" y="285" text-anchor="middle" class="small">when references are unavailable</text>
 </svg>

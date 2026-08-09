@@ -19,7 +19,7 @@ Control operations and status associated with timing interfaces are specified in
 For each implemented receive interface, the supplier **shall** document:
 
 - Interface type and direction.
-- Referenced signal, protocol, and profile, including edition or revision.
+- Referenced signal, protocol, and profile, including the specific edition or revision.
 - Connector, pin assignment, or logical endpoint.
 - Electrical or optical levels, impedance, termination, polarity, and edge definition, as applicable.
 - Message format, timescale, epoch, and on-time marker, as applicable.
@@ -31,14 +31,14 @@ For each implemented receive interface, the supplier **shall** document:
 
 ### 7.2.2 Recognized receive-interface types
 
-The following interface types can be implemented:
+The following interface types may be implemented:
 
 - **PTP:** If PTP is implemented, protocol behavior **shall** conform to IEEE Std 1588-2019 [4] or IEEE Std 802.1AS-2025 [5] for the profile identified in the conformance statement.
 - **NTP:** If NTP is implemented as a synchronization input, protocol behavior **shall** conform to IETF RFC 5905 [7] for the mode and options identified in the conformance statement.
 - **IRIG:** If an IRIG AM or DCLS input is implemented, its format **shall** conform to IRIG Standard 200-16 [8] for the code and options identified in the conformance statement.
-- **GNSS:** A GNSS input can include antenna RF, receiver data, 1PPS, frequency, or a combination thereof. The implementation **shall** identify the receiver protocol, supported constellations, antenna requirements, and relationship of the receiver timescale to the unified timescale.
-- **Discrete pulse or frequency:** A receive interface can accept 1PPS, another pulse rate, a sine-wave frequency reference, or a logic-level clock. Its accepted waveform and on-time or phase marker **shall** be declared as required by 7.2.1.
-- **Other time-transfer methods:** A TimeCard can implement White Rabbit, regional radio time, wireless time transfer, or another method. The supplier **shall** identify the governing specification and provide the declarations required by 7.2.1.
+- **GNSS:** A GNSS input may include antenna RF, receiver data, 1PPS, frequency, or a combination thereof. The implementation **shall** identify the receiver protocol, supported constellations, antenna requirements, and relationship of the receiver timescale to the unified timescale.
+- **Discrete pulse or frequency:** A receive interface may accept 1PPS, another pulse rate, a sine-wave frequency reference, or a logic-level clock. Its accepted waveform and on-time or phase marker **shall** be declared as required by 7.2.1.
+- **Other time-transfer methods:** A TimeCard may implement White Rabbit, regional radio time, wireless time transfer, or another method. The supplier **shall** identify the governing specification and provide the declarations required by 7.2.1.
 
 ### 7.2.3 Reference selection and transition behavior
 

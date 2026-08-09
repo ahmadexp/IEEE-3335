@@ -1,6 +1,6 @@
 # 4. Conformance
 
-This clause defines the conditions under which an implementation can claim conformance to IEEE P3335. A conforming implementation **shall** satisfy the mandatory requirements in this clause and the mandatory requirements in Clauses 5 through 9 that apply to the implemented features, interfaces, and operating conditions.
+This clause defines the conditions under which an implementation may claim conformance to IEEE P3335. A conforming implementation **shall** satisfy the mandatory requirements in this clause and the mandatory requirements in Clauses 5 through 9 that apply to the implemented features, interfaces, and operating conditions.
 
 Informative clauses, informative notes, and informative annexes provide explanatory material only. They do not create conformance requirements unless a normative clause explicitly references a requirement stated elsewhere.
 
@@ -15,9 +15,11 @@ The following terms are used as defined by IEEE SA rules for standards text:
 
 The term **must** is not used as a requirement term in this standard. Where a physical or mathematical inevitability needs to be described, the text should be written as a statement of fact using **is**, **are**, or **can**.
 
+The term **unspecified** is not a requirement term. It identifies a value, behavior, or design choice that P3335 has considered but intentionally does not constrain. The choice is left to the implementation, an applicable profile, or a later specification, subject to any applicable documentation requirements.
+
 ## 4.2 Conformance Model
 
-IEEE P3335 uses interspersed requirements with a conformance summary. Mandatory and optional requirements are stated in the technical clauses where the relevant behavior is specified. This clause summarizes how those requirements are applied.
+IEEE P3335 uses interspersed requirements with a conformance summary. Mandatory and optional requirements are stated in the technical clauses where the relevant behavior is specified. Clause 4 summarizes how those requirements are applied.
 
 A TimeCard implementation may be realized as a discrete add-in card, an embedded module, an FPGA or ASIC function, a system-on-chip block, or an external timing unit. The form factor does not determine conformance. Conformance is determined by the externally observable interfaces, behavior, documentation, and performance declarations of the implementation.
 
@@ -35,7 +37,7 @@ A claim of conformance **shall** identify at least the following:
 A conforming TimeCard implementation **shall** meet all of the following base requirements:
 
 - The implementation **shall** provide at least one timing output providing interface that distributes time, phase, frequency, or a combination thereof to a host system or downstream system.
-- All implemented timing output providing interfaces **shall** derive from one unified timescale as specified in Clause 5.
+- All implemented timing output providing interfaces **shall** derive from the single unified timescale specified in Clause 5.
 - The implementation **shall** provide at least one accessible control interface as specified in Clause 8.
 - The implementation **shall** document all implemented timing interfaces, control interfaces, physical connectors, protocol mappings, and optional features.
 - The implementation **shall** document the performance metrics required by Clause 6 for each applicable measurement point.

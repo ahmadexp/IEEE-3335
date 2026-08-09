@@ -5,10 +5,12 @@
 For the purposes of this document, the following terms and definitions apply.
 
 - **accuracy:** Qualitative closeness of agreement between a measured quantity value and a reference quantity value. A numerical accuracy claim is expressed in this standard as time error, frequency offset, uncertainty, or another defined metric.
+- **command queue:** Ordered control-interface mechanism through which a producer submits commands or requests and a consumer reports completion, status, or response data according to a defined mapping.
 - **conformance profile:** Named set of mandatory requirements that applies when the profile is claimed by an implementation.
 - **conformance statement:** Supplier documentation identifying the P3335 clauses, profiles, optional features, interfaces, limits, and evidence for which an implementation claims conformance.
 - **control interface:** Logical or physical interface used to configure, monitor, update, or manage a TimeCard.
-- **data plane:** Logical or physical path that conveys time, phase, frequency, or event-timestamp information.
+- **control plane:** Set of logical or physical paths and functions used to configure, monitor, update, or manage a TimeCard.
+- **data plane:** Logical or physical path or set of paths that conveys time, phase, frequency, or event-timestamp information.
 - **declared:** Stated in the conformance statement or in supplier documentation referenced by that statement.
 - **disciplining:** Steering a local timing function using observations of one or more reference signals.
 - **ensemble operation:** Combination of selected reference observations to produce a synthesized reference used to discipline or validate the unified timescale.
@@ -26,14 +28,15 @@ For the purposes of this document, the following terms and definitions apply.
 - **receive interface:** Inbound physical or logical interface and its defined measurement point through which a TimeCard acquires observations of an external reference signal or data stream.
 - **reference signal:** External physical signal or data stream whose defined timing marker or encoded time value can be used to initialize, discipline, validate, or monitor the unified timescale.
 - **resolution:** Smallest change in a measured quantity that causes a perceptible change in the corresponding indication.
+- **serial interface:** Control interface that transfers commands and data sequentially over a physical or virtual serial channel using framing and command syntax defined by its mapping.
 - **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
 - **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
 - **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
 - **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
 - **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty. In this standard, a TimeCard supplies declarations and evidence that support system-level traceability analysis; the term does not assert that a TimeCard alone establishes end-to-end traceability.
 - **unavailable:** Status indicating that a supported object or measurement does not currently have a valid value.
-- **unspecified:** Status indicating that the applicable interface mapping defines a field or property but the implementation has not assigned a value. `unspecified` is distinct from `unknown`, `unavailable`, and `unsupported`.
 - **unified timescale:** Single timescale maintained by a TimeCard instance from which all of that instance's providing interfaces derive their time, phase, frequency, or timestamp information.
+- **unspecified:** Status or behavior that P3335 or an applicable mapping intentionally does not constrain, leaving the selection or definition to an implementation, profile, or later specification. For an object field, it may also indicate that the mapping permits a value but the implementation has not assigned one. `unspecified` is distinct from `unknown`, `unavailable`, and `unsupported`.
 - **unsupported:** Status indicating that an object, operation, or feature is not implemented.
 - **valid:** Status indicating that a value satisfies the freshness, state, and integrity conditions defined by its interface mapping.
 
@@ -72,13 +75,15 @@ For the purposes of this document, the following terms and definitions apply.
 - **ITU-T:** International Telecommunication Union Telecommunication Standardization Sector
 - **LFM:** linear feet per minute
 - **LOS:** loss of signal
+- **mdeg C:** millidegrees Celsius
 - **MMIO:** memory-mapped input/output
-- **MIPI:** MIPI Alliance
+- **MIPI:** MIPI Alliance; originally Mobile Industry Processor Interface, but MIPI is no longer expanded as an acronym
 - **MTBF:** mean time between failures
 - **MTIE:** maximum time interval error
 - **NC-SI:** Network Controller Sideband Interface
 - **NavIC:** Navigation with Indian Constellation
 - **NMI:** national metrology institute
+- **ns:** nanosecond
 - **NTP:** Network Time Protocol
 - **OCP:** Open Compute Project
 - **OCP TAP:** Open Compute Project Time Appliances Project
@@ -88,6 +93,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **PCI-SIG:** Peripheral Component Interconnect Special Interest Group
 - **PHC:** PTP hardware clock
 - **PLL:** phase-locked loop
+- **ps:** picosecond
 - **PPS:** pulse per second
 - **PTM:** Precision Time Measurement
 - **PTP:** Precision Time Protocol
@@ -96,7 +102,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **RF:** radio frequency
 - **RFC:** Request for Comments
 - **RMS:** root mean square
-- **SMA:** SubMiniature version A connector
+- **SMA:** SubMiniature version A coaxial connector
 - **SMBus:** System Management Bus
 - **SNMP:** Simple Network Management Protocol
 - **TAI:** International Atomic Time
@@ -106,8 +112,10 @@ For the purposes of this document, the following terms and definitions apply.
 - **TIC:** time interval counter
 - **TIE:** time interval error
 - **TLS:** Transport Layer Security
-- **TNC:** Threaded Neill-Concelman connector
+- **TNC:** Threaded Neill-Concelman coaxial connector
 - **ToD:** time of day
+- **Type-N:** Type-N coaxial connector
+- **µs:** microsecond
 - **USB:** Universal Serial Bus
 - **UTC:** Coordinated Universal Time
 - **UTF-8:** Unicode Transformation Format, 8-bit

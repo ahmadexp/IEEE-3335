@@ -36,7 +36,7 @@ Internal partitioning is implementation-specific unless a claimed optional featu
 
 ## 5.3 Core Functional Blocks
 
-A TimeCard architecture can be described by the following logical blocks. An implementation may combine or subdivide these blocks, provided that the externally observable behavior remains conformant.
+A TimeCard architecture is described by the following logical blocks. An implementation may combine or subdivide these blocks, provided that the externally observable behavior remains conformant.
 
 ### 5.3.1 Local Timing Function
 

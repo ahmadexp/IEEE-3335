@@ -1,3 +1,7 @@
 \usepackage[pagewise]{lineno}
 \renewcommand\linenumberfont{\normalfont\tiny\sffamily}
 \setlength\linenumbersep{10pt}
+\makeatletter
+\renewcommand\thelinenumber{%
+  \ifnum\value{linenumber}<10 0\fi\arabic{linenumber}}
+\makeatother

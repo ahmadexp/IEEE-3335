@@ -33,6 +33,8 @@ If altitude or ambient pressure affects cooling, electrical spacing, oscillator 
 
 The supplier **shall** document cooling assumptions needed for safe operation and full performance, including airflow direction and minimum airflow, heat-sink or cold-plate requirements, allowable inlet temperature, or host thermal design requirements, as applicable.
 
+Where forced air, liquid, or another coolant is required, the supplier **shall** document the coolant type, cleanliness or contamination limits, filtration requirements, inspection or maintenance interval, and any derating or protective response required when a filter, heat sink, cold plate, or other heat-transfer surface becomes obstructed or fouled.
+
 ## 9.3 Mechanical conditions
 
 ### 9.3.1 Form factor and installation
@@ -45,7 +47,7 @@ If operation, survival, or performance under shock or vibration is claimed, the 
 
 ### 9.3.3 Connectors and cabling
 
-The supplier **shall** document mating connectors, retention or torque requirements, expected mating cycles where relevant, cable strain-relief assumptions, and environmental limitations for externally accessible timing and RF connectors.
+The supplier **shall** document mating connectors, retention or torque requirements, the expected number of mating cycles where relevant, cable strain-relief assumptions, and environmental limitations for externally accessible timing and RF connectors.
 
 ## 9.4 Electrical and electromagnetic conditions
 
@@ -78,7 +80,7 @@ Environmental measurements supporting a conformance claim **shall** satisfy the 
 - Pre-test, during-test, and post-test results.
 - Recovery or recalibration performed after the test.
 
-Within the declared full-performance range, measured performance **shall** remain within the applicable bounded declarations from Clause 6. Within the wider operating range, the implementation **shall** remain functional and **shall** indicate when full-performance bounds are not valid.
+Within the declared full-performance range, measured performance **shall** remain within the applicable bounded declarations from Clause 6. Within the wider operating range, the implementation **shall** remain functional. When the implementation can detect that the applicable full-performance bounds are not assured, it **shall** expose a dynamic indication through a control object or alarm, and the supplier **shall** document the indication, the affected bounds, and the conditions for setting and clearing it. When the implementation cannot detect that condition, the supplier **shall** document the external monitoring needed to determine whether the bounds apply.
 
 ## 9.6 Reliability, service life, and calibration
 
@@ -103,7 +105,7 @@ The conformance statement or referenced product documentation **shall** include,
 | Deployment | Intended environment and implementation form. |
 | Temperature | Operating, full-performance, storage, and survival ranges; measurement location; warm-up. |
 | Humidity | Operating and storage ranges; condensation condition. |
-| Altitude and cooling | Range, derating, airflow direction and rate, or other cooling dependency. |
+| Altitude and cooling | Range, derating, airflow direction and rate, coolant cleanliness, filtration and maintenance assumptions, or other cooling dependency. |
 | Mechanical | Form factor, dimensions, mass, mounting, retention, shock, and vibration claims. |
 | Power | Rails, tolerances, consumption, inrush, sequencing, reset, persistence, and interruption behavior. |
 | EMC and ESD | Claimed standards, editions, levels, configurations, restrictions, and results. |
@@ -112,4 +114,4 @@ The conformance statement or referenced product documentation **shall** include,
 
 ## 9.8 Regulatory note (Informative)
 
-Manufacturers and integrators remain responsible for the safety, electromagnetic, environmental, spectrum, and other legal requirements of the jurisdictions in which a product is produced, installed, or operated. P3335 only defines TimeCard conformance and does not grant regulatory approval.
+Manufacturers and integrators remain responsible for the safety, electromagnetic, environmental, spectrum, and other legal requirements of the jurisdictions in which a product is produced, installed, or operated. P3335 only defines TimeCard conformance and does not and cannot grant regulatory approval.

@@ -6,7 +6,7 @@ LAYOUT_HEADER = latex/standards-layout.tex
 TABLE_FILTER = scripts/ieee_table_layout.lua
 LATEX_SCRATCH = *.aux *.log *.out *.toc
 FIGURE_CONVERTER ?= $(shell command -v magick 2>/dev/null || command -v convert 2>/dev/null || true)
-FIGURE_DENSITY ?= 72
+FIGURE_DENSITY ?= 144
 FIGURE_SVGS := $(wildcard figures/*.svg)
 FIGURE_PDFS := $(patsubst figures/%.svg,figures/rendered/%.pdf,$(FIGURE_SVGS))
 
@@ -31,7 +31,8 @@ figures/rendered/%.pdf: figures/%.svg
 		exit 1; \
 	fi
 	@mkdir -p figures/rendered
-	@$(FIGURE_CONVERTER) -density $(FIGURE_DENSITY) "$<" "$@"
+	@$(FIGURE_CONVERTER) -density $(FIGURE_DENSITY) -background white "$<" \
+		-alpha remove -alpha off -colorspace Gray "$@"
 
 $(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $(TABLE_FILTER) $(FIGURE_PDFS)
 	@echo "Gathering chapter files to build $(OUTPUT)..."
