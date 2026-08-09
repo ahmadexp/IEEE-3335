@@ -1,6 +1,6 @@
 # IEEE P3335 TimeCard Specification
 
-<img width="877" height="458" alt="logo_blue" src="https://github.com/user-attachments/assets/d7a902ab-45db-423e-98c3-9673068b70e5" />
+<img width="877" height="458" alt="logo_blue" src="https://github.com/user-attachments/assets/3409c764-63f7-4b3d-ae48-f75e585ee1dd" />
 
 This repository contains the working draft source for the **IEEE P3335 TimeCard Specification**. It defines the architectural framework, performance expectations, and interoperability objectives for TimeCard devices--modular timing subsystems that provide standardized, high-precision time, phase, and frequency services to host systems.
 
