@@ -97,7 +97,15 @@ Measure the declared carrier with an analyzer configuration whose residual floor
 
 Capture the declared edge using the stated termination and bandwidth. Use the declared sample population and ideal-event model. Compute the exact RMS, standard-deviation, percentile, peak-to-peak, or bounded statistic stated by the supplier.
 
-### B.4.6 Holdover
+### B.4.6 Noise transfer
+
+Apply the declared timing-variation stimulus at the receive-interface measurement point while the TimeCard is synchronized to that input. Simultaneously measure the applied input variation and the response at each applicable providing-interface measurement point. Sweep or otherwise exercise the declared frequency range, observation intervals, amplitudes, and operating configurations. Remove or bound fixture and reference-distribution contributions, compute the declared transfer response or mask, and compare the result with the supplier's bounded declaration.
+
+### B.4.7 Noise tolerance
+
+Apply the declared timing-variation profile at the receive-interface measurement point while monitoring reference validity, alarms, selected source, lock state, holdover state, and the providing-interface metrics named in the acceptance criteria. Exercise the declared threshold or mask and enough adjacent conditions to establish the boundary, including any specified dwell and hysteresis. Compare the observed threshold and every monitored outcome with the supplier's bounded declaration. The test should distinguish loss of an input acceptance criterion from an output limit exceeded through otherwise valid noise transfer.
+
+### B.4.8 Holdover
 
 Lock the TimeCard for at least the declared preconditioning interval, record initial time and frequency error, remove all applicable references, and observe the declared holdover duration. Record the temperature and power profile. Compare time error or MTIE versus elapsed holdover time with the supplier's bound, then verify reference-restoration behavior.
 

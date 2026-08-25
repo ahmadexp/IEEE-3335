@@ -31,9 +31,11 @@ The measurement uncertainty, instrument noise floor, measurement bandwidth, aver
 
 When a measured result is compared with a declared limit, the test report **shall** state the decision rule and treatment of measurement uncertainty. A pass/fail conclusion **shall** not silently treat an uncertainty interval that crosses the limit as an unqualified pass.
 
-If the term **jitter** is used, the implementation documentation **shall** define the exact jitter metric, measurement bandwidth, sample population, and statistical calculation. Time jitter, phase noise, MTIE, TDEV, and ADEV **shall** not be used interchangeably.
+If the term **jitter** is used, the implementation documentation **shall** define the exact jitter metric, measurement bandwidth, sample population, and statistical calculation. Constant time error, dynamic time error, phase noise, MTIE, TDEV, ADEV, noise transfer, and noise tolerance **shall** not be used interchangeably.
 
-## 6.4 Time Accuracy
+## 6.4 Time Error and Noise Response
+
+### 6.4.1 Time error
 
 Time accuracy declarations **shall** state the error of a TimeCard output or timestamp relative to a declared reference timescale or source.
 
@@ -43,12 +45,36 @@ For each time accuracy declaration, the supplier **shall** document:
 - Measurement point, such as 1PPS output, Time of Day output, PTP egress timestamp, PTM timestamp, or register-read timestamp.
 - Maximum time error or another explicitly defined bounded statistic.
 - Statistical basis, such as maximum observed value, percentile, RMS value, or confidence interval.
-- Static error and dynamic error components when they are separately known.
+- Constant time error and dynamic time error components when they can be separately estimated under the declared method.
 - Valid temperature range and environmental profile.
 - Minimum lock time before the declaration applies.
 - Relationship between the declared source and UTC or TAI, if the declared source is not itself UTC or TAI.
 
 If an implementation reports IEEE 1588-2019 [4] `clockAccuracy` values, the values **shall** correspond to the measured or declared accuracy range for the applicable operating mode.
+
+### 6.4.2 Noise transfer
+
+For each receive interface used to discipline the unified timescale, the supplier **shall** characterize noise transfer to each providing interface for which synchronized performance is declared. The characterization **shall** identify:
+
+- Receive and providing measurement points.
+- Applied timing-variation type, amplitude, and frequency range or observation intervals.
+- Reference-selection state, local timing function configuration, and operating mode.
+- Transfer result expressed as a gain and phase response, bandwidth and peaking bounds, an input-to-output mask, or another explicitly defined bounded response.
+- Measurement bandwidth, filtering, data treatment, observation duration, and measurement uncertainty.
+
+The applied timing variation may be phase modulation, wander, packet-delay variation, or another disturbance appropriate to the receive interface. The supplier **shall** define the stimulus and calculation method sufficiently for another laboratory to reproduce the result.
+
+### 6.4.3 Noise tolerance
+
+For each receive interface used to discipline the unified timescale, the supplier **shall** characterize noise tolerance. The characterization **shall** identify:
+
+- Receive-interface measurement point, nominal input conditions, and operating mode.
+- Applied timing-variation type, amplitude profile, frequency range or observation intervals, and duration.
+- Acceptance criteria, including the applicable reference-validity, alarm, reference-switching, lock, holdover, and providing-interface performance outcomes.
+- Threshold, mask, or other bounded input condition that satisfies the declared acceptance criteria.
+- Hysteresis, dwell time, filtering, data treatment, and measurement uncertainty relevant to the result.
+
+Noise tolerance **shall** be stated separately from electrical noise immunity and from noise transfer. A tolerance declaration **shall** not imply an output-performance bound unless that bound is included in its acceptance criteria.
 
 ## 6.5 Time Stability
 
@@ -137,11 +163,13 @@ The performance section of a datasheet or conformance statement **shall** includ
 
 | Category | Required reporting content |
 |----------|-----------------------------|
-| Time accuracy | Reference source, measurement point, bounded error, statistic, temperature range, lock time |
+| Time error | Reference source, measurement point, bounded error, constant and dynamic components, statistic, temperature range, lock time |
 | Time stability | MTIE and applicable TDEV intervals, measurement point, state, environmental profile |
 | Frequency stability | Frequency accuracy, temperature stability, applicable ADEV intervals, measurement point |
 | Phase noise | Carrier frequency, offset-frequency range, measurement bandwidth, phase-noise curve or limits |
 | Pulse timing | Edge definition, pulse width, rise/fall time, time jitter definition, alignment to unified timescale |
+| Noise transfer | Input and output measurement points, stimulus, operating state, transfer response or mask, bandwidth, uncertainty |
+| Noise tolerance | Input measurement point and nominal conditions, stimulus and duration, acceptance criteria, tolerance mask or threshold, uncertainty |
 | Holdover | Entry condition, prior lock duration, MTIE/error versus elapsed time, temperature profile |
 | Transitions | Lock acquisition, failover, holdover exit, phase steps, reporting mechanism |
 | Environment | Temperature, voltage, vibration, airflow, and host-integration assumptions |

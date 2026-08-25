@@ -72,11 +72,12 @@ This file is the working-group action register for the Markdown draft. It is not
 | AI-024 | P0 | Draft candidate; WG vote needed | TBD | Ratify the portable PCIe discovery descriptor. | WG approves the locator, signature, header and entry encoding, resource types, capability allocation, consistency mechanism, and fail-closed compatibility behavior in 8.9.1. |
 | AI-025 | P0 | Draft candidate; host-time review needed | TBD | Ratify host-time correlation and discipline eligibility. | WG approves the `HOST_TIME_CORRELATION` fields, clock and timescale semantics, discontinuity handling, freshness and window limits, and eligibility rules in 8.10.4. |
 | AI-026 | P1 | Draft candidate; cross-platform validation needed | TBD | Validate host lifecycle, identity, ABI, and ownership requirements. | Annex B host tests are executed on representative Windows, macOS, and Linux implementations, with limitations and resulting normative comments recorded. |
+| AI-027 | P1 | Draft candidate; reviewer confirmation needed | TBD | Ratify the timing-flow scope clarification and noise-response requirements. | Stefano confirms the comment dispositions; the WG approves the 1.1 deployment model and the noise-transfer, noise-tolerance, cTE, and dTE text in Clauses 3, 5, and 6. |
 
 ## Recommended sequence
 
 1. Resolve AI-003, AI-004, AI-005, AI-006, AI-017, AI-018, AI-024, and AI-025 as the interoperability core.
-2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, AI-022, and AI-026 as the validation and profile layer.
+2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, AI-022, AI-026, and AI-027 as the validation and profile layer.
 3. Complete AI-007 and AI-019 with the IEEE SA program manager and project editor.
 4. Regenerate the requirements index after every normative edit using `make requirements`.
 5. Run `make check`, rebuild with `make`, and visually review the PDF before each ballot-facing circulation.

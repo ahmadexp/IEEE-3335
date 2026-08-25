@@ -1,6 +1,6 @@
 # Annex A: Metrics (Informative)
 
-This annex summarizes timing and frequency metrics used by the normative performance declarations in Clause 6. The controlling definitions and calculation methods are those in the normative references cited by the applicable requirement. The environmental-sensitivity discussion in A.10 condenses concepts from IEEE Std 1193-2022 [3] for convenient application to TimeCards; IEEE Std 1193-2022 remains the controlling source where a normative requirement cites it.
+This annex summarizes timing and frequency metrics used by the normative performance declarations in Clause 6. The controlling definitions and calculation methods are those in the normative references cited by the applicable requirement. The environmental-sensitivity discussion in A.11 condenses concepts from IEEE Std 1193-2022 [3] for convenient application to TimeCards; IEEE Std 1193-2022 remains the controlling source where a normative requirement cites it.
 
 ## A.1 Metric selection
 
@@ -14,6 +14,8 @@ No single metric characterizes every aspect of a TimeCard. A useful declaration 
 | Fractional-frequency stability | ADEV or modified ADEV |
 | Spectral purity of a periodic output | Phase noise |
 | Short-term edge variation | A specifically defined time-jitter statistic |
+| Transfer of input timing variation to an output | Noise-transfer response, gain, bandwidth, peaking, or mask |
+| Accepted input timing variation without a declared loss of function | Noise-tolerance threshold or mask |
 | Reference-loss behavior | Time error or MTIE versus elapsed holdover time |
 
 The metric name alone is insufficient. The measurement point, operating state, averaging or observation interval, bandwidth, environmental conditions, and uncertainty determine what a result means and therefore should be documented with the result.
@@ -67,7 +69,15 @@ The word *jitter* has several domain-specific meanings. For a pulse or event str
 
 Peak-to-peak observed range depends strongly on sample count and observation time. RMS and standard deviation are equivalent only under the stated centering convention. These details are therefore part of the metric definition.
 
-## A.7 Accuracy, precision, resolution, and granularity
+## A.7 Noise transfer and noise tolerance
+
+Noise transfer characterizes how timing variation present at a selected receive interface appears at a selected providing interface while the TimeCard is synchronized to that input. A linearized transfer function, gain and phase response, bandwidth and peaking result, or bounded input-to-output mask may be suitable. The declaration should identify both measurement points, the stimulus type and amplitude, the frequency range or observation intervals, the local timing function and servo configuration, and any nonlinear or time-varying behavior that limits the chosen representation.
+
+Noise tolerance characterizes the timing variation that a receive interface can accept while satisfying declared criteria. The criteria can include remaining locked, retaining the selected reference, avoiding a specified alarm or holdover transition, and keeping a providing-interface metric within a declared bound. The result should state the input stimulus or mask, nominal signal conditions, test duration, threshold-search method, hysteresis, monitored state and outputs, and the first criterion that fails. Noise tolerance describes accepted input variation; it does not by itself characterize the variation transferred to an output.
+
+For packet timing inputs, the stimulus may be a reproducible packet-delay-variation model rather than sinusoidal phase modulation. The packet rate, delay distribution or sequence, asymmetry, loss and reordering behavior, traffic conditions, and random seed or retained stimulus record should accompany the result.
+
+## A.8 Accuracy, precision, resolution, and granularity
 
 | Term | Use in IEEE P3335 |
 |------|----------------------|
@@ -82,7 +92,7 @@ These terms define P3335 performance-declaration semantics and are aligned with 
 
 P3335 uses *accuracy* qualitatively and requires a quantitative claim to be expressed as a defined error or uncertainty bound. An IEEE 1588 `clockAccuracy` value is a protocol encoding that is mapped to the applicable measured or declared range under 6.4. P3335 uses *precision* for repeatability, *resolution* for the smallest perceptible change in indication, and *granularity* for the smallest representable encoding step. These four terms are not interchangeable, and an IEEE 1588 timestamp field width or scaling does not, by itself, establish P3335 resolution, precision, or accuracy.
 
-## A.8 Holdover time error
+## A.9 Holdover time error
 
 During holdover, time error can be represented conceptually as:
 
@@ -94,13 +104,13 @@ where $x_0$ is time error at holdover entry, $y_0$ is initial fractional-frequen
 
 A holdover declaration should therefore identify the prior lock duration and source, entry condition, elapsed holdover interval, temperature profile, initial error treatment, and behavior on reference restoration.
 
-## A.9 Ensemble and correlation considerations
+## A.10 Ensemble and correlation considerations
 
 For $N$ independent sources with equal variance, ideal averaging reduces standard deviation by a factor of $\sqrt{N}$, giving an ensemble deviation proportional to $1/\sqrt{N}$. Real sources can share environmental, receiver, antenna, power, or network errors, so error correlation reduces or eliminates that benefit.
 
 An ensemble result should identify the source population, weighting or selection method, error-correlation assumptions, rejection criteria, and behavior as sources become unavailable or degraded.
 
-## A.10 Environmental sensitivity
+## A.11 Environmental sensitivity
 
 Common environmental sensitivity quantities include fractional-frequency change per degree of temperature, fractional-frequency change per unit acceleration, supply sensitivity, and aging rate. Reports should distinguish static sensitivity from transient response and should identify axis, stimulus frequency, rate of change, settling time, and hysteresis when relevant.
 

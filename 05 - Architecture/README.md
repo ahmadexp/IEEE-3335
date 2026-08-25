@@ -143,6 +143,8 @@ The following performance categories **shall** be addressed when applicable to t
 - Frequency stability, including ADEV where applicable.
 - Phase noise for periodic frequency outputs where applicable.
 - Time jitter for pulse outputs where applicable.
+- Noise transfer from each receive interface used for synchronization to each applicable providing interface.
+- Noise tolerance of each receive interface used for synchronization.
 - Holdover error versus elapsed time.
 - Lock acquisition, recovery, and failover behavior.
 - Environmental sensitivity relevant to the declared operating profile.

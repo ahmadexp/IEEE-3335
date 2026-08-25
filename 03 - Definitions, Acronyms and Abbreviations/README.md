@@ -6,6 +6,7 @@ For the purposes of this document, the following terms and definitions apply.
 
 - **accuracy:** Qualitative closeness of agreement between a measured quantity value and a reference quantity value. A numerical accuracy claim is expressed in this standard as time error, frequency offset, uncertainty, or another defined metric.
 - **command queue:** Ordered control-interface mechanism through which a producer submits commands or requests and a consumer reports completion, status, or response data according to a defined mapping.
+- **constant time error:** Constant component, denoted cTE, of the time error of a synchronized TimeCard relative to the declared reference timescale under the declared estimation method.
 - **conformance profile:** Named set of mandatory requirements that applies when the profile is claimed by an implementation.
 - **conformance statement:** Supplier documentation identifying the P3335 clauses, profiles, optional features, interfaces, limits, and evidence for which an implementation claims conformance.
 - **control interface:** Logical or physical interface used to configure, monitor, update, or manage a TimeCard.
@@ -13,6 +14,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **data plane:** Logical or physical path or set of paths that conveys time, phase, frequency, or event-timestamp information.
 - **declared:** Stated in the conformance statement or in supplier documentation referenced by that statement.
 - **disciplining:** Steering a local timing function using observations of one or more reference signals.
+- **dynamic time error:** Time-varying random-noise component, denoted dTE, of the time error of a synchronized TimeCard. Dynamic time error may be characterized using metrics such as MTIE and TDEV under a declared measurement method.
 - **ensemble operation:** Combination of selected reference observations to produce a synthesized reference used to discipline or validate the unified timescale.
 - **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
 - **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, or accuracy.
@@ -24,6 +26,8 @@ For the purposes of this document, the following terms and definitions apply.
 - **lock time:** Elapsed time from a declared starting condition until a TimeCard enters the declared locked state.
 - **measurement point:** Physical connector, logical boundary, register access point, packet event, or other defined location to which a measured or declared value applies.
 - **measurement uncertainty:** Non-negative parameter characterizing the dispersion of quantity values attributed to a measurand.
+- **noise tolerance:** Level and form of timing variation at a receive interface that can be accepted without causing one or more declared loss-of-function criteria.
+- **noise transfer:** Relationship between timing variation at a receive-interface measurement point and the resulting timing variation at a providing-interface measurement point under declared operating conditions.
 - **optional feature:** Feature, interface, protocol, environmental profile, or security function not required for base conformance that becomes subject to its applicable mandatory requirements when claimed.
 - **phase alignment:** Specified phase relationship between corresponding timing markers on two interfaces. Alignment error is the measured difference from that relationship.
 - **precision:** Closeness of agreement among repeated indications under stated conditions.
@@ -56,9 +60,11 @@ For the purposes of this document, the following terms and definitions apply.
 - **BMC:** baseboard management controller
 - **CFM:** cubic feet per minute
 - **CSAC:** chip-scale atomic clock
+- **cTE:** constant time error
 - **DCLS:** direct current level shift (IRIG time-code modulation)
 - **DDS:** direct digital synthesizer
 - **DMTF:** Distributed Management Task Force
+- **dTE:** dynamic time error
 - **EMC:** electromagnetic compatibility
 - **EMI:** electromagnetic interference
 - **ESD:** electrostatic discharge
