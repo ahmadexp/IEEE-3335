@@ -39,3 +39,11 @@ This bibliography identifies background material useful for designing, applying,
 - **[B24]** Lamport, L., Shostak, R., and Pease, M., "The Byzantine Generals Problem," *ACM Transactions on Programming Languages and Systems*, vol. 4, no. 3, pp. 382-401, July 1982. [<https://lamport.azurewebsites.net/pubs/byz.pdf>].
 - **[B25]** Gray, J., and Reuter, A., *Transaction Processing: Concepts and Techniques*, 1st ed., Morgan Kaufmann, 1992. [<https://shop.elsevier.com/books/transaction-processing/gray/978-0-08-051955-5>].
 - **[B26]** van Steen, M., and Tanenbaum, A. S., *Distributed Systems*, 3rd ed., distributed-systems.net, 2017. [<https://www.distributed-systems.net/index.php/books/ds3/>].
+
+## C.5 Host Driver and Operating-System References
+
+- **[B27]** Microsoft, *Supporting PnP and Power Management in Function Drivers*, Windows Driver Framework documentation. [<https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/supporting-pnp-and-power-management-in-function-drivers>].
+- **[B28]** Microsoft, *How the Windows Time Service Works*, Windows Server documentation. [<https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/how-the-windows-time-service-works>].
+- **[B29]** Apple Inc., *DriverKit*, Apple Developer Documentation. [<https://developer.apple.com/documentation/driverkit>].
+- **[B30]** Apple Inc., *PCIDriverKit*, Apple Developer Documentation. [<https://developer.apple.com/documentation/pcidriverkit>].
+- **[B31]** Linux kernel documentation, *PTP hardware clock infrastructure for Linux*. [<https://docs.kernel.org/driver-api/ptp.html>].

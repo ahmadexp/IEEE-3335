@@ -36,13 +36,13 @@ A claim of conformance **shall** identify at least the following:
 
 A conforming TimeCard implementation **shall** meet all of the following base requirements:
 
-- The implementation **shall** provide at least one timing output providing interface that distributes time, phase, frequency, or a combination thereof to a host system or downstream system.
+- The implementation **shall** provide at least one providing interface that distributes time, phase, frequency, timestamp information, or a combination thereof to a host system or downstream system.
 - All implemented timing output providing interfaces **shall** derive from the single unified timescale specified in Clause 5.
 - The implementation **shall** provide at least one accessible control interface as specified in Clause 8.
 - The implementation **shall** document all implemented timing interfaces, control interfaces, physical connectors, protocol mappings, and optional features.
 - The implementation **shall** document the performance metrics required by Clause 6 for each applicable measurement point.
 - The implementation **shall** document the environmental limits and reliability information required by Clause 9 for the declared deployment environment.
-- The implementation **shall** define the conditions under which each declared performance value is valid, including warm-up time, lock time, reference source, temperature range, and measurement bandwidth where applicable.
+- The implementation **shall** define the conditions under which each declared performance value is valid, including warm-up time, lock time, TimeCard synchronization source, temperature range, and measurement bandwidth where applicable.
 - The implementation **shall** not claim support for an optional feature unless all mandatory requirements associated with that feature are satisfied.
 
 An implementation may conform to IEEE P3335 without implementing every optional receive interface, providing interface, host interface mapping, management protocol, environmental profile, or security hardening feature described in this standard.
@@ -67,7 +67,7 @@ Optional features are conditional. If an implementation claims support for an op
 
 Optional feature claims include, but are not limited to:
 
-- Receive interfaces such as GNSS, PTP, NTP, White Rabbit, WiWi, WWVB, IRIG, PPS, or frequency-reference inputs.
+- Receive interfaces such as GNSS, PTP, NTP, White Rabbit, WWVB, IRIG, PPS, wireless time transfer, or frequency-reference inputs.
 - Providing interfaces such as PPS, frequency outputs, Time of Day outputs, PTP, PCIe PTM, or other host-bus time-transfer mechanisms.
 - Host interface mappings such as PCIe, USB, serial, embedded memory-mapped interfaces, or implementation-specific mappings.
 - Control protocols such as SMBus, I2C, I3C, IPMI, NC-SI, REST, gRPC, SNMP, Redfish, serial, or USB.
@@ -87,12 +87,17 @@ An implementation may claim a vendor-defined or application-defined performance 
 
 The supplier of a conforming implementation **shall** provide a conformance statement. The conformance statement **shall** be both publicly available and supplied with the product documentation and **shall** include, at a minimum:
 
-- Product name, hardware revision, firmware revision, and relevant configuration profile.
+- Product or implementation name; hardware or implementation revision; firmware, gateware, and software revisions; and relevant configuration profile.
+- The published edition of this standard against which conformance is claimed, together with the conformance-statement date and revision.
 - Claimed IEEE P3335 conformance scope.
 - Supported timing receive interfaces and providing interfaces.
 - Supported host interface mapping and control interface classes.
+- Baseline control mapping and revision, required-object coverage, conditional capabilities, status encoding, and extension or compatibility policy.
+- Host driver, service, API, and ABI revisions required for each claimed host mapping.
+- Instance-identifier stability, host lifecycle behavior, and host-time correlation capabilities for each claimed host mapping.
 - Claimed conformance profiles from 4.4.
 - Supported optional feature sets.
+- Security properties and deployment assumptions required by 8.11.1, including the claimed security profile and supported security functions.
 - Declared performance metrics and measurement points.
 - Declared environmental operating and storage limits.
 - References to datasheets, register maps, interface descriptions, calibration information, and test reports needed to evaluate the claim.
@@ -110,11 +115,13 @@ When test evidence is used to support a conformance claim, the evidence **shall*
 - The device under test and configuration under test.
 - The applicable IEEE P3335 clauses and optional feature claims.
 - Test equipment, calibration status, and traceability path.
-- Test environment, reference source, cabling, and measurement points.
+- Test environment, TimeCard synchronization source, cabling, and measurement points.
 - Pass/fail criteria and measured results.
 - Any deviations, waivers, or limitations of the test method.
 
 Annex B provides informative example test procedures that can be used as a starting point for such evidence. Its procedures do not add, change, or replace the normative conformance criteria.
+
+A deviation or waiver of a test method **shall** not waive an applicable mandatory requirement of this standard.
 
 ## 4.9 Conformance Statement Proforma
 

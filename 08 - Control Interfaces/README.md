@@ -19,7 +19,7 @@ At least one implemented control interface **shall** provide access to the requi
 
 - Read implementation identity, revision, profile, and capability information.
 - Read the unified-timescale state and an atomic time value.
-- Read active and available synchronization-source information.
+- Read information about active and available TimeCard synchronization sources.
 - Read active alarm and security-state information.
 - Discover whether conditional configuration, telemetry, event, update, and sanitization operations are supported.
 
@@ -39,7 +39,7 @@ Each implemented PCIe control mapping **shall** satisfy 8.9. If PCIe PTM is impl
 
 ### 8.3.3 IPMI and NC-SI
 
-An implementation claiming IPMI control **shall** conform to DMTF DSP0236 [1] for the IPMI version and command scope identified in the conformance statement. Vendor or P3335-specific commands **shall** use an assigned or documented extension mechanism, **shall** have identifiers unique within the applicable command namespace, and **shall** not redefine, alias, or overlap standard command identifiers.
+An implementation claiming IPMI control **shall** conform to the IPMI Specification, Version 2.0, Revision 1.1, with E7 markup dated 21 April 2015 [1], for the interface roles and command scope identified in the conformance statement. Vendor or P3335-specific commands **shall** use an assigned or documented extension mechanism, **shall** have identifiers unique within the applicable command namespace, and **shall** not redefine, alias, or overlap standard command identifiers.
 
 An NC-SI mapping **shall** identify the NC-SI specification revision, package and channel discovery behavior, command set, and mapping of baseline objects.
 
@@ -62,14 +62,20 @@ Each control-interface mapping **shall** define:
 - A mapping name and major and minor version.
 - Discovery and enumeration behavior.
 - Data encoding, byte order, alignment, transfer size, and string encoding.
+- Binary structure, message, or envelope lengths and version fields, when a binary ABI is used.
 - Mapping of required and conditional objects.
 - Object support, validity, stale-data, unavailable, and fault reporting.
 - Error responses for unsupported operations, invalid values, reserved values, malformed requests, and access denial.
 - Concurrency and atomicity behavior for multi-field values and configuration changes.
 - Reset, restart, and persistence behavior.
+- Host and device lifecycle behavior, including low-power transitions, removal, reconnection, and disposition of outstanding operations when applicable.
 - Compatibility behavior for unknown objects, fields, enumeration values, and extensions.
 
 A change that removes an object, changes its units or meaning, narrows its valid range, or changes its access semantics **shall** increment the mapping major version. A backward-compatible addition **shall** increment the mapping minor version.
+
+A binary mapping **shall** carry a validated total length and mapping version in each request and response structure or in a transport envelope that unambiguously supplies the same information. A receiving implementation **shall** validate the transport length, declared length, and supported version before accessing any field. A short, oversized, internally inconsistent, or unsupported structure **shall** be rejected without performing the requested operation unless the mapping explicitly defines a backward-compatible trailing-field rule.
+
+Reserved binary fields **shall** be transmitted as zero. A receiving implementation **shall** not interpret a reserved field as a capability or command. The mapping **shall** define whether a nonzero reserved field is ignored for forward compatibility or rejected as malformed.
 
 A receiving implementation **shall** process every recognized object and field in a message. It **shall** leave an unknown optional object or field uninterpreted. When forwarding is supported, it **shall** preserve the unknown optional value. If an unknown element prevents the requested operation, the receiving implementation **shall** report an incompatibility. A receiving implementation **shall** not write a reserved value. An implementation receiving a reserved or invalid write value **shall** reject the operation without changing the prior value.
 
@@ -83,6 +89,10 @@ For a configuration operation affecting timing behavior, the interface **shall**
 
 Configuration writes **shall** either complete as one documented operation or report partial completion and the resulting state. A failed write **shall** not silently leave an indeterminate state or configuration.
 
+Operations that set time, step phase, steer frequency, select a synchronization source, alter a discipline loop, or modify persistent timing calibration **shall** be serialized against other operations that can affect the same state. The mapping **shall** define the arbitration order, conflict response, and recovery behavior.
+
+If more than one independent client can issue such operations, the mapping **shall** provide time-control ownership through an exclusive lease, an atomic claim operation, or an equivalent fail-closed mechanism. A non-owner operation **shall** be rejected without changing timing state. Ownership **shall** terminate or be revalidated according to documented rules for explicit release, client loss, timeout, reset, low-power transition, device removal, and driver or service restart. Time-control ownership **shall** not bypass authentication or authorization requirements.
+
 ## 8.6 Access control and security state
 
 Every control interface **shall** document its authentication, authorization, transport protection, update authorization, audit, key-storage, and sanitization capabilities. The `SECURITY_STATE` object **shall** report the mechanisms supported and their current verified or active state. If no security mechanism is implemented for a control interface, the documentation and `SECURITY_STATE` object **shall** state `none` and **shall** identify the physical-access or deployment assumptions on which that choice depends.
@@ -91,9 +101,11 @@ Requirements for the Managed TimeCard and Secure Infrastructure TimeCard profile
 
 Security failure **shall** not be reported as normal successful completion. Authentication failures, authorization denials, firmware verification failures, and sanitization failures **shall** be distinguishable to an authorized operator.
 
+For an interface exposing timing-affecting write operations, the authorization declaration **shall** identify the privileges required to set time, discipline phase or frequency, select a TimeCard synchronization source, change persistent calibration, and update executable content. When the authorization mechanism supports distinct privileges, read-only monitoring **shall** be separable from these timing-affecting operations.
+
 ## 8.7 Events and telemetry
 
-If event reporting is implemented, each event record **shall** include a timestamp or an explicit indication that valid time was unavailable, a severity, a source, an event type, and event-specific data. The event timestamp measurement point and timescale **shall** be documented.
+If event reporting is implemented, each event record **shall** include a timestamp or an explicit indication that valid time was unavailable, a severity, an event origin, an event type, and event-specific data. The event timestamp measurement point and timescale **shall** be documented.
 
 The following state changes **shall** generate an event when the corresponding function and event reporting are implemented:
 
@@ -114,22 +126,56 @@ A receiving implementation that does not advertise support for an extension **sh
 
 ## 8.9 PCIe host interface profile
 
-An implementation claiming the PCIe Host Mapping conformance profile **shall** expose a discoverable PCIe function associated with the TimeCard timing and control functions.
+An implementation claiming the PCIe Host Mapping conformance profile **shall** expose a discoverable PCIe function associated with the TimeCard timing and control functions and a P3335 discovery descriptor satisfying 8.9.1.
 
 The PCIe mapping **shall** document:
 
 - Vendor ID, device ID, class code, subsystem identifiers, and revision identifier.
 - PCIe Base Specification revision and discovery behavior.
 - BAR, capability, command-queue, or driver-API resources used by the mapping.
-- Mapping signature and major and minor version at a documented discovery location.
+- P3335 discovery-descriptor locator and serialized encoding.
 - Interrupt or polling behavior.
 - Function-level, fundamental, and software-reset behavior.
 - Persistence of configuration and time state across each reset type.
+- Active and non-active host power-state behavior, removal and reconnection behavior, and disposition of outstanding operations.
 - Error reporting for unsupported, malformed, reserved, or unauthorized accesses.
 - Timestamp format, epoch, timescale, granularity, rollover, and atomic-read mechanism.
 - Measurement point and correction terms relating PCIe or PTM time to the unified timescale and other providing interfaces.
 
+### 8.9.1 P3335 discovery descriptor
+
+The P3335 discovery descriptor **shall** be read-only and reachable using PCI configuration-space information and a documented baseline locator. Locating the descriptor **shall** not require probing guessed MMIO offsets or accessing an optional resource.
+
+The descriptor **shall** contain:
+
+- A recognizable P3335 signature, descriptor revision, total length, and header length.
+- Mapping major and minor version, byte order, and entry-size information.
+- Implementation or board profile and active firmware or gateware image identity, including an explicit `not-applicable` or `unavailable` indication when no such image identity exists.
+- The `TC_INSTANCE_ID` value or a reference to the baseline operation that returns it, together with its declared stability scope.
+- BAR index, offset, and span occupied by the descriptor.
+- Capability and valid-field indications sufficient to distinguish implemented, unavailable, and unsupported resources.
+- Resource-directory entry count and a bounded mechanism for traversing entries.
+- A generation, snapshot, or equivalent consistency mechanism by which a receiver can detect a descriptor change during discovery.
+
+Each resource-directory entry **shall** identify the resource type and instance, BAR index, offset, span, resource revision, access modes, and applicable interrupt or polling information. An entry **shall** include its length so that an unknown optional entry type can be skipped without interpreting its fields.
+
+Every advertised resource range **shall** fit within the system-assigned BAR length and **shall** satisfy the alignment and overlap rules declared by the mapping. A capability **shall** not be advertised solely because a register address or core revision exists; the active implementation or image **shall** provide the semantics associated with that capability.
+
+A driver or other receiving implementation using the P3335 discovery descriptor **shall** validate the signature, supported descriptor and mapping versions, lengths, consistency mechanism, and every resource range before accessing a resource. If the implementation identity, active image, register layout, or resource range is ambiguous or cannot be validated, the receiver **shall** limit access to resources that remain unambiguously described or **shall** report the mapping as unsupported. It **shall** not infer an optional resource solely from an enumeration index, PCI identifier, core-version register, guessed address, or successful read from an undocumented MMIO location.
+
+### 8.9.2 PCIe lifecycle and recovery
+
+The PCIe mapping **shall** define behavior for entry into and exit from each supported host power state, orderly and surprise removal, hot-plug or tunneled-PCIe disconnection, reconnection, driver unload and reload, and host reboot. The definition **shall** identify which time, configuration, calibration, event, queue, interrupt, and time-control-ownership state persists.
+
+When the PCIe function becomes inaccessible, an outstanding operation **shall** complete with a documented cancellation, unavailable, or fault response and **shall** not wait indefinitely or return stale data as current data. After reconnection, reset, or resume, a receiver **shall** revalidate the discovery descriptor before restoring access to optional resources. A timing-affecting operation **shall** not be resumed automatically unless the documented policy and revalidated time-control ownership authorize it.
+
+### 8.9.3 Baseline host control mapping
+
 The PCIe mapping **shall** expose all required baseline objects in 8.10.2 through MMIO, a command or queue interface, a driver API, or a documented combination thereof. The conformance statement **shall** identify which mapping is the interoperable baseline for the implementation.
+
+A binary driver API used as the baseline mapping **shall** satisfy the ABI length, version, reserved-field, and compatibility requirements in 8.4. A mapping that exposes multiple TimeCards **shall** permit selection by `TC_INSTANCE_ID` and **shall** define behavior when a selector is absent, ambiguous, stale, or no longer present.
+
+### 8.9.4 PCIe PTM
 
 If PCIe PTM is implemented, the TimeCard **shall** expose the standard PTM capability structures and **shall** document the PTM measurement point and correction model.
 
@@ -154,6 +200,8 @@ Access modes are `R` for read-only, `W` for write-only, and `R/W` for read/write
 
 For a `timestamp`, nanoseconds **shall** be in the range 0 through 999 999 999. The seconds and nanoseconds fields **shall** represent the same measurement instant and **shall** satisfy the atomic-read requirement in 8.5.
 
+When a `record` contains conditional fields, the response **shall** provide field-level support and validity information or use a mapping-defined encoding that unambiguously distinguishes an absent, unsupported, unavailable, stale, and valid field. A zero numeric value **shall** not by itself indicate that a conditional field is absent or invalid.
+
 Each mapping **shall** define the response when a value would exceed the representable range of its declared type. For every accumulating counter, the mapping **shall** define whether the value saturates or rolls over, its maximum or modulus, its reset conditions, and the indication used to detect rollover or lost counts. An accumulating counter **shall** not wrap without an observable indication.
 
 ### 8.10.2 Required baseline objects
@@ -163,6 +211,7 @@ The following objects **shall** be exposed through at least one control interfac
 | Object | Access | Type | Units | Semantics |
 |--------|--------|------|-------|-----------|
 | `TC_MODEL` | R | string | none | Product or implementation model identifier. |
+| `TC_INSTANCE_ID` | R | string | none | Mapping-scoped selector for one TimeCard instance. The mapping declares its derivation and stability across restart, removal, reinsertion, and host reboot. |
 | `TC_HW_REV` | R | string | none | Hardware or implementation revision; `not-applicable` for an implementation without hardware. |
 | `TC_FW_REV` | R | string | none | Active firmware, gateware, or software revision; `not-applicable` when none exists. |
 | `TC_INFO_MODEL_REV` | R | string | none | P3335 information-model revision implemented. |
@@ -171,7 +220,7 @@ The following objects **shall** be exposed through at least one control interfac
 | `TC_STATE` | R | enum | none | Overall unified-timescale operating state. |
 | `TC_TIMESCALE` | R | enum | none | Timescale represented by `TC_TIME` and timing telemetry. |
 | `TC_TIME` | R | timestamp | s, ns | Atomic unified-timescale value at the declared read measurement point. |
-| `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the source currently used to discipline or validate the unified timescale; `none` when no source is active. |
+| `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the TimeCard synchronization source currently used to discipline or validate the unified timescale; `none` when no synchronization source is active. |
 | `SYNC_SRC_AVAIL` | R | set | none | Identifiers of synchronization sources currently available for selection or monitoring. |
 | `ALARM_ACTIVE` | R | set | none | Active alarm identifiers; an empty set indicates no active alarm. |
 | `SECURITY_STATE` | R | record | none | Supported and active security mechanisms and the result of the most recent integrity verification. |
@@ -180,27 +229,58 @@ A required baseline object **shall** not report `unsupported` or `unspecified` a
 
 ### 8.10.3 Conditional baseline objects
 
-The following objects are required when the corresponding capability is advertised in `TC_CAPS`:
+When a capability is advertised in `TC_CAPS`, the corresponding objects in the following table **shall** be exposed:
 
 | Object | Access | Type | Units | Applicability and semantics |
 |--------|--------|------|-------|-----------------------------|
-| `SYNC_SRC_SELECT` | R/W | string | none | Implementations supporting operator source selection; selected source or selection policy. |
-| `SYNC_SRC_HEALTH` | R | record | none | Implementations with receive interfaces; health and rejection reason for each source. |
-| `PHASE_ERR` | R | int64 | ps | Implementations reporting phase error; value relative to the identified source and measurement point. |
-| `FREQ_OFFSET` | R | int64 | 1e-15 | Implementations reporting fractional frequency offset; value relative to the identified source. |
+| `SYNC_SRC_SELECT` | R/W | string | none | Implementations supporting operator synchronization-source selection; selected TimeCard synchronization source or selection policy. |
+| `SYNC_SRC_HEALTH` | R | record | none | Implementations with receive interfaces; health and rejection reason for each available synchronization source. |
+| `PHASE_ERR` | R | int64 | ps | Implementations reporting phase error; value relative to the identified TimeCard synchronization source and measurement point. |
+| `FREQ_OFFSET` | R | int64 | 1e-15 | Implementations reporting fractional frequency offset; value relative to the identified TimeCard synchronization source. |
 | `MTIE_EST` | R | uint64 | ps | Implementations reporting estimated or measured MTIE; paired with `MTIE_INTERVAL`. |
 | `MTIE_INTERVAL` | R | uint64 | s | Observation interval associated with `MTIE_EST`. |
 | `HOLDOVER_ELAPSED` | R | uint64 | s | Implementations supporting holdover; elapsed time since holdover entry. |
 | `TEMP_LOCAL` | R | int64 | mdeg C | Implementations reporting a local timing-function temperature in millidegrees Celsius; sensor location is declared. |
 | `EVENT_COUNT` | R | uint32 | count | Implementations with an event log; number of readable retained events. Behavior at the `uint32` limit and indication of event loss or overwrite follow the mapping declaration required by 8.10.1. |
 | `EVENT_READ` | R | record | none | Implementations with an event log; next or selected event record. |
-| `REFERENCE_EVIDENCE` | R | record | none | Implementations reporting reference-chain evidence; identifiers and availability of source, calibration, measurement-point, and uncertainty information without asserting end-to-end traceability. |
+| `REFERENCE_EVIDENCE` | R | record | none | Implementations reporting reference-chain evidence; synchronization-source identity and availability, calibration, measurement-point, and uncertainty information without asserting end-to-end traceability. |
+| `TC_SERIAL` | R | string | none | Implementations with a supplier-assigned or otherwise persistent device serial identifier; value and identity namespace are declared. |
+| `HOST_TIME_CORRELATION` | R | record | none | Host mappings supporting bounded correlation of a TimeCard timestamp with a host clock; record satisfies 8.10.4. |
+| `TIME_CONTROL_STATUS` | R | record | none | Host mappings supporting explicit time-control ownership; arbitration and ownership status satisfies 8.10.5. |
 | `UPDATE_CMD` | W | record | none | Implementations supporting controlled firmware, gateware, or software update. |
 | `SANITIZE_CMD` | W | record | none | Implementations claiming sanitization; scope and authorization parameters. |
 
 A conditional object advertised in `TC_CAPS` **shall** not report `unsupported`. An unadvertised conditional object may report `unsupported` when addressed through a mapping that permits object probing.
 
-### 8.10.4 Common symbolic values
+### 8.10.4 Host-time correlation record
+
+A `HOST_TIME_CORRELATION` record **shall** contain the following fields:
+
+| Field | Required | Type | Units | Semantics |
+|-------|----------|------|-------|-----------|
+| `card_time` | Yes | timestamp | s, ns | Atomic unified-timescale value at the declared card measurement point. |
+| `host_time_before` | Yes | timestamp | s, ns | Value returned by a host-clock read that completes before the card-time measurement operation begins. |
+| `host_time_after` | Yes | timestamp | s, ns | Value returned by a host-clock read that begins after the card-time measurement operation completes. |
+| `host_clock_id` | Yes | string | none | Stable identifier for the host clock used by both host timestamps. |
+| `capture_sequence` | Yes | uint64 | count | Monotonically advancing correlation-capture sequence within its declared reset scope. |
+| `discontinuity_sequence` | Yes | uint64 | count | Generation identifying host-clock discontinuities that invalidate prior correlations. |
+| `correlation_window` | Yes | uint64 | ns | Non-negative difference between `host_time_after` and `host_time_before`. |
+| `sample_age` | Yes | uint64 | ns | Age of the captured sample at the response or publication measurement point. |
+| `card_state` | Yes | enum | none | `TC_STATE` applicable to the captured card timestamp. |
+| `source_valid` | Yes | bool | none | Whether the TimeCard synchronization-source evidence required by the declared host policy was valid at capture. |
+| `discipline_eligible` | Yes | bool | none | Whether the complete record meets the declared policy for submission to a host-clock discipline function. |
+
+The two host timestamps **shall** use the same host clock, epoch, timescale, and units. The card-time measurement operation **shall** begin after the `host_time_before` read completes and **shall** complete before the `host_time_after` read begins. If that ordering cannot be established, or if the host clock is discontinuous within the interval, the record **shall** report `unavailable` or `fault` and **shall** not be marked discipline-eligible.
+
+The mapping **shall** document the host clock, its adjustment behavior, the sign convention for any timescale correction, the maximum accepted correlation window, the maximum sample age, and the uncertainty or dispersion method used by the host integration. If the relation between the card and host timescales is not known unambiguously, `card_time` **shall** identify its timescale as `unknown` or the applicable declared value, no cross-timescale offset **shall** be asserted, and `discipline_eligible` **shall** be false.
+
+A correlation **shall** be marked discipline-eligible only when the declared card state, synchronization-source validity, timescale relation, sample age, correlation window, and uncertainty or dispersion limits are satisfied. A host-clock discontinuity **shall** advance `discontinuity_sequence` and **shall** make correlations from an earlier sequence stale or unavailable.
+
+### 8.10.5 Time-control status record
+
+A `TIME_CONTROL_STATUS` record **shall** identify the arbitration mode, whether ownership is active, whether the requester is the current owner, an ownership-generation value, the applicable timeout or expiry condition, and the most recent ownership-termination reason. The mapping **shall** define claim, renewal, and release operations and **shall** protect owner identity from unauthorized disclosure.
+
+### 8.10.6 Common symbolic values
 
 `TC_PROFILE` **shall** use the profile names `base`, `physical-timing-output`, `pcie-host-mapping`, `managed-timecard`, and `secure-infrastructure-timecard` for the corresponding profiles in 4.4.
 
@@ -210,7 +290,7 @@ A conditional object advertised in `TC_CAPS` **shall** not report `unsupported`.
 
 Unknown symbolic values received by a receiving implementation **shall** be preserved when forwarding and otherwise treated as unknown. A mapping that encodes symbolic values numerically **shall** document the numeric assignments and reserve an extension range.
 
-### 8.10.5 GNSS conditional objects
+### 8.10.7 GNSS conditional objects
 
 If a GNSS receive capability is advertised in `TC_CAPS`, the following objects **shall** be exposed:
 
@@ -225,9 +305,9 @@ If a GNSS receive capability is advertised in `TC_CAPS`, the following objects *
 
 The common constellation identifiers are `GPS`, `Galileo`, `GLONASS`, `BeiDou`, `QZSS`, and `NavIC`. Additional constellation identifiers **shall** use the extension mechanism defined by the control mapping.
 
-### 8.10.6 Other satellite timing sources
+### 8.10.8 Other satellite synchronization sources
 
-Non-GNSS satellite services, including large low-Earth-orbit constellations such as Starlink, are not assigned common GNSS identifiers by P3335. If an implementation uses such a service as a timing source, the supplier **shall** identify the service, document vehicle selection and handover behavior, and expose source identity and health through the extension mechanism defined by the control mapping.
+Non-GNSS satellite services, including large low-Earth-orbit constellations such as Starlink, are not assigned common GNSS identifiers by P3335. If an implementation uses such a service as a TimeCard synchronization source, the supplier **shall** identify the service, document vehicle selection and handover behavior, and expose synchronization-source identity and health through the extension mechanism defined by the control mapping.
 
 ## 8.11 Security profiles
 
@@ -240,7 +320,7 @@ All conforming implementations **shall** document the security properties of eac
 An implementation claiming the Managed TimeCard profile **shall** meet the following requirements:
 
 - A networked or remotely reachable control interface **shall** authenticate the user or machine before permitting configuration or update operations.
-- Authorization **shall** distinguish monitoring, configuration, update, security-administration, and sanitization privileges when those operations are implemented.
+- Authorization **shall** distinguish monitoring, time setting and discipline, configuration, update, security-administration, and sanitization privileges when those operations are implemented.
 - Default shared credentials **shall** be replaced or changed before remote configuration is enabled.
 - An update payload **shall** be integrity-checked before installation.
 - Security-relevant successes and failures **shall** be recorded when event logging is implemented.

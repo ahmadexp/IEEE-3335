@@ -3,8 +3,11 @@
 PANDOC   ?= pandoc
 LATEXMK  ?= latexmk
 BUILDDIR := build
+FIGURE_BUILDDIR := $(BUILDDIR)/figures
+FIGURE_TEX := figures/architecture-context.tex
+FIGURE_PDF := figures/architecture-context.pdf
 
-SOURCES := paper.md references.bib figures/architecture-context.pdf
+SOURCES := paper.md references.bib $(FIGURE_TEX) $(FIGURE_PDF)
 
 .PHONY: all pdf tex watch clean distclean
 
@@ -15,8 +18,14 @@ pdf: main.pdf
 main.pdf: $(BUILDDIR)/main.pdf
 	cp $< $@
 
-$(BUILDDIR)/main.pdf: $(BUILDDIR)/main.tex references.bib
+$(BUILDDIR)/main.pdf: $(BUILDDIR)/main.tex references.bib $(FIGURE_PDF)
 	cd $(BUILDDIR) && TEXINPUTS=..: BIBINPUTS=..: $(LATEXMK) -pdf -interaction=nonstopmode main.tex
+
+$(FIGURE_PDF): $(FIGURE_TEX)
+	mkdir -p $(FIGURE_BUILDDIR)
+	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error \
+		-outdir=$(FIGURE_BUILDDIR) $(FIGURE_TEX)
+	cp $(FIGURE_BUILDDIR)/architecture-context.pdf $(FIGURE_PDF)
 
 $(BUILDDIR)/main.tex: paper.md
 	mkdir -p $(BUILDDIR)

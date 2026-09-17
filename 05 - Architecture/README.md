@@ -8,7 +8,7 @@ The architecture separates timing data-plane functions from management and contr
 
 ## 5.1 Architectural Overview
 
-A TimeCard is a timing subsystem that provides time, phase, frequency, or a combination thereof to a host system or downstream system. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a timing service with documented support for system-level traceability analysis.
+A TimeCard is a timing subsystem that provides time, phase, frequency, timestamp information, or a combination thereof to a host system or downstream system. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a timing service with documented support for system-level traceability analysis.
 
 A conforming TimeCard **shall** include the following externally observable capabilities:
 
@@ -100,10 +100,10 @@ If an implementation claims ensemble reference operation, it **shall** document:
 - Supported input reference types.
 - Weighting, voting, or selection method at a level sufficient for operational evaluation.
 - Health and alarm criteria.
-- Behavior when one or more ensemble sources degrade or fail.
+- Behavior when one or more ensemble synchronization sources degrade or fail.
 - Metrics exposed through the control interface.
 
-Ensemble operation **shall** produce one selected or synthesized reference for disciplining the unified timescale. It **shall** not create multiple independent conforming timescales within the same TimeCard instance unless those instances are separately identified and separately documented.
+Ensemble operation **shall** produce one selected or synthesized TimeCard synchronization source for disciplining the unified timescale. It **shall** not create multiple independent conforming timescales within the same TimeCard instance unless those instances are separately identified and separately documented.
 
 ## 5.6 Host and Time-Transfer Interfaces
 
@@ -113,18 +113,28 @@ Each host interface mapping **shall** document:
 
 - Physical and logical interface standards used.
 - Discovery and enumeration behavior.
+- Per-instance selection, instance-identifier derivation, and identifier stability across restart, removal, reinsertion, and host reboot.
 - Required driver-visible registers, messages, commands, or API elements.
 - Endianness, alignment, units, and timestamp formats.
 - Interrupts, polling requirements, and error reporting.
+- Concurrency, time-control ownership, and behavior when more than one host client can issue timing-affecting operations.
+- Behavior during host low-power states, sleep, hibernation, wake, orderly or surprise removal, hot plug, driver or service restart, and outstanding-operation cancellation.
 - Latency, asymmetry, and correction information required for time-transfer evaluation.
+- Host-clock identity, epoch, timescale, discontinuity behavior, and freshness information used for host-time correlation.
+
+A host interface mapping that can expose more than one TimeCard **shall** provide unambiguous per-instance selection. An enumeration index **shall** not be the sole persistent selector when a stable supplier-assigned or implementation-derived identity is available.
+
+A mapping that implements host-time correlation **shall** preserve the semantics and validity rules in 8.10.4. A mapping that permits more than one client to set or discipline time **shall** implement the arbitration requirements in 8.5.
 
 If PCIe PTM is implemented, the implementation **shall** document the PTM capability defined by the PCI Express Base Specification, Revision 5.0, Version 1.0 [13], the measurement point represented by PTM timestamps, and any correction terms needed to relate PTM time to other providing interfaces.
+
+Annex E provides informative examples of applying these requirements to Windows, macOS, and Linux host software.
 
 ## 5.7 Performance and Measurement Architecture
 
 Performance requirements in this standard are expressed as reporting and measurement requirements unless a technical clause explicitly states a numeric limit. This allows TimeCards to serve different use cases while making supplier claims comparable.
 
-An implementation **shall** identify the measurement point for each declared metric. Metrics **shall** be reported with enough context to reproduce or evaluate the claim, including reference source, measurement bandwidth, observation interval, environmental conditions, warm-up conditions, and lock state.
+An implementation **shall** identify the measurement point for each declared metric. Metrics **shall** be reported with enough context to reproduce or evaluate the claim, including TimeCard synchronization source, measurement bandwidth, observation interval, environmental conditions, warm-up conditions, and lock state.
 
 The following performance categories **shall** be addressed when applicable to the implemented interfaces:
 
@@ -133,6 +143,8 @@ The following performance categories **shall** be addressed when applicable to t
 - Frequency stability, including ADEV where applicable.
 - Phase noise for periodic frequency outputs where applicable.
 - Time jitter for pulse outputs where applicable.
+- Noise transfer from each receive interface used for synchronization to each applicable providing interface.
+- Noise tolerance of each receive interface used for synchronization.
 - Holdover error versus elapsed time.
 - Lock acquisition, recovery, and failover behavior.
 - Environmental sensitivity relevant to the declared operating profile.
@@ -155,7 +167,7 @@ Vendor-specific extensions **shall** be identified by a documented namespace, id
 
 ## 5.10 Documentation Requirements
 
-Manufacturers **shall** provide documentation sufficient to evaluate and integrate a conforming TimeCard. The documentation **shall** include:
+Suppliers **shall** provide documentation sufficient to evaluate and integrate a conforming TimeCard. The documentation **shall** include:
 
 - Conformance statement required by Clause 4.
 - Interface descriptions for all receive, providing, host, and control interfaces.
@@ -168,10 +180,10 @@ Manufacturers **shall** provide documentation sufficient to evaluate and integra
 - Reference-chain, calibration, measurement-point, and uncertainty information sufficient to support system-level traceability analysis, or an explicit statement identifying which information is unavailable.
 - All optional features claimed and all conditional requirements exercised by those claims.
 
-Documentation should be publicly available for commercial products and available to integrators for non-commercial, embedded, or custom implementations.
+The conformance statement is subject to the availability requirements in 4.7. Supporting integration documentation should be publicly available for commercial products and made available to integrators for non-commercial, embedded, or custom implementations.
 
-## 5.11 Informative Time-Flow Narrative
+## 5.11 Time-Flow Narrative (Informative)
 
-In a typical TimeCard, one or more receive interfaces acquire external timing references such as GNSS, PTP, PPS, frequency references, or other sources. Reference-selection logic evaluates those inputs and selects or synthesizes a reference. A disciplining function steers the local timing function. The time generator maintains the unified timescale. Providing interfaces distribute that unified timescale as PPS, frequency, Time of Day, packet timestamps, host-bus time, or other representations. Control interfaces report status, telemetry, alarms, and configuration state.
+In a typical TimeCard, one or more receive interfaces acquire external timing references such as GNSS, PTP, PPS, frequency references, or other reference signals. Reference-selection logic evaluates those inputs and selects or synthesizes a TimeCard synchronization source. A disciplining function steers the local timing function. The time generator maintains the unified timescale. Providing interfaces distribute that unified timescale as PPS, frequency, Time of Day, packet timestamps, host-bus time, or other representations. Control interfaces report status, telemetry, alarms, and configuration state.
 
 When all usable external references are lost, the TimeCard normally enters holdover or free-running operation. During holdover, the unified timescale continues according to the local timing function and any holdover model implemented by the TimeCard. The TimeCard reports the state transition and exposes the information needed to evaluate the declared holdover behavior.
