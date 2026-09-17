@@ -4,7 +4,6 @@
 
 For the purposes of this document, the following terms and definitions apply.
 
-- **accuracy:** Qualitative closeness of agreement between a measured quantity value and a reference quantity value. A numerical accuracy claim is expressed in this standard as time error, frequency offset, uncertainty, or another defined metric.
 - **command queue:** Ordered control-interface mechanism through which a producer submits commands or requests and a consumer reports completion, status, or response data according to a defined mapping.
 - **constant time error:** Constant component, denoted cTE, of the time error of a synchronized TimeCard relative to the declared reference timescale under the declared estimation method.
 - **conformance profile:** Named set of mandatory requirements that applies when the profile is claimed by an implementation.
@@ -17,7 +16,9 @@ For the purposes of this document, the following terms and definitions apply.
 - **dynamic time error:** Time-varying random-noise component, denoted dTE, of the time error of a synchronized TimeCard. Dynamic time error may be characterized using metrics such as MTIE and TDEV under a declared measurement method.
 - **ensemble operation:** Combination of selected reference observations to produce a synthesized reference used to discipline or validate the unified timescale.
 - **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
-- **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, or accuracy.
+- **fault:** Status indicating that an operation failed or that a supported object cannot provide a meaningful value because an error condition is present.
+- **frequency accuracy:** Closeness of agreement between a TimeCard frequency and a declared reference frequency under specified conditions. A quantitative frequency-accuracy claim is expressed as fractional-frequency offset, uncertainty, or another explicitly defined frequency-error statistic.
+- **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, time accuracy, frequency accuracy, or TimeCard timestamp accuracy.
 - **holdover:** Operating state in which a TimeCard maintains its timescale after loss or rejection of the external reference used for synchronization, using its local timing function and available historical information.
 - **host clock:** Clock maintained or exposed by a host system and identified by its clock domain, epoch, timescale, and adjustment behavior.
 - **host system:** Computing, telecommunications, measurement, or control platform that integrates or consumes the services of a TimeCard.
@@ -36,14 +37,19 @@ For the purposes of this document, the following terms and definitions apply.
 - **reference signal:** External physical signal or data stream whose defined timing marker or encoded time value can be used to initialize, discipline, validate, or monitor the unified timescale.
 - **resolution:** Smallest change in a measured quantity that causes a perceptible change in the corresponding indication.
 - **serial interface:** Control interface that transfers commands and data sequentially over a physical or virtual serial channel using framing and command syntax defined by its mapping.
-- **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
-- **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
-- **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
-- **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
+- **stale:** Status indicating that a value was valid when captured but no longer satisfies the freshness, sequence, or lifecycle conditions defined by its interface mapping.
+- **time accuracy:** Closeness of agreement between the time indicated by a TimeCard at a declared measurement point and the time of a declared reference timescale at the corresponding instant. A quantitative time-accuracy claim is expressed as time error and measurement uncertainty under declared conditions.
 - **time-control ownership:** Arbitration state that grants one authorized client exclusive permission to perform operations that set or discipline the unified timescale or its local timing function.
+- **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
+- **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
+- **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
+- **TimeCard synchronization source:** Reference signal, internal primary reference, or selected or synthesized ensemble whose observations are available or active to initialize, discipline, or validate a TimeCard's unified timescale. The shorter phrase *synchronization source* is used when the TimeCard context is unambiguous.
+- **TimeCard timestamp accuracy:** Closeness of agreement between a timestamp assigned by a TimeCard to an event at a declared timestamping measurement point and the time of the declared reference timescale at the corresponding event instant. A quantitative claim is expressed as a bounded timestamp error and measurement uncertainty under declared conditions; timestamp resolution and granularity are separate characteristics.
+- **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
 - **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty. In this standard, a TimeCard supplies declarations and evidence that support system-level traceability analysis; the term does not assert that a TimeCard alone establishes end-to-end traceability.
 - **unavailable:** Status indicating that a supported object or measurement does not currently have a valid value.
 - **unified timescale:** Single timescale maintained by a TimeCard instance from which all of that instance's providing interfaces derive their time, phase, frequency, or timestamp information.
+- **unknown:** Status or symbolic value indicating that information cannot be determined or that a received value is not recognized by the applicable mapping. `unknown` does not assert that the object or feature is unsupported.
 - **unspecified:** Status or behavior that P3335 or an applicable mapping intentionally does not constrain, leaving the selection or definition to an implementation, profile, or later specification. For an object field, it may also indicate that the mapping permits a value but the implementation has not assigned one. `unspecified` is distinct from `unknown`, `unavailable`, and `unsupported`.
 - **unsupported:** Status indicating that an object, operation, or feature is not implemented.
 - **valid:** Status indicating that a value satisfies the freshness, state, and integrity conditions defined by its interface mapping.
@@ -73,7 +79,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **GNSS:** global navigation satellite system
 - **GPIO:** general-purpose input/output
 - **GPS:** Global Positioning System
-- **gRPC:** Google Remote Procedure Call
+- **gRPC:** gRPC Remote Procedure Calls
 - **I2C:** Inter-Integrated Circuit
 - **I3C:** Improved Inter-Integrated Circuit
 - **ID:** identifier

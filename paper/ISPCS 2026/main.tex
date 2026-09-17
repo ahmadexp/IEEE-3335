@@ -7,16 +7,32 @@
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
+\usepackage{etoolbox}
+
+\makeatletter
+\patchcmd{\abstract}{---}{:\ }{}{}
+\patchcmd{\IEEEkeywords}{---}{:\ }{}{}
+\makeatother
 
 \begin{document}
 
 \title{IEEE P3335, Standard for Architecture and Interfaces for Time Card:\\ Motivation and Progress Report}
 
 \author{\IEEEauthorblockN{Ahmad Byagowi}
-\IEEEauthorblockA{Time Appliance Project\\
-Chair, IEEE P3335 Time Card Working Group\\
-byagowi@turbalance.com}
-% Add working-group co-authors as needed
+\IEEEauthorblockA{Open Compute Project, USA\\
+ahmad.byagowi@ocproject.net}
+\and
+\IEEEauthorblockN{Denis Reilly}
+\IEEEauthorblockA{Safran, USA\\
+denis.reilly@gmail.com}
+\and
+\IEEEauthorblockN{Joseph Gwinn}
+\IEEEauthorblockA{Raytheon, USA\\
+joegwinn@comcast.net}
+\and
+\IEEEauthorblockN{Kang B Lee}
+\IEEEauthorblockA{NIST, USA\\
+kang.lee@nist.gov}
 \thanks{This paper describes the unapproved IEEE P3335 draft; content
 is subject to change.}
 }
@@ -43,6 +59,7 @@ consideration of the draft.
 IEEE P3335, Time Card, IEEE 1588, PTP hardware clock, time synchronization,
 conformance, figures of merit
 \end{IEEEkeywords}
+\bstctlcite{BSTcontrol}
 
 \section{Motivation}
 Data centers, telecommunications, industrial control, finance, and
@@ -66,20 +83,22 @@ integration via a shared PTP hardware clock (PHC); modular implementation
 around defined building blocks (time source, local oscillator, time
 processor); and unambiguous comparison through common figures of merit,
 measurement points, and operating conditions. The working group's guiding principle is
-to embrace implementation diversity while ensuring interoperability.
+to embrace implementation diversity while supporting interoperability.
 
 \section{Architecture}
 The draft defines a Time Card by externally observable behavior rather than
 physical construction: one conformance model covers a discrete add-in card,
-embedded gateway, an FPGA or SoC function, and an external timing unit. Internally, the architecture names a local timing function (the oscillator
-state, from quartz to miniaturized atomic references), a time generator, a
+embedded gateway, an FPGA or SoC function, and an external timing unit.
+Internally, the architecture names a local timing function (which may use
+oscillator technologies ranging from quartz to miniaturized atomic
+references), a time generator, a
 timestamping facility, and receive, providing, and control interfaces
 (Fig.~\ref{fig:arch}); the timing data plane is separated from management
 and control.
 
-\begin{figure}[t]  % Figure is Illegible
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.85\columnwidth]{figures/architecture-context.pdf}
+\includegraphics[width=\columnwidth]{figures/architecture-context.pdf}
 \caption{Time Card context: external references enter through receive
 interfaces, discipline one unified timescale, and reach the host through
 providing and control interfaces.}
@@ -153,31 +172,28 @@ identical whether control rides SMBus, I2C, or I3C, PCIe MMIO, IPMI or
 NC-SI, or REST, gRPC, Redfish, or SNMP. Required objects cover identity and
 versioning, device state (initializing through locked, holdover, degraded,
 and fault), timescale identity, sync-source status, alarms, security state,
-and coherent (tear-free) time reads. Conditional telemetry spans phase error in picoseconds, fractional
-frequency offset in parts in $10^{15}$, MTIE estimates, holdover elapsed
-time, and GNSS status. Configuration writes must report acceptance and whether they
-can cause a phase step, loss of lock, or output interruption.
+and atomic (tear-free) time reads. Conditional telemetry spans phase error
+in picoseconds, fractional frequency offset in parts in $10^{15}$, MTIE
+estimates, holdover elapsed time, and GNSS status. Configuration writes
+must report acceptance and whether they can cause a phase step, loss of
+lock, or output interruption.
 
 \section{Progress, Process, and Remaining Work}
-The working group formed from the OCP time-appliances community after PAR
-approval; contributions on architecture, host integration, use cases, and
-metrics accumulated through 2025, and drafting moved
-to a public git repository~\cite{p3335repo} in October 2025. As of July
-2026 the draft is structurally complete and pre-ballot: Clauses 1--10 plus
-metrics and test-procedure annexes compile to a 48-page document carrying
-411 machine-indexed requirement statements. The draft is written as per-clause Markdown with
-pull-request-based comment resolution and a generated requirements index
-for traceability; the comment round from the April 2026 working-group
-meeting is merged, and all 14 normative references passed a technical use
-audit. Open pre-ballot decisions include ratifying the 1PPS electrical and
-alignment limits, choosing between a mandated cross-vendor host ABI (a
-common register layout or OS API) and transport-neutral semantics alone,
-freezing the baseline control vocabulary, ratifying normative-reference
-editions, fixing the security-profile cryptographic suites, and an
-independent timing-metrology review. The presentation will detail these decisions, share experience running an
-IEEE standards project on open git tooling, and solicit review and
-participation from the ISPCS community while the draft is considered in the working group.
+The working group grew from the OCP time-appliances community after PAR
+approval and has developed the draft in a public git
+repository~\cite{p3335repo} since October 2025. As of July 2026, the
+48-page pre-ballot draft is structurally complete, with Clauses 1-10 and
+informative annexes covering metrics and test procedures. The April 2026
+working-group comment round is resolved, and a technical audit of the
+normative references is complete.
 
+Before ballot, the group must finalize the 1PPS electrical and alignment
+limits, the degree of host-interface standardization, the baseline control
+vocabulary, security choices, and an independent timing-metrology review.
+The presentation will summarize these decisions and invite ISPCS review
+and participation. IEEE SA members may also vote in the formal ballot.
+
+\interlinepenalty=10000
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 

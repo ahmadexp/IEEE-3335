@@ -23,6 +23,7 @@ requirements:
 check:
 	python3 scripts/check_draft.py
 	python3 scripts/requirements_index.py --check
+	python3 -m unittest discover -s scripts/tests
 	python3 -m py_compile scripts/ieee_3335_tools/*.py scripts/check_python.py scripts/check_torch.py scripts/check_draft.py scripts/requirements_index.py
 
 figures/rendered/%.pdf: figures/%.svg
@@ -34,9 +35,11 @@ figures/rendered/%.pdf: figures/%.svg
 	@$(FIGURE_CONVERTER) -density $(FIGURE_DENSITY) -background white "$<" \
 		-alpha remove -alpha off -colorspace Gray "$@"
 
-$(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $(TABLE_FILTER) $(FIGURE_PDFS)
+$(OUTPUT): check $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $(TABLE_FILTER) $(FIGURE_PDFS)
 	@echo "Gathering chapter files to build $(OUTPUT)..."
-	@bash -c ' \
+	@bash -eu -o pipefail -c ' \
+		BUILD_DIR=$$(mktemp -d "./.p3335-build.XXXXXX") ; \
+		trap "rm -rf \"$$BUILD_DIR\"" EXIT ; \
 		FILES=() ; \
 		while IFS= read -r line; do \
 			FILES+=("$$line") ; \
@@ -44,7 +47,7 @@ $(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $
 		echo "Found files:" ; \
 		for file in "$${FILES[@]}"; do echo "  $$file"; done ; \
 		echo "Using PDF Engine: $(PDF_ENGINE)" ; \
-		pandoc "$${FILES[@]}" -o $(OUTPUT) \
+		pandoc "$${FILES[@]}" -o "$$BUILD_DIR/proposal.pdf" \
 			--toc \
 			--toc-depth=3 \
 			--metadata-file=$(METADATA) \
@@ -54,7 +57,7 @@ $(OUTPUT): $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEADER) $
 			--include-in-header=$(LINE_NUMBER_HEADER) \
 			--pdf-engine=$(PDF_ENGINE) \
 			-V geometry:margin=1in ; \
-		rm -f $(LATEX_SCRATCH) \
+		mv "$$BUILD_DIR/proposal.pdf" "$(OUTPUT)" \
 	'
 
 clean:

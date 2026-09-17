@@ -6,7 +6,7 @@ Informative references and background material are listed in Annex C.
 
 ## 2.1 Standards and specifications
 
-- [1] **DMTF DSP0236**, *Intelligent Platform Management Interface Specification, Second Generation*, Version 2.0, 20 February 2015.
+- [1] **IPMI Specification, Version 2.0, Revision 1.1**, *Intelligent Platform Management Interface Specification, Second Generation*, 1 October 2013, with E7 markup dated 21 April 2015, Intel, Hewlett-Packard, NEC, and Dell.
 - [2] **IEEE Std 1139-2022**, *IEEE Standard Definitions of Physical Quantities for Fundamental Frequency and Time Metrology--Random Instabilities*, 2022.
 - [3] **IEEE Std 1193-2022**, *IEEE Guide for Measurement of Environmental Sensitivities of Frequency Standards*, 2022.
 - [4] **IEEE Std 1588-2019**, *IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems*, 2019.

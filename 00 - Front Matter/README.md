@@ -18,6 +18,6 @@ This draft specifies a generic architecture and interface framework for TimeCard
 
 The TimeCard concept has been developed through contributions to IEEE P3335 and related work in the Open Compute Project Time Appliances Project. This draft organizes that material as an implementation-neutral architecture, a set of externally observable interface requirements, and a common basis for declaring performance.
 
-The text distinguishes requirements needed for base conformance from conditional requirements that apply only when an interface or profile is claimed. Informative annexes provide metric background, example test procedures, a bibliography, and a conformance-statement proforma.
+The text distinguishes requirements needed for base conformance from conditional requirements that apply only when an interface or profile is claimed. Informative annexes provide metric background, example test procedures, a bibliography, a conformance-statement proforma, and host operating-system integration guidance.
 
 \newpage

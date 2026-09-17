@@ -14,13 +14,13 @@ This file is the working-group action register for the Markdown draft. It is not
 |------|----------------|
 | Draft status | Front matter identifies the document as unapproved, subject to change, and not for conformance or compliance use. Official IEEE copyright, patents, participant, and template material remains external. |
 | Scope and purpose | Clause 1 is aligned to the public PAR and separates scope, purpose, need, and implementation freedom. |
-| Conformance | Clause 4 defines base conformance, conditional profiles, supplier statements, evidence, and an informative Annex D proforma. |
+| Conformance | Clause 4 defines base conformance, conditional profiles, supplier statements, and evidence. Annex D provides implementation, profile, interface, host, control, security, performance, environment, and evidence declaration records. |
 | Architecture | Clause 5 specifies externally observable boundaries, one unified timescale, source selection, host transfer, stable instance selection, host lifecycle behavior, measurement points, and documentation. |
 | Performance | Clause 6 uses bounded declarations, traceable methods, uncertainty, and explicit decision rules rather than unsupported universal product classes. |
 | Timing interfaces | Clause 7 defines common receive/provide declarations, conditional protocol conformance, concrete 1PPS output limits, continuity, and timing-interface status. |
 | Control interfaces | Clause 8 separates transport bindings from the baseline semantic model, defines atomic time reads, a portable PCIe discovery descriptor, binary ABI validation, stable identity, bounded host-time correlation, time-control ownership, lifecycle recovery, required and conditional objects, versioning, extension behavior, and security profiles. |
 | Environment | Clause 9 uses implementation-neutral operating, full-performance, storage, survival, qualification, and lifecycle declarations. |
-| Informative material | Clauses and annexes use neutral examples without arbitrary universal limits; Annexes A and B explain metrics and test evidence, Annex C contains a focused, source-checked bibliography, and Annex E maps the host requirements to Windows, macOS, and Linux. |
+| Informative material | Clauses and annexes use neutral examples without arbitrary universal limits; Annexes A and B explain metrics and functional, security, and performance test evidence, Annex C contains a focused, source-checked bibliography, and Annex E maps the host requirements to Windows, macOS, and Linux. |
 | Traceability tooling | `make check` validates the manuscript and verifies that `REQUIREMENTS_INDEX.md` matches the normative sources. |
 | Build | `make` builds source-controlled figures, front matter, clauses, and annexes into the review PDF. |
 
@@ -32,15 +32,18 @@ This file is the working-group action register for the Markdown draft. It is not
 | P0 | Ratify the P3335 PCIe discovery-descriptor locator and serialized binary encoding. | Clause 8 now defines mandatory descriptor content and receiver behavior, but the fixed locator, field encoding, identifier allocations, and migration policy require working-group ownership. |
 | P0 | Freeze the baseline control vocabulary and extension policy. | Object names and semantics are usable draft text; stable numeric encodings or a registry require WG ownership and compatibility policy. |
 | P0 | Complete IEEE SA editorial/legal review of every Clause 2 reference. | The technical-use audit is complete, but availability and commercial-terms review cannot be closed solely in the repository. |
+| P0 | Resolve the IPMI reference's embedded NDA and adopter-agreement terms. | Reference [1] has been corrected from the unrelated MCTP identifier to the actual IPMI document, whose embedded terms require an explicit IEEE SA disposition before ballot. |
 | P0 | Obtain official IEEE SA front matter and publication template. | The draft notice is present; copyright, patents, participants, trademarks, and final IEEE production formatting require IEEE SA input. |
 | P1 | Ratify the reporting-only performance strategy. | The current model enables comparison but deliberately creates no universal numeric product class. |
 | P1 | Ratify Annex B as informative or select a normative conformance-test approach. | The procedures are now reproducible examples, but their formal status is a WG policy decision. |
 | P1 | Review security profiles for cryptographic interoperability. | Required outcomes are defined; algorithm suites, trust-anchor formats, protocol versions, and certification targets are not fixed. |
 | P1 | Ratify the Clause 9 declaration model and any market-specific environmental profiles. | The current text avoids arbitrary universal limits; application profiles can still add numeric limits. |
 | P1 | Obtain an independent metrology review of Clause 6 and Annexes A and B. | Formulae and procedures have been editorially corrected but should be reviewed by timing-metrology specialists before ballot. |
+| P1 | Coordinate overlapping terminology with IEEE P1952. | Opher identified useful alignment opportunities, but the current P1952 working draft is not a public normative source and terminology should be compared through an authorized liaison review. |
 | P1 | Decide whether Annex D remains informative or becomes a formal conformance proforma after requirement freeze. | The current proforma is useful but does not yet enumerate every requirement as a ballot-stable checklist. |
 | P2 | Decide whether generated editorial IDs are sufficient or stable requirement IDs are embedded in normative text. | Generated IDs intentionally change when requirements are reordered. |
 | P2 | Complete provenance-preserving migration of `Unsorted/`. | Triage rules exist, but bulk moves should be reviewed separately from normative edits. |
+| P2 | Complete review line numbering for tables and other non-paragraph content. | The current LaTeX numbering covers paragraph lines from the Abstract onward; table cells, display equations, and figure content do not receive equivalent per-line numbers. |
 
 ## Action items
 
@@ -67,22 +70,26 @@ This file is the working-group action register for the Markdown draft. It is not
 | AI-019 | P0 | External dependency | TBD | Obtain official IEEE SA publication front matter. | IEEE-approved copyright, patents, participants, trademark, and draft boilerplate replace the repository placeholders. |
 | AI-020 | P1 | Draft candidate; WG review needed | TBD | Ratify the environmental declaration model. | WG approves Clause 9 and identifies any numeric application profiles needed for target markets. |
 | AI-021 | P1 | Open | TBD | Conduct independent metrology review. | Named reviewers confirm Clause 6 and Annexes A and B or record and resolve technical comments. |
-| AI-022 | P1 | Draft candidate; requirement freeze needed | TBD | Finalize the conformance-statement proforma. | Annex D is checked against the frozen requirements and its normative or informative status is approved. |
+| AI-022 | P1 | Expanded draft candidate; requirement freeze needed | TBD | Finalize the conformance-statement proforma. | Annex D covers implementation identity, profiles, interfaces, host integration, control and security behavior, performance, environment, and evidence; after requirement freeze, every field is rechecked and its normative or informative status is approved. |
 | AI-023 | P1 | Closed | TBD | Audit the informative bibliography. | Misattributed or untraceable entries are removed; retained technical publications include sufficient bibliographic data and publisher or DOI links. |
 | AI-024 | P0 | Draft candidate; WG vote needed | TBD | Ratify the portable PCIe discovery descriptor. | WG approves the locator, signature, header and entry encoding, resource types, capability allocation, consistency mechanism, and fail-closed compatibility behavior in 8.9.1. |
 | AI-025 | P0 | Draft candidate; host-time review needed | TBD | Ratify host-time correlation and discipline eligibility. | WG approves the `HOST_TIME_CORRELATION` fields, clock and timescale semantics, discontinuity handling, freshness and window limits, and eligibility rules in 8.10.4. |
 | AI-026 | P1 | Draft candidate; cross-platform validation needed | TBD | Validate host lifecycle, identity, ABI, and ownership requirements. | Annex B host tests are executed on representative Windows, macOS, and Linux implementations, with limitations and resulting normative comments recorded. |
 | AI-027 | P1 | Draft candidate; reviewer confirmation needed | TBD | Ratify the timing-flow scope clarification and noise-response requirements. | Stefano confirms the comment dispositions; the WG approves the 1.1 deployment model and the noise-transfer, noise-tolerance, cTE, and dTE text in Clauses 3, 5, and 6. |
+| AI-028 | P1 | Draft candidate; liaison review needed | TBD | Confirm qualified accuracy and synchronization-source terminology with Opher and IEEE P1952. | Opher confirms the disposition; authorized reviewers compare the P3335 terms with the current P1952 glossary, record overlaps and intentional differences, and the WG approves the resulting terminology before ballot. |
+| AI-029 | P1 | Closed | TBD | Close editorial traceability gaps found in the publication-readiness rescan. | Clause 1 lists every annex and applies the optional timing-flow scope through Clause 9; Clause 3 defines every baseline control status; Clauses 4 through 6 align timestamp services and declarations; conditional control objects appear in the requirements index; Annexes B and D cover control, security, and noise-response evidence. |
+| AI-030 | P0 | Source identity corrected; IEEE SA disposition needed | WG Chair / IEEE SA project editor | Resolve IPMI normative-reference eligibility. | Review the exact v2.0, Revision 1.1, E7 source and its embedded terms; record an acceptable reference or alternative technical disposition in the reference audit before ballot. |
+| AI-031 | P2 | Open | TBD | Complete per-line numbering of review tables and other non-paragraph content. | A review build provides unambiguous line references for table cells, displayed equations, and figure captions without collisions or altered normative text. |
 
 ## Recommended sequence
 
 1. Resolve AI-003, AI-004, AI-005, AI-006, AI-017, AI-018, AI-024, and AI-025 as the interoperability core.
-2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, AI-022, AI-026, and AI-027 as the validation and profile layer.
-3. Complete AI-007 and AI-019 with the IEEE SA program manager and project editor.
+2. Resolve AI-008, AI-010, AI-014, AI-020, AI-021, AI-022, AI-026, AI-027, and AI-028 as the validation and profile layer.
+3. Complete AI-007, AI-019, and AI-030 with the IEEE SA program manager and project editor.
 4. Regenerate the requirements index after every normative edit using `make requirements`.
-5. Run `make check`, rebuild with `make`, and visually review the PDF before each ballot-facing circulation.
+5. Run `make check`, rebuild with `make`, and visually review the PDF before each ballot-facing circulation. Resolve AI-031 for complete review line coverage.
 6. Complete AI-016 in a separate provenance-preserving change.
 
 ## Repeatable local checks
 
-`make check` performs placeholder, requirement-word, informative-material, normative-reference-use, duplicate-object, requirements-index freshness, and Python syntax checks. The PDF build remains a separate `make` step so editorial checks can run quickly during drafting.
+`make check` performs active-source, document-map, placeholder, requirement-word, informative-material, normative-reference identity and numbering, reference-use, control-status-definition, duplicate-object, requirements-index freshness, regression, and Python syntax checks. The PDF build runs these checks before producing `IEEE3335.pdf` and preserves the previous output if compilation fails.

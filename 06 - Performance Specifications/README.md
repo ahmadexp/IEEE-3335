@@ -9,7 +9,7 @@ Suppliers **shall** publish performance declarations for each conforming TimeCar
 - The metric being reported.
 - The measurement point.
 - The operating mode, such as locked, holdover, free-running, warm-up, failover, or recovery.
-- The reference source or reference timescale.
+- The TimeCard synchronization source and reference timescale.
 - The applicable temperature range, voltage range, airflow or cooling condition, and other environmental conditions.
 - The minimum warm-up time and lock time required before the declaration applies.
 - The observation interval, averaging time, bandwidth, sample count, or statistical confidence basis used.
@@ -35,22 +35,24 @@ If the term **jitter** is used, the implementation documentation **shall** defin
 
 ## 6.4 Time Error and Noise Response
 
-### 6.4.1 Time error
+### 6.4.1 Time accuracy and TimeCard timestamp accuracy
 
-Time accuracy declarations **shall** state the error of a TimeCard output or timestamp relative to a declared reference timescale or source.
+Time accuracy declarations **shall** state the error of a TimeCard time or phase output, or indicated time, relative to a declared reference timescale and TimeCard synchronization source.
 
 For each time accuracy declaration, the supplier **shall** document:
 
-- Source of standard time, such as GNSS system time, UTC(k), TAI, PTP grandmaster time, or another declared reference.
-- Measurement point, such as 1PPS output, Time of Day output, PTP egress timestamp, PTM timestamp, or register-read timestamp.
+- Reference timescale and TimeCard synchronization source, such as GNSS system time and receiver, UTC(k) and laboratory reference, TAI and primary reference, PTP timescale and grandmaster, or another declared combination.
+- Measurement point, such as 1PPS output, Time of Day output, or register-read indication of TimeCard time.
 - Maximum time error or another explicitly defined bounded statistic.
 - Statistical basis, such as maximum observed value, percentile, RMS value, or confidence interval.
 - Constant time error and dynamic time error components when they can be separately estimated under the declared method.
 - Valid temperature range and environmental profile.
 - Minimum lock time before the declaration applies.
-- Relationship between the declared source and UTC or TAI, if the declared source is not itself UTC or TAI.
+- Relationship between the declared reference timescale and UTC or TAI, if the declared timescale is not itself UTC or TAI.
 
-If an implementation reports IEEE 1588-2019 [4] `clockAccuracy` values, the values **shall** correspond to the measured or declared accuracy range for the applicable operating mode.
+If an implementation reports IEEE 1588-2019 [4] `clockAccuracy` values, the values **shall** correspond to the measured or declared time-accuracy range for the applicable operating mode.
+
+When TimeCard timestamp accuracy is claimed for an event-capture or timestamping function, the supplier **shall** state a bounded error between the assigned timestamp and the declared reference time at the corresponding event instant. The supplier **shall** identify the event marker, timestamping measurement point, reference timescale, TimeCard synchronization source, resolution, granularity, latency, fixed corrections, known asymmetry, uncertainty contributors, and operating conditions. Timestamp resolution or granularity **shall** not be represented as TimeCard timestamp accuracy.
 
 ### 6.4.2 Noise transfer
 
@@ -106,7 +108,7 @@ For pulse outputs such as 1PPS, suppliers **shall** document:
 - Peak-to-peak or bounded time variation when claimed.
 - Alignment to other providing interfaces of the same TimeCard.
 
-For event-capture or timestamping inputs, suppliers **shall** document the event measurement point, timestamp resolution, granularity, latency, fixed corrections, and known uncertainty contributors.
+For event-capture or timestamping inputs, suppliers **shall** document the event measurement point, timestamp resolution, granularity, latency, fixed corrections, and known uncertainty contributors. Any claimed TimeCard timestamp accuracy **shall** also satisfy 6.4.1.
 
 ## 6.8 Holdover Performance
 
@@ -115,7 +117,7 @@ Holdover declarations **shall** characterize accumulated time error after loss o
 For each holdover declaration, the supplier **shall** document:
 
 - Holdover entry condition and triggering event.
-- Reference source and lock duration before holdover begins.
+- TimeCard synchronization source and lock duration before holdover begins.
 - Minimum warm-up and stabilization conditions before holdover begins.
 - Measurement point.
 - Maximum time error or MTIE versus elapsed holdover time.
@@ -131,7 +133,7 @@ Suppliers **shall** characterize timing behavior during operational transitions 
 - Cold-start and warm-start lock acquisition time.
 - Transition from locked operation to holdover.
 - Transition from holdover to locked operation.
-- Reference failover between two valid sources.
+- Reference failover between two valid synchronization sources.
 - Manual time step or frequency steering command.
 - Firmware update or restart behavior if timing service is interrupted or degraded.
 - Host entry into and recovery from a low-power, sleep, or hibernation state.
@@ -163,7 +165,8 @@ The performance section of a datasheet or conformance statement **shall** includ
 
 | Category | Required reporting content |
 |----------|-----------------------------|
-| Time error | Reference source, measurement point, bounded error, constant and dynamic components, statistic, temperature range, lock time |
+| Time error | TimeCard synchronization source, reference timescale, measurement point, bounded error, constant and dynamic components, statistic, temperature range, lock time |
+| TimeCard timestamp accuracy | Event marker and measurement point, reference timescale, synchronization source, bounded timestamp error, resolution, granularity, corrections, latency, uncertainty |
 | Time stability | MTIE and applicable TDEV intervals, measurement point, state, environmental profile |
 | Frequency stability | Frequency accuracy, temperature stability, applicable ADEV intervals, measurement point |
 | Phase noise | Carrier frequency, offset-frequency range, measurement bandwidth, phase-noise curve or limits |

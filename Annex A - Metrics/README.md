@@ -77,20 +77,22 @@ Noise tolerance characterizes the timing variation that a receive interface can 
 
 For packet timing inputs, the stimulus may be a reproducible packet-delay-variation model rather than sinusoidal phase modulation. The packet rate, delay distribution or sequence, asymmetry, loss and reordering behavior, traffic conditions, and random seed or retained stimulus record should accompany the result.
 
-## A.8 Accuracy, precision, resolution, and granularity
+## A.8 Qualified accuracy terms, precision, resolution, and granularity
 
 | Term | Use in IEEE P3335 |
 |------|----------------------|
-| Accuracy | Qualitative closeness to a reference value; numerical claims are expressed using a defined error and uncertainty. |
+| Time accuracy | Closeness of indicated time to a declared reference timescale; numerical claims are expressed as time error and uncertainty. |
+| Frequency accuracy | Closeness of indicated frequency to a declared reference frequency; numerical claims are expressed as fractional-frequency offset and uncertainty. |
+| TimeCard timestamp accuracy | Closeness of an event timestamp to the declared reference time at the corresponding event instant and measurement point; numerical claims are expressed as bounded timestamp error and uncertainty. |
 | Precision | Closeness of agreement among repeated indications under stated conditions. |
 | Resolution | Smallest change in a measured quantity that produces a perceptible change in indication. |
 | Granularity | Smallest step representable by an encoding or interface. |
 
-A fine timestamp granularity does not by itself imply equally fine resolution, precision, or accuracy.
+A fine timestamp granularity does not by itself imply equally fine resolution, precision, time accuracy, or TimeCard timestamp accuracy.
 
 These terms define P3335 performance-declaration semantics and are aligned with the corresponding measurement concepts used by IEEE Std 1588-2019 [4]. When an implementation claims an IEEE 1588 mapping, IEEE Std 1588-2019 governs the protocol fields and state-machine behavior, while the definitions in Clause 3 govern P3335 conformance and performance declarations. Under 4.7 and 7.3.3, an implementation-specific departure is identified in the conformance statement and is not to be represented or interpreted as IEEE 1588 conformance.
 
-P3335 uses *accuracy* qualitatively and requires a quantitative claim to be expressed as a defined error or uncertainty bound. An IEEE 1588 `clockAccuracy` value is a protocol encoding that is mapped to the applicable measured or declared range under 6.4. P3335 uses *precision* for repeatability, *resolution* for the smallest perceptible change in indication, and *granularity* for the smallest representable encoding step. These four terms are not interchangeable, and an IEEE 1588 timestamp field width or scaling does not, by itself, establish P3335 resolution, precision, or accuracy.
+P3335 does not use unqualified *accuracy* as a quantitative metric. It uses time accuracy, frequency accuracy, and TimeCard timestamp accuracy only in their declared contexts, with numerical claims expressed using the applicable error and uncertainty. An IEEE 1588 `clockAccuracy` value is a protocol encoding that is mapped to the applicable measured or declared time-accuracy range under 6.4. P3335 uses *precision* for repeatability, *resolution* for the smallest perceptible change in indication, and *granularity* for the smallest representable encoding step. These terms are not interchangeable, and an IEEE 1588 timestamp field width or scaling does not, by itself, establish P3335 resolution, precision, time accuracy, or TimeCard timestamp accuracy.
 
 ## A.9 Holdover time error
 
@@ -102,13 +104,13 @@ $$
 
 where $x_0$ is time error at holdover entry, $y_0$ is initial fractional-frequency offset, $D$ is a linear fractional-frequency drift rate, and $n_y$ represents residual frequency fluctuations. Temperature, aging, retrace, supply sensitivity, and the quality of the pre-holdover estimate can alter these terms.
 
-A holdover declaration should therefore identify the prior lock duration and source, entry condition, elapsed holdover interval, temperature profile, initial error treatment, and behavior on reference restoration.
+A holdover declaration should therefore identify the prior lock duration and TimeCard synchronization source, entry condition, elapsed holdover interval, temperature profile, initial error treatment, and behavior on reference restoration.
 
 ## A.10 Ensemble and correlation considerations
 
-For $N$ independent sources with equal variance, ideal averaging reduces standard deviation by a factor of $\sqrt{N}$, giving an ensemble deviation proportional to $1/\sqrt{N}$. Real sources can share environmental, receiver, antenna, power, or network errors, so error correlation reduces or eliminates that benefit.
+For $N$ independent synchronization sources with equal variance, ideal averaging reduces standard deviation by a factor of $\sqrt{N}$, giving an ensemble deviation proportional to $1/\sqrt{N}$. Real synchronization sources can share environmental, receiver, antenna, power, or network errors, so error correlation reduces or eliminates that benefit.
 
-An ensemble result should identify the source population, weighting or selection method, error-correlation assumptions, rejection criteria, and behavior as sources become unavailable or degraded.
+An ensemble result should identify the synchronization-source population, weighting or selection method, error-correlation assumptions, rejection criteria, and behavior as synchronization sources become unavailable or degraded.
 
 ## A.11 Environmental sensitivity
 

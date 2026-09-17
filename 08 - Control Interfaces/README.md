@@ -19,7 +19,7 @@ At least one implemented control interface **shall** provide access to the requi
 
 - Read implementation identity, revision, profile, and capability information.
 - Read the unified-timescale state and an atomic time value.
-- Read active and available synchronization-source information.
+- Read information about active and available TimeCard synchronization sources.
 - Read active alarm and security-state information.
 - Discover whether conditional configuration, telemetry, event, update, and sanitization operations are supported.
 
@@ -39,7 +39,7 @@ Each implemented PCIe control mapping **shall** satisfy 8.9. If PCIe PTM is impl
 
 ### 8.3.3 IPMI and NC-SI
 
-An implementation claiming IPMI control **shall** conform to DMTF DSP0236 [1] for the IPMI version and command scope identified in the conformance statement. Vendor or P3335-specific commands **shall** use an assigned or documented extension mechanism, **shall** have identifiers unique within the applicable command namespace, and **shall** not redefine, alias, or overlap standard command identifiers.
+An implementation claiming IPMI control **shall** conform to the IPMI Specification, Version 2.0, Revision 1.1, with E7 markup dated 21 April 2015 [1], for the interface roles and command scope identified in the conformance statement. Vendor or P3335-specific commands **shall** use an assigned or documented extension mechanism, **shall** have identifiers unique within the applicable command namespace, and **shall** not redefine, alias, or overlap standard command identifiers.
 
 An NC-SI mapping **shall** identify the NC-SI specification revision, package and channel discovery behavior, command set, and mapping of baseline objects.
 
@@ -101,11 +101,11 @@ Requirements for the Managed TimeCard and Secure Infrastructure TimeCard profile
 
 Security failure **shall** not be reported as normal successful completion. Authentication failures, authorization denials, firmware verification failures, and sanitization failures **shall** be distinguishable to an authorized operator.
 
-For an interface exposing timing-affecting write operations, the authorization declaration **shall** identify the privileges required to set time, discipline phase or frequency, select a source, change persistent calibration, and update executable content. When the authorization mechanism supports distinct privileges, read-only monitoring **shall** be separable from these timing-affecting operations.
+For an interface exposing timing-affecting write operations, the authorization declaration **shall** identify the privileges required to set time, discipline phase or frequency, select a TimeCard synchronization source, change persistent calibration, and update executable content. When the authorization mechanism supports distinct privileges, read-only monitoring **shall** be separable from these timing-affecting operations.
 
 ## 8.7 Events and telemetry
 
-If event reporting is implemented, each event record **shall** include a timestamp or an explicit indication that valid time was unavailable, a severity, a source, an event type, and event-specific data. The event timestamp measurement point and timescale **shall** be documented.
+If event reporting is implemented, each event record **shall** include a timestamp or an explicit indication that valid time was unavailable, a severity, an event origin, an event type, and event-specific data. The event timestamp measurement point and timescale **shall** be documented.
 
 The following state changes **shall** generate an event when the corresponding function and event reporting are implemented:
 
@@ -220,7 +220,7 @@ The following objects **shall** be exposed through at least one control interfac
 | `TC_STATE` | R | enum | none | Overall unified-timescale operating state. |
 | `TC_TIMESCALE` | R | enum | none | Timescale represented by `TC_TIME` and timing telemetry. |
 | `TC_TIME` | R | timestamp | s, ns | Atomic unified-timescale value at the declared read measurement point. |
-| `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the source currently used to discipline or validate the unified timescale; `none` when no source is active. |
+| `SYNC_SRC_ACTIVE` | R | string | none | Identifier of the TimeCard synchronization source currently used to discipline or validate the unified timescale; `none` when no synchronization source is active. |
 | `SYNC_SRC_AVAIL` | R | set | none | Identifiers of synchronization sources currently available for selection or monitoring. |
 | `ALARM_ACTIVE` | R | set | none | Active alarm identifiers; an empty set indicates no active alarm. |
 | `SECURITY_STATE` | R | record | none | Supported and active security mechanisms and the result of the most recent integrity verification. |
@@ -229,21 +229,21 @@ A required baseline object **shall** not report `unsupported` or `unspecified` a
 
 ### 8.10.3 Conditional baseline objects
 
-The following objects are required when the corresponding capability is advertised in `TC_CAPS`:
+When a capability is advertised in `TC_CAPS`, the corresponding objects in the following table **shall** be exposed:
 
 | Object | Access | Type | Units | Applicability and semantics |
 |--------|--------|------|-------|-----------------------------|
-| `SYNC_SRC_SELECT` | R/W | string | none | Implementations supporting operator source selection; selected source or selection policy. |
-| `SYNC_SRC_HEALTH` | R | record | none | Implementations with receive interfaces; health and rejection reason for each source. |
-| `PHASE_ERR` | R | int64 | ps | Implementations reporting phase error; value relative to the identified source and measurement point. |
-| `FREQ_OFFSET` | R | int64 | 1e-15 | Implementations reporting fractional frequency offset; value relative to the identified source. |
+| `SYNC_SRC_SELECT` | R/W | string | none | Implementations supporting operator synchronization-source selection; selected TimeCard synchronization source or selection policy. |
+| `SYNC_SRC_HEALTH` | R | record | none | Implementations with receive interfaces; health and rejection reason for each available synchronization source. |
+| `PHASE_ERR` | R | int64 | ps | Implementations reporting phase error; value relative to the identified TimeCard synchronization source and measurement point. |
+| `FREQ_OFFSET` | R | int64 | 1e-15 | Implementations reporting fractional frequency offset; value relative to the identified TimeCard synchronization source. |
 | `MTIE_EST` | R | uint64 | ps | Implementations reporting estimated or measured MTIE; paired with `MTIE_INTERVAL`. |
 | `MTIE_INTERVAL` | R | uint64 | s | Observation interval associated with `MTIE_EST`. |
 | `HOLDOVER_ELAPSED` | R | uint64 | s | Implementations supporting holdover; elapsed time since holdover entry. |
 | `TEMP_LOCAL` | R | int64 | mdeg C | Implementations reporting a local timing-function temperature in millidegrees Celsius; sensor location is declared. |
 | `EVENT_COUNT` | R | uint32 | count | Implementations with an event log; number of readable retained events. Behavior at the `uint32` limit and indication of event loss or overwrite follow the mapping declaration required by 8.10.1. |
 | `EVENT_READ` | R | record | none | Implementations with an event log; next or selected event record. |
-| `REFERENCE_EVIDENCE` | R | record | none | Implementations reporting reference-chain evidence; identifiers and availability of source, calibration, measurement-point, and uncertainty information without asserting end-to-end traceability. |
+| `REFERENCE_EVIDENCE` | R | record | none | Implementations reporting reference-chain evidence; synchronization-source identity and availability, calibration, measurement-point, and uncertainty information without asserting end-to-end traceability. |
 | `TC_SERIAL` | R | string | none | Implementations with a supplier-assigned or otherwise persistent device serial identifier; value and identity namespace are declared. |
 | `HOST_TIME_CORRELATION` | R | record | none | Host mappings supporting bounded correlation of a TimeCard timestamp with a host clock; record satisfies 8.10.4. |
 | `TIME_CONTROL_STATUS` | R | record | none | Host mappings supporting explicit time-control ownership; arbitration and ownership status satisfies 8.10.5. |
@@ -267,14 +267,14 @@ A `HOST_TIME_CORRELATION` record **shall** contain the following fields:
 | `correlation_window` | Yes | uint64 | ns | Non-negative difference between `host_time_after` and `host_time_before`. |
 | `sample_age` | Yes | uint64 | ns | Age of the captured sample at the response or publication measurement point. |
 | `card_state` | Yes | enum | none | `TC_STATE` applicable to the captured card timestamp. |
-| `source_valid` | Yes | bool | none | Whether the synchronization-source evidence required by the declared host policy was valid at capture. |
+| `source_valid` | Yes | bool | none | Whether the TimeCard synchronization-source evidence required by the declared host policy was valid at capture. |
 | `discipline_eligible` | Yes | bool | none | Whether the complete record meets the declared policy for submission to a host-clock discipline function. |
 
 The two host timestamps **shall** use the same host clock, epoch, timescale, and units. The card-time measurement operation **shall** begin after the `host_time_before` read completes and **shall** complete before the `host_time_after` read begins. If that ordering cannot be established, or if the host clock is discontinuous within the interval, the record **shall** report `unavailable` or `fault` and **shall** not be marked discipline-eligible.
 
 The mapping **shall** document the host clock, its adjustment behavior, the sign convention for any timescale correction, the maximum accepted correlation window, the maximum sample age, and the uncertainty or dispersion method used by the host integration. If the relation between the card and host timescales is not known unambiguously, `card_time` **shall** identify its timescale as `unknown` or the applicable declared value, no cross-timescale offset **shall** be asserted, and `discipline_eligible` **shall** be false.
 
-A correlation **shall** be marked discipline-eligible only when the declared card state, source validity, timescale relation, sample age, correlation window, and uncertainty or dispersion limits are satisfied. A host-clock discontinuity **shall** advance `discontinuity_sequence` and **shall** make correlations from an earlier sequence stale or unavailable.
+A correlation **shall** be marked discipline-eligible only when the declared card state, synchronization-source validity, timescale relation, sample age, correlation window, and uncertainty or dispersion limits are satisfied. A host-clock discontinuity **shall** advance `discontinuity_sequence` and **shall** make correlations from an earlier sequence stale or unavailable.
 
 ### 8.10.5 Time-control status record
 
@@ -305,9 +305,9 @@ If a GNSS receive capability is advertised in `TC_CAPS`, the following objects *
 
 The common constellation identifiers are `GPS`, `Galileo`, `GLONASS`, `BeiDou`, `QZSS`, and `NavIC`. Additional constellation identifiers **shall** use the extension mechanism defined by the control mapping.
 
-### 8.10.8 Other satellite timing sources
+### 8.10.8 Other satellite synchronization sources
 
-Non-GNSS satellite services, including large low-Earth-orbit constellations such as Starlink, are not assigned common GNSS identifiers by P3335. If an implementation uses such a service as a timing source, the supplier **shall** identify the service, document vehicle selection and handover behavior, and expose source identity and health through the extension mechanism defined by the control mapping.
+Non-GNSS satellite services, including large low-Earth-orbit constellations such as Starlink, are not assigned common GNSS identifiers by P3335. If an implementation uses such a service as a TimeCard synchronization source, the supplier **shall** identify the service, document vehicle selection and handover behavior, and expose synchronization-source identity and health through the extension mechanism defined by the control mapping.
 
 ## 8.11 Security profiles
 

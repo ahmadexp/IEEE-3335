@@ -1,6 +1,6 @@
 # 10. Applications and Best Practices (Informative)
 
-This clause provides deployment considerations for TimeCard systems. It does not add or alter conformance requirements. Application-specific accuracy, availability, security, safety, and regulatory limits remain the responsibility of the system designer and operator.
+This clause provides deployment considerations for TimeCard systems. It does not add or alter conformance requirements. Application-specific time accuracy, frequency accuracy, availability, security, safety, and regulatory limits remain the responsibility of the system designer and operator.
 
 ## 10.1 Selecting a TimeCard
 
@@ -13,17 +13,17 @@ A useful selection process begins with the system timing requirement and works b
 - Environmental and host-integration conditions.
 - Monitoring, update, access-control, and recovery needs.
 
-Timestamp granularity or oscillator type alone does not establish end-to-end accuracy. The complete error and uncertainty path and budget should be evaluated.
+Timestamp granularity or oscillator type alone does not establish end-to-end time accuracy or TimeCard timestamp accuracy. The complete error and uncertainty path and budget should be evaluated.
 
 ## 10.2 Application considerations
 
 ### 10.2.1 Data centers and distributed computing
 
-TimeCards can serve as PTP grandmasters, host timing sources, or monitored references. Deployments commonly consider redundant references, independent failure domains, hardware timestamping, host PHC integration, monitoring at scale, and the effect of network asymmetry. The relevant accuracy target should be set by the application rather than inferred from the interface technology.
+TimeCards can serve as PTP grandmasters, host timing sources, or monitored references. Deployments commonly consider redundant references, independent failure domains, hardware timestamping, host PHC integration, monitoring at scale, and the effect of network asymmetry. The relevant time-accuracy target should be set by the application rather than inferred from the interface technology.
 
 ### 10.2.2 Telecommunications
 
-Telecommunications deployments can require specific PTP or frequency-synchronization profiles and bounded holdover during reference failure. Source traceability, packet-network support, asymmetry, environmental qualification, and profile-specific limits should be evaluated together.
+Telecommunications deployments can require specific PTP or frequency-synchronization profiles and bounded holdover during reference failure. Traceability of the TimeCard synchronization source, packet-network support, asymmetry, environmental qualification, and profile-specific limits should be evaluated together.
 
 ### 10.2.3 Regulated event timestamping
 
@@ -57,7 +57,7 @@ Host software should begin with the declared mapping and capability information,
 
 Multi-card software should select a card using `TC_INSTANCE_ID` or `TC_SERIAL` when available. An enumeration index or operating-system device number can change after removal, reinsertion, firmware update, or inventory changes and should not be used as the persistent key for configuration or calibration data.
 
-Software correlating TimeCard time with a host clock should preserve both host bounds, the correlation window, capture and discontinuity sequences, card state, source validity, sample age, and the card and host timescales. A raw hardware counter should not be labeled UTC, or used to discipline a host clock, until the timescale relationship and applicable leap information are valid.
+Software correlating TimeCard time with a host clock should preserve both host bounds, the correlation window, capture and discontinuity sequences, card state, synchronization-source validity, sample age, and the card and host timescales. A raw hardware counter should not be labeled UTC, or used to discipline a host clock, until the timescale relationship and applicable leap information are valid.
 
 Only one authorized component should control time setting or discipline at a time. Monitoring applications, command-line tools, background discipline services, and host time providers should share the ownership and authorization mechanism defined by the mapping rather than applying independent steering actions.
 
@@ -69,11 +69,11 @@ Annex E gives platform-specific examples for Windows, macOS, and Linux.
 
 ### 10.4.1 Reference policy
 
-Reference priorities and qualification thresholds should reflect independence, accuracy, stability, and failure behavior. A secondary source that shares an antenna, power supply, network path, or upstream clock with the primary source might not provide meaningful redundancy.
+TimeCard synchronization-source priorities and qualification thresholds should reflect independence, time or frequency accuracy, stability, and failure behavior. A secondary synchronization source that shares an antenna, power supply, network path, or upstream clock with the primary synchronization source might not provide meaningful redundancy.
 
 ### 10.4.2 Monitoring and alarms
 
-Operators should monitor at least source availability, active source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit might be exceeded, not only to device state names.
+Operators should monitor at least the availability and identity of TimeCard synchronization sources, the active synchronization source, lock state, holdover elapsed time, phase error, frequency offset, environmental conditions, alarms, and software revisions. Alert thresholds should be tied to the time remaining before an application limit might be exceeded, not only to device state names.
 
 ### 10.4.3 Updates and configuration
 
@@ -88,7 +88,7 @@ Calibration and verification intervals should be based on the declared performan
 | Symptom | Possible cause | Investigation |
 |---------|----------------|---------------|
 | Constant offset | Cable or antenna delay, wrong edge, epoch mismatch, or unapplied correction | Trace the measurement point, correction sign, and correction value through the complete timing path. |
-| Intermittent source loss | Marginal signal level, RF interference, packet loss, threshold hysteresis, loose or poorly retained connectors, broken or intermittent cabling, or lack of needed redundancy | Inspect and mechanically verify connectors and cabling, then correlate source health, raw signal indicators, network data, and event logs. |
+| Intermittent loss of a synchronization source | Marginal signal level, RF interference, packet loss, threshold hysteresis, loose or poorly retained connectors, broken or intermittent cabling, or lack of needed redundancy | Inspect and mechanically verify connectors and cabling, then correlate synchronization-source health, raw signal indicators, network data, and event logs. |
 | Excessive holdover error | Initial frequency offset, temperature change, aging, insufficient preconditioning, or model error | Compare the holdover test conditions with the supplier declaration and recorded environment. |
 | Host timestamp disagreement | Different epochs or timescales, non-atomic reads, host-bus delay, or conversion error | Validate the timestamp mapping, rollover behavior, atomicity, and correction model. |
 | Unexpected phase step | Reference switch, manual adjustment, restart, or invalid continuity assumption | Correlate physical outputs with control state and transition events. |

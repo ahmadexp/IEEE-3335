@@ -1,4 +1,4 @@
-PWD /Users/ahmadbyagowi/git/ISPCS/3335/build
+PWD /Users/ahmadbyagowi/git/IEEE-3335/paper/ISPCS 2026/build
 INPUT /usr/local/texlive/2025/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
@@ -242,11 +242,11 @@ INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 OUTPUT main.pdf
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmcsc10.tfm
-INPUT ../figures/architecture-context.pdf
-INPUT ../figures/architecture-context.pdf
-INPUT ../figures/architecture-context.pdf
-INPUT ../figures/architecture-context.pdf
-INPUT ../figures/architecture-context.pdf
+INPUT ./figures/architecture-context.pdf
+INPUT ./figures/architecture-context.pdf
+INPUT ./figures/architecture-context.pdf
+INPUT ./figures/architecture-context.pdf
+INPUT ./figures/architecture-context.pdf
 INPUT /usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
@@ -303,3 +303,6 @@ INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb
+INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb
+INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss9.pfb
+INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb

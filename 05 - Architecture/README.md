@@ -8,7 +8,7 @@ The architecture separates timing data-plane functions from management and contr
 
 ## 5.1 Architectural Overview
 
-A TimeCard is a timing subsystem that provides time, phase, frequency, or a combination thereof to a host system or downstream system. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a timing service with documented support for system-level traceability analysis.
+A TimeCard is a timing subsystem that provides time, phase, frequency, timestamp information, or a combination thereof to a host system or downstream system. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a timing service with documented support for system-level traceability analysis.
 
 A conforming TimeCard **shall** include the following externally observable capabilities:
 
@@ -100,10 +100,10 @@ If an implementation claims ensemble reference operation, it **shall** document:
 - Supported input reference types.
 - Weighting, voting, or selection method at a level sufficient for operational evaluation.
 - Health and alarm criteria.
-- Behavior when one or more ensemble sources degrade or fail.
+- Behavior when one or more ensemble synchronization sources degrade or fail.
 - Metrics exposed through the control interface.
 
-Ensemble operation **shall** produce one selected or synthesized reference for disciplining the unified timescale. It **shall** not create multiple independent conforming timescales within the same TimeCard instance unless those instances are separately identified and separately documented.
+Ensemble operation **shall** produce one selected or synthesized TimeCard synchronization source for disciplining the unified timescale. It **shall** not create multiple independent conforming timescales within the same TimeCard instance unless those instances are separately identified and separately documented.
 
 ## 5.6 Host and Time-Transfer Interfaces
 
@@ -134,7 +134,7 @@ Annex E provides informative examples of applying these requirements to Windows,
 
 Performance requirements in this standard are expressed as reporting and measurement requirements unless a technical clause explicitly states a numeric limit. This allows TimeCards to serve different use cases while making supplier claims comparable.
 
-An implementation **shall** identify the measurement point for each declared metric. Metrics **shall** be reported with enough context to reproduce or evaluate the claim, including reference source, measurement bandwidth, observation interval, environmental conditions, warm-up conditions, and lock state.
+An implementation **shall** identify the measurement point for each declared metric. Metrics **shall** be reported with enough context to reproduce or evaluate the claim, including TimeCard synchronization source, measurement bandwidth, observation interval, environmental conditions, warm-up conditions, and lock state.
 
 The following performance categories **shall** be addressed when applicable to the implemented interfaces:
 
@@ -167,7 +167,7 @@ Vendor-specific extensions **shall** be identified by a documented namespace, id
 
 ## 5.10 Documentation Requirements
 
-Manufacturers **shall** provide documentation sufficient to evaluate and integrate a conforming TimeCard. The documentation **shall** include:
+Suppliers **shall** provide documentation sufficient to evaluate and integrate a conforming TimeCard. The documentation **shall** include:
 
 - Conformance statement required by Clause 4.
 - Interface descriptions for all receive, providing, host, and control interfaces.
@@ -180,10 +180,10 @@ Manufacturers **shall** provide documentation sufficient to evaluate and integra
 - Reference-chain, calibration, measurement-point, and uncertainty information sufficient to support system-level traceability analysis, or an explicit statement identifying which information is unavailable.
 - All optional features claimed and all conditional requirements exercised by those claims.
 
-Documentation should be publicly available for commercial products and available to integrators for non-commercial, embedded, or custom implementations.
+The conformance statement is subject to the availability requirements in 4.7. Supporting integration documentation should be publicly available for commercial products and made available to integrators for non-commercial, embedded, or custom implementations.
 
-## 5.11 Informative Time-Flow Narrative
+## 5.11 Time-Flow Narrative (Informative)
 
-In a typical TimeCard, one or more receive interfaces acquire external timing references such as GNSS, PTP, PPS, frequency references, or other sources. Reference-selection logic evaluates those inputs and selects or synthesizes a reference. A disciplining function steers the local timing function. The time generator maintains the unified timescale. Providing interfaces distribute that unified timescale as PPS, frequency, Time of Day, packet timestamps, host-bus time, or other representations. Control interfaces report status, telemetry, alarms, and configuration state.
+In a typical TimeCard, one or more receive interfaces acquire external timing references such as GNSS, PTP, PPS, frequency references, or other reference signals. Reference-selection logic evaluates those inputs and selects or synthesizes a TimeCard synchronization source. A disciplining function steers the local timing function. The time generator maintains the unified timescale. Providing interfaces distribute that unified timescale as PPS, frequency, Time of Day, packet timestamps, host-bus time, or other representations. Control interfaces report status, telemetry, alarms, and configuration state.
 
 When all usable external references are lost, the TimeCard normally enters holdover or free-running operation. During holdover, the unified timescale continues according to the local timing function and any holdover model implemented by the TimeCard. The TimeCard reports the state transition and exposes the information needed to evaluate the declared holdover behavior.

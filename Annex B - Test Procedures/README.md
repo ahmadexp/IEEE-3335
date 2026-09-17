@@ -8,7 +8,7 @@ Each test record should identify:
 
 - Test identifier and applicable clause, profile, interface, or optional feature.
 - Device under test, hardware revision, firmware or gateware revision, and configuration.
-- Entrance conditions, including warm-up, lock state, source, power, and environment.
+- Entrance conditions, including warm-up, lock state, TimeCard synchronization source, power, and environment.
 - Equipment, calibration status, traceability chain, and measurement uncertainty.
 - Cabling, termination, corrections, and measurement points.
 - Procedure and data-processing method.
@@ -23,7 +23,7 @@ A representative arrangement is shown in Figure 3.
 
 The environment should be controlled and recorded at a level appropriate to the declared limit. The TimeCard should complete the supplier-declared warm-up and stabilization interval before a full-performance measurement begins.
 
-The measurement system should have sufficient bandwidth, noise floor, resolution, stability, and uncertainty to distinguish the declared limit. A fixed instrument-to-device accuracy ratio is not assumed; the test report should justify the selected system and decision rule.
+The measurement system should have sufficient bandwidth, noise floor, resolution, stability, and uncertainty to distinguish the declared limit. A fixed ratio between instrument uncertainty and the declared limit is not assumed; the test report should justify the selected system and decision rule.
 
 Cable delay, connector adapters, splitters, terminations, and reference-distribution paths should be characterized when their contribution is material. Corrections should be stated with sign convention and uncertainty.
 
@@ -33,11 +33,11 @@ Cable delay, connector adapters, splitters, terminations, and reference-distribu
 
 | Test | Applicability | Method | Example pass/fail basis |
 |------|---------------|--------|-------------------------|
-| Discovery and declaration | Each receive interface | Inspect documentation and control capabilities, then compare them with the physical or logical interface. | Type, direction, protocol or signal, limits, measurement point, and source identifier are consistent. |
-| Reference qualification and status | Each receive interface | Apply supplier-declared acceptable conditions and selected unacceptable counterexamples, then observe state. | Reported acceptance, rejection, source identity, and alarms agree with the declared qualification rules for the tested conditions. |
+| Discovery and declaration | Each receive interface | Inspect documentation and control capabilities, then compare them with the physical or logical interface. | Type, direction, protocol or signal, limits, measurement point, and synchronization-source identifier are consistent. |
+| Reference qualification and status | Each receive interface | Apply supplier-declared acceptable conditions and selected unacceptable counterexamples, then observe state. | Reported acceptance, rejection, synchronization-source identity, and alarms agree with the declared qualification rules for the tested conditions. |
 | Boundary behavior | Physical receive interfaces | Exercise declared amplitude, frequency, pulse, or protocol acceptance boundaries without exceeding protection limits. | Accepted and rejected conditions agree with the declared thresholds and hysteresis. |
 | Loss and reacquisition | Each receive interface used for synchronization | Remove or invalidate the active reference, then restore it. | State, alarms, transition behavior, and reacquisition time agree with the declaration. |
-| Source selection | Multiple-reference implementations | Exercise automatic and operator-controlled selection policies. | Active source and selection mode agree with the documented policy. |
+| Synchronization-source selection | Multiple-reference implementations | Exercise automatic and operator-controlled selection policies. | Active TimeCard synchronization source and selection mode agree with the documented policy. |
 
 P3335 does not prescribe a universal test that proves a reference valid under every possible condition. Reference qualification is evaluated using a finite, declared set of acceptable conditions and counterexamples. The test record should identify that set, the implemented qualification rules, and the limits of the resulting evidence.
 
@@ -55,11 +55,14 @@ P3335 does not prescribe a universal test that proves a reference valid under ev
 
 | Test | Applicability | Method | Example pass/fail basis |
 |------|---------------|--------|-------------------------|
-| Required objects | All implementations | Read every object in 8.10.2 through the declared baseline control mapping. | Every object is present and does not report unsupported. |
+| Required objects | All implementations | Read every object in 8.10.2 through the declared baseline control mapping. | Every object is present and reports neither `unsupported` nor `unspecified` at object level. Any unavailable, stale, or fault status is meaningful and distinguishable from a valid value. |
 | Atomic time read | All implementations | Repeatedly read `TC_TIME`, emphasizing second rollover and concurrent updates. | No result combines fields from different measurement instants; nanoseconds remain in range. |
+| Object status and freshness | All implementations | Exercise valid values and each mapping-supported unavailable, unsupported, unspecified, stale, and fault condition. Include a valid zero value and a field-level status where the mapping supports one. | Each condition is distinguishable according to 8.10.1; a valid zero is not treated as absent, and stale or faulted data is not presented as current valid data. |
 | Conditional discovery | Implementations advertising conditional capabilities | Compare `TC_CAPS` with readable objects and exercised operations. | Every advertised object is mapped and unadvertised objects follow the documented unsupported behavior. |
+| Version and extension compatibility | Versioned or extensible mappings | Submit a supported message containing an unknown optional field or symbolic value, an unsupported mandatory element, an unsupported version, and a nonzero reserved field. | Recognized content is processed; unknown optional content is skipped or preserved as documented; incompatible requests are rejected without changing state; reserved values are not assigned implementation-specific meaning. |
 | Invalid and reserved write | Writable mappings | Submit an out-of-range or reserved value in a non-destructive configuration. | The write is rejected and the prior value remains unchanged. |
 | Reset and persistence | Reset-capable mappings | Exercise each documented reset type. | Discovery, state, persisted configuration, and time behavior agree with the mapping declaration. |
+| Events and telemetry | Mappings implementing events or telemetry | Generate the applicable state-change events in 8.7, including a case without valid time. For streaming, exercise the declared rate, backpressure, and a controlled interruption or overflow. | Event content and time-validity indication satisfy 8.7. Streaming timestamps, ordering, dropped-sample indication, and relation to on-demand reads agree with the declaration. |
 | Access control | Managed or Secure Infrastructure profile | Exercise monitoring, configuration, update, and security roles with authorized and unauthorized identities. | Each operation is allowed or denied according to the claimed profile and is reported unambiguously. |
 
 ### B.3.4 Host and driver mappings
@@ -71,15 +74,27 @@ P3335 does not prescribe a universal test that proves a reference valid under ev
 | Binary ABI framing | Binary host mappings | Exercise exact, shorter, longer, unsupported-version, inconsistent-length, and nonzero-reserved-field requests. | Accepted and rejected cases match the documented compatibility rules, and rejected requests do not change device state. |
 | Multi-card identity | Host mappings supporting multiple TimeCards | Enumerate at least two instances, record identifiers, reorder or remove them, restart the driver, and reinsert a card. | Selection remains unambiguous; persistent state follows the declared stable identity rather than an enumeration index. |
 | Host-time correlation | Mappings advertising host-time correlation | Capture repeated records under normal load and at a second boundary; independently instrument the host calls where practical. | The card read is bounded by the two host readings, sequences advance as declared, the correlation window is consistent, and all timescales and measurement points are identified. |
-| Timescale and eligibility safety | Mappings offering samples for host discipline | Invalidate source state, timescale correction, freshness, correlation-window, and uncertainty inputs one at a time. Cause a host-clock discontinuity. | Ineligible or pre-discontinuity samples are reported stale or unavailable and are not submitted as valid discipline samples. |
+| Timescale and eligibility safety | Mappings offering samples for host discipline | Invalidate synchronization-source state, timescale correction, freshness, correlation-window, and uncertainty inputs one at a time. Cause a host-clock discontinuity. | Ineligible or pre-discontinuity samples are reported stale or unavailable and are not submitted as valid discipline samples. |
 | Time-control ownership | Host mappings permitting multiple timing-control clients | Race two authorized clients for ownership; exercise non-owner writes, timeout, client termination, reset, sleep, and removal. | At most one client controls timing state; non-owner writes have no effect; release and recovery follow the declared rules. |
 | Power and removal lifecycle | Host-connected implementations | Exercise supported sleep, hibernation, wake, orderly removal, surprise removal or tunnel disconnect, reinsertion, and driver reload while reads, events, and a bounded write are outstanding. | Operations complete or cancel within declared bounds, no stale sample is returned as current, resources are not accessed while absent, and discovery is revalidated before optional access resumes. |
 
+### B.3.5 Security functions
+
+| Test | Applicability | Method | Example pass/fail basis |
+|------|---------------|--------|-------------------------|
+| Security declaration | All implementations | Compare every control interface and implemented security function with the declaration required by 8.11.1. | Authentication, authorization, transport protection, update, boot integrity, key storage, anti-rollback, auditing, tamper response, sanitization, and physical-access assumptions are each identified as supported or `none`. |
+| Update integrity and authorization | Implementations supporting update; Managed or Secure Infrastructure profile as applicable | Attempt a valid update and controlled invalid cases, including a corrupted payload, an unauthorized signer where signatures are required, and a disallowed rollback where anti-rollback is required. | Only updates satisfying the claimed profile and documented recovery policy are accepted; failure is reported without presenting the rejected image as active. |
+| Boot integrity and protected storage | Secure Infrastructure TimeCard profile | Exercise the documented integrity-verification path with an authorized image and a controlled invalid-image or measurement-failure case. Inspect evidence for protection of private keys and credentials. | Timing service does not enter the locked state after failed executable-integrity verification, and protected-storage behavior agrees with the declaration. |
+| Transport and replay protection | Secure Infrastructure TimeCard profile with remote IP management | Attempt unauthenticated, incorrectly authenticated, replayed, and modified privileged requests in a controlled environment. | The transport authenticates peers, protects confidentiality and integrity, and rejects replayed or injected privileged operations without applying them. |
+| Sanitization | Implementations claiming sanitization | Provision representative data within the declared sanitization scope, invoke sanitization, and exercise a controlled failure where supported. | In-scope data is no longer recoverable through supported interfaces, completion or failure is reported accurately, and a failed operation is not reported as successful. |
+
+Security tests should use controlled fixtures, test credentials, and recoverable configurations. Interface-level sanitization checks alone do not establish erasure of all storage copies; the evidence should also address the declared storage and erasure mechanism, including protected storage, backups, and failure recovery where applicable.
+
 ## B.4 Performance measurements
 
-### B.4.1 Time accuracy
+### B.4.1 Time accuracy and TimeCard timestamp accuracy
 
-Compare the declared output or timestamp measurement point with the declared reference timescale. Record enough data to support the stated maximum, percentile, RMS, or confidence result. Include fixed-delay corrections, source-to-reference uncertainty, and measurement-system uncertainty.
+Compare the declared output or timestamping measurement point with the declared reference timescale. For TimeCard timestamp accuracy, apply events at known instants and compare the assigned timestamps with the reference time at those instants. Record enough data to support the stated maximum, percentile, RMS, or confidence result. Include fixed-delay corrections, uncertainty between the TimeCard synchronization source and reference timescale, event-generation uncertainty, and measurement-system uncertainty. Verify that resolution and granularity are reported separately from the bounded TimeCard timestamp-accuracy result.
 
 ### B.4.2 ADEV and TDEV
 
@@ -103,7 +118,7 @@ Apply the declared timing-variation stimulus at the receive-interface measuremen
 
 ### B.4.7 Noise tolerance
 
-Apply the declared timing-variation profile at the receive-interface measurement point while monitoring reference validity, alarms, selected source, lock state, holdover state, and the providing-interface metrics named in the acceptance criteria. Exercise the declared threshold or mask and enough adjacent conditions to establish the boundary, including any specified dwell and hysteresis. Compare the observed threshold and every monitored outcome with the supplier's bounded declaration. The test should distinguish loss of an input acceptance criterion from an output limit exceeded through otherwise valid noise transfer.
+Apply the declared timing-variation profile at the receive-interface measurement point while monitoring reference validity, alarms, selected TimeCard synchronization source, lock state, holdover state, and the providing-interface metrics named in the acceptance criteria. Exercise the declared threshold or mask and enough adjacent conditions to establish the boundary, including any specified dwell and hysteresis. Compare the observed threshold and every monitored outcome with the supplier's bounded declaration. The test should distinguish loss of an input acceptance criterion from an output limit exceeded through otherwise valid noise transfer.
 
 ### B.4.8 Holdover
 

@@ -31,7 +31,7 @@ Read-only monitoring and timing-affecting operations should be separate in both 
 
 ### E.2.3 Time and discipline services
 
-A host-time correlation should retain the two host bounds rather than only a derived midpoint. The correlation window, sample age, clock identity, timescales, card state, source validity, discontinuity generation, and uncertainty or dispersion policy are needed to decide whether the sample is suitable for host-clock discipline.
+A host-time correlation should retain the two host bounds rather than only a derived midpoint. The correlation window, sample age, clock identity, timescales, card state, synchronization-source validity, discontinuity generation, and uncertainty or dispersion policy are needed to decide whether the sample is suitable for host-clock discipline.
 
 A background discipline service, command-line utility, monitoring application, and host time provider can otherwise compete for the same hardware. One component should own timing-affecting operations at a time, while read-only clients continue to observe state. Loss of the owner should lead to a bounded and observable ownership transition.
 
@@ -90,7 +90,7 @@ Before a platform binding is used for a performance or conformance claim, an int
 - Descriptor validation and fail-closed handling of unknown or ambiguous optional resources.
 - Stable per-card selection and separation of per-card calibration and configuration.
 - Atomic TimeCard reads and bounded host-time correlations with explicit timescales.
-- Rejection of stale, discontinuous, source-invalid, or excessive-window discipline samples.
+- Rejection of stale or discontinuous discipline samples, samples with an invalid synchronization source, and samples with an excessive correlation window.
 - Single-owner behavior for time setting and discipline.
 - Bounded cancellation and resource revalidation through supported lifecycle transitions.
 - Least-privilege separation of monitoring, time control, configuration, update, and security administration.
