@@ -52,6 +52,8 @@ For each reference-loss, failover, and reacquisition transition, the supplier **
 
 If a 1PPS receive interface is implemented, the supplier **shall** document the input impedance, valid low and high voltage ranges, pulse-width range, on-time edge, rise- and fall-time tolerance, input protection range, and loss-of-signal thresholds. The declared values apply at the input measurement point with the declared termination.
 
+When compatibility with a G.703 interface is claimed, the declaration **shall** identify the specific interface in ITU-T Recommendation G.703 (04/2016), including Amendment 1 (05/2021) [9], the applicable provisions, and the cable and termination conditions used to evaluate compatibility. A claim about a measurement interface does not imply support for a different distribution interface. Other pulse inputs remain subject to their declared waveform and acceptance limits.
+
 ## 7.3 Providing interfaces
 
 ### 7.3.1 Common declaration requirements
@@ -65,7 +67,7 @@ For each implemented providing interface, the supplier **shall** document:
 - Measurement point, fixed delay, applied correction, and known asymmetry.
 - Granularity, resolution, update rate, and rollover behavior for digital representations.
 - Alignment to the unified timescale and to other providing interfaces when alignment is claimed.
-- Behavior and validity indication during startup, unlocked operation, holdover, failover, time adjustment, reset, and fault.
+- Behavior and validity indication during startup, unlocked operation, holdover, failover, time adjustment, firmware, gateware or software update, restart, reset, and fault.
 
 Typical providing interfaces include pulse outputs, frequency outputs, Time of Day messages, PTP, IRIG, PCIe PTM, host-bus timestamps, and synchronous logic clocks.
 
@@ -75,14 +77,14 @@ An implementation claiming the Physical Timing Output conformance profile **shal
 
 The 1PPS output **shall** meet the following requirements at the declared connector with a 50 ohm load:
 
-- The connector **shall** be an SMA, TNC, or Type-N female connector, or another mechanically retained 50 ohm coaxial female connector. For conformance testing, an implementation without an SMA female connector **shall** be supplied with or specify a mechanically retained adapter to SMA female.
+- The connector **shall** be a 50 ohm SMA, BNC, TNC, or Type-N female connector, or another mechanically retained 50 ohm coaxial female connector. For conformance testing, an implementation without an SMA female connector **shall** be supplied with or specify a mechanically retained adapter to SMA female.
 - The low level **shall** be between -0.3 V and 0.3 V.
 - The high level **shall** be between 1.2 V and 5.5 V.
 - The rising edge **shall** be the on-time mark.
 - The pulse width **shall** be at least 1 microsecond and not greater than 500 milliseconds.
 - The 10% to 90% rise time of the on-time edge **shall** be less than 10 nanoseconds.
 
-The supplier **shall** document the fall time, output protection behavior, fixed delay from the unified-timescale marker, RMS time jitter or other declared short-term variation metric, bounded time variation, measurement bandwidth, and measurement uncertainty.
+The supplier **shall** document the fall time, output protection behavior, fixed delay from the unified-timescale marker, time-error bound and timing-variation statistic as specified in 6.7, bounded time variation, measurement bandwidth, and measurement uncertainty.
 
 The supplier **shall** state the maximum alignment error between the 1PPS output and each other providing interface that claims alignment to it. For the Physical Timing Output profile, that maximum alignment error **shall** be less than 100 nanoseconds unless a different application profile defining another limit is identified in the conformance statement.
 

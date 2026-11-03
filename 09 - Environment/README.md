@@ -13,6 +13,8 @@ An environmental declaration **shall** distinguish:
 - **Storage and transport limits**, within which the unpowered implementation is not permanently damaged or degraded.
 - **Survival limits**, if claimed, after which operation can require inspection, recalibration, or repair.
 
+Environmental declarations **shall** state the units of each quantity. Temperature **shall** be expressed in degrees Celsius; relative humidity in percent with a condensing or non-condensing condition; altitude and dimensions in metres or explicitly identified decimal submultiples; pressure in pascals or decimal multiples; mass in kilograms or decimal submultiples; power in watts; and voltage in volts. Supplementary non-SI units may be provided with their equivalent SI values. The quantity and measurement location remain part of the declaration; a pressure value **shall** identify whether it is absolute or relative to a stated reference pressure.
+
 ## 9.2 Operating and storage conditions
 
 The supplier **shall** declare the conditions and elapsed interval after startup at which normal operation begins, even when full-performance limits do not yet apply. The declaration **shall** distinguish first usable output, normal operation, locked operation, and full-performance operation when those milestones differ.
@@ -63,6 +65,8 @@ For a host-connected implementation, the supplier **shall** document whether the
 
 The effect of input-voltage variation and supply noise on declared timing performance **shall** be characterized when applicable. If ride-through, backup energy, or uninterrupted holdover is claimed, the supplier **shall** declare the interruption profile, supported duration, load condition, output behavior, and recovery behavior.
 
+Backup energy, including batteries or capacitors, is optional. When implemented, the supplier **shall** identify which functions it preserves, distinguishing configuration retention, a real-time clock, maintenance of the unified timescale, and continued service at providing interfaces. Retention of stored time alone **shall** not be described as uninterrupted timing service.
+
 ### 9.4.3 EMC and ESD
 
 For a physical implementation, the supplier **shall** identify each EMC emission, immunity, and ESD standard for which conformity is claimed, including edition, test level, port classification, configuration, and result. P3335 conformance does not by itself constitute regulatory approval or EMC/ESD certification.
@@ -93,6 +97,8 @@ If MTBF, failure rate, availability, or another reliability metric is claimed, t
 ### 9.6.2 Service-life items
 
 The supplier **shall** identify components or stored data with a service-life limitation that can affect timing service, including batteries, fans, nonvolatile-memory endurance, oscillators, and calibration data, as applicable. The documentation **shall** state the rated interval or endurance, replacement or maintenance action, and effect of expiration or failure.
+
+For an included battery, the supplier **shall** document chemistry, nominal voltage, capacity or energy rating, location, replaceability, maintenance and disposal instructions, and the applicable transport-documentation references. Transport obligations depend on the battery, installation, transport mode, and jurisdiction; P3335 conformance does not replace those obligations. This documentation requirement does not mandate battery-health sensing or a new control object.
 
 ### 9.6.3 Calibration and traceability
 

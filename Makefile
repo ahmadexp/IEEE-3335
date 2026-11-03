@@ -1,4 +1,5 @@
 OUTPUT = IEEE3335.pdf
+PANDOC ?= pandoc
 METADATA = metadata.yaml
 LINE_NUMBER_HEADER = latex/review-line-numbers.tex
 FOOTER_HEADER = latex/review-footer.tex
@@ -47,7 +48,7 @@ $(OUTPUT): check $(METADATA) $(LINE_NUMBER_HEADER) $(FOOTER_HEADER) $(LAYOUT_HEA
 		echo "Found files:" ; \
 		for file in "$${FILES[@]}"; do echo "  $$file"; done ; \
 		echo "Using PDF Engine: $(PDF_ENGINE)" ; \
-		pandoc "$${FILES[@]}" -o "$$BUILD_DIR/proposal.pdf" \
+		"$(PANDOC)" "$${FILES[@]}" -o "$$BUILD_DIR/proposal.pdf" \
 			--toc \
 			--toc-depth=3 \
 			--metadata-file=$(METADATA) \

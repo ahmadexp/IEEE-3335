@@ -13,10 +13,10 @@ No single metric characterizes every aspect of a TimeCard. A useful declaration 
 | Stochastic time variation | TDEV |
 | Fractional-frequency stability | ADEV or modified ADEV |
 | Spectral purity of a periodic output | Phase noise |
-| Short-term edge variation | A specifically defined time-jitter statistic |
+| Pulse or event timing | Time error and an explicitly defined timing-variation statistic |
 | Transfer of input timing variation to an output | Noise-transfer response, gain, bandwidth, peaking, or mask |
 | Accepted input timing variation without a declared loss of function | Noise-tolerance threshold or mask |
-| Reference-loss behavior | Time error or MTIE versus elapsed holdover time |
+| Reference-loss behavior | Absolute or initial-offset-relative time-error envelope; MTIE additionally when applicable |
 
 The metric name alone is insufficient. The measurement point, operating state, averaging or observation interval, bandwidth, environmental conditions, and uncertainty determine what a result means and therefore should be documented with the result.
 
@@ -40,6 +40,8 @@ $$
 
 TDEV is useful when assessing time-transfer noise and wander. A report should identify the underlying time-error sequence, sampling interval, averaging factors, filtering, and treatment of gaps or outliers.
 
+TDEV is expressed in seconds; labelled submultiples such as nanoseconds may be used. Averaging time is a separate time quantity. TDEV describes time stability, whereas ADEV describes fractional-frequency stability; the equation above uses modified Allan deviation, not ordinary Allan deviation.
+
 ## A.4 Maximum time interval error
 
 Maximum time interval error (MTIE) is the maximum peak-to-peak time-error variation in any observation window of duration $\tau$. For a time-error function $x(t)$ over the available record, it can be expressed as:
@@ -50,15 +52,19 @@ $$
 
 MTIE is a worst-observed-window statistic. The total record length, sampling interval, treatment of missing data, and observation intervals should accompany a reported curve or limit.
 
+MTIE is expressed in seconds, with labelled submultiples permitted. It measures variation, not absolute offset: adding the same constant to every time-error sample leaves MTIE unchanged. A constant 1 microsecond error therefore has zero MTIE. Absolute time-error and holdover claims need the applicable error bound in addition to any MTIE result.
+
 ## A.5 Phase noise
 
 Single-sideband phase noise $\mathcal{L}(f)$ describes noise power in a 1 Hz bandwidth at offset frequency $f$ from a carrier, relative to carrier power, and is normally reported in dBc/Hz. A declaration should identify carrier frequency, offset-frequency range, resolution and measurement bandwidths, cross-correlation settings if used, instrument floor, and any spurs excluded from the noise trace.
 
 Phase noise is a frequency-domain metric. It should not be substituted for a time-domain jitter, ADEV, TDEV, or MTIE result without a stated conversion method and integration limits.
 
-## A.6 Time jitter
+An application standard may instead specify a time-domain assessment of the output. That assessment characterizes its stated quantity; it does not automatically verify a spectral mask. A domain conversion depends on the spectrum, weighting or filtering, integration limits, and applicable assumptions, as discussed in [B16]. Different spectra can yield the same integrated result.
 
-The word *jitter* has several domain-specific meanings. For a pulse or event stream, a TimeCard declaration should define:
+## A.6 Pulse and event timing variation
+
+For a pulse or event stream, time error relates the measured event to the declared reference event. Its constant and dynamic components and any timing-variation statistic should be identified without assuming that one statistic describes all behavior. A TimeCard declaration should define:
 
 - The ideal event model and any trend or deterministic component removed.
 - The event or edge used as the measurement marker.
@@ -69,6 +75,8 @@ The word *jitter* has several domain-specific meanings. For a pulse or event str
 
 Peak-to-peak observed range depends strongly on sample count and observation time. RMS and standard deviation are equivalent only under the stated centering convention. These details are therefore part of the metric definition.
 
+The word *jitter* has domain-specific meanings. ITU-T G.810 [10] separates jitter and wander at a timing-variation frequency of 10 Hz. This is not a boundary defined by the pulse repetition rate. A once-per-second edge-error record does not, by itself, resolve a high-frequency jitter spectrum; the sampling, filtering, and aliasing limitations should be stated. Use time error and timing variation for general 1PPS reporting, and a specific jitter or wander definition only where the applicable method supports it.
+
 ## A.7 Noise transfer and noise tolerance
 
 Noise transfer characterizes how timing variation present at a selected receive interface appears at a selected providing interface while the TimeCard is synchronized to that input. A linearized transfer function, gain and phase response, bandwidth and peaking result, or bounded input-to-output mask may be suitable. The declaration should identify both measurement points, the stimulus type and amplitude, the frequency range or observation intervals, the local timing function and servo configuration, and any nonlinear or time-varying behavior that limits the chosen representation.
@@ -76,6 +84,8 @@ Noise transfer characterizes how timing variation present at a selected receive 
 Noise tolerance characterizes the timing variation that a receive interface can accept while satisfying declared criteria. The criteria can include remaining locked, retaining the selected reference, avoiding a specified alarm or holdover transition, and keeping a providing-interface metric within a declared bound. The result should state the input stimulus or mask, nominal signal conditions, test duration, threshold-search method, hysteresis, monitored state and outputs, and the first criterion that fails. Noise tolerance describes accepted input variation; it does not by itself characterize the variation transferred to an output.
 
 For packet timing inputs, the stimulus may be a reproducible packet-delay-variation model rather than sinusoidal phase modulation. The packet rate, delay distribution or sequence, asymmetry, loss and reordering behavior, traffic conditions, and random seed or retained stimulus record should accompany the result.
+
+For TDEV, MTIE, noise-transfer, noise-tolerance, and holdover masks, identify the governing document and edition, class and mask identifier, parameter set, intervals, filtering, and acceptance rule. These identifiers connect the guidance here to the declaration requirements in 6.1; the annex does not introduce a new mask or limit.
 
 ## A.8 Qualified accuracy terms, precision, resolution, and granularity
 
@@ -105,6 +115,8 @@ $$
 where $x_0$ is time error at holdover entry, $y_0$ is initial fractional-frequency offset, $D$ is a linear fractional-frequency drift rate, and $n_y$ represents residual frequency fluctuations. Temperature, aging, retrace, supply sensitivity, and the quality of the pre-holdover estimate can alter these terms.
 
 A holdover declaration should therefore identify the prior lock duration and TimeCard synchronization source, entry condition, elapsed holdover interval, temperature profile, initial error treatment, and behavior on reference restoration.
+
+An absolute envelope bounds the error relative to the declared reference timescale. An initial-offset-relative envelope bounds the change from the measured error at entry and should not be described as an absolute bound. Report initial-error uncertainty separately; if initial error is unknown, a relative result alone cannot establish absolute time accuracy. MTIE characterizes variation within the record and does not recover the missing initial offset.
 
 ## A.10 Ensemble and correlation considerations
 

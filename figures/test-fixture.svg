@@ -1,61 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="600" viewBox="0 0 900 300">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="720" viewBox="0 0 1000 360">
+  <title>Representative TimeCard verification arrangement</title>
+  <desc>An applied reference and host control connect to the TimeCard. A measurement instrument compares a declared TimeCard output with a separately identified measurement reference. Adapters depend on the implemented interfaces.</desc>
   <style>
-    .box { fill: #ffffff; stroke: #000000; stroke-width: 2; rx: 4; }
-    .dut { fill: #ffffff; stroke: #000000; stroke-width: 2; rx: 4; }
-    .text { font-family: sans-serif; font-size: 22px; font-weight: bold; fill: #000000; }
-    .compact { font-family: sans-serif; font-size: 20px; font-weight: bold; fill: #000000; }
-    .small { font-family: sans-serif; font-size: 18px; fill: #000000; }
-    .small-compact { font-family: sans-serif; font-size: 15px; fill: #000000; }
-    .label { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+    .box { fill: #ffffff; stroke: #000000; stroke-width: 2; }
+    .title { font-family: sans-serif; font-size: 22px; font-weight: bold; fill: #000000; }
+    .detail { font-family: sans-serif; font-size: 18px; fill: #000000; }
+    .label { font-family: sans-serif; font-size: 17px; fill: #000000; }
+    .path { fill: none; stroke: #000000; stroke-width: 3; }
   </style>
-
-  <rect x="10" y="40" width="190" height="70" fill="#000000"/>
-  <rect x="12" y="42" width="186" height="66" fill="#ffffff"/>
-  <text x="105" y="72" text-anchor="middle" class="compact">Reference Clock</text>
-  <text x="105" y="95" text-anchor="middle" class="small-compact">UTC(k), GNSS reference</text>
-
-  <rect x="30" y="190" width="170" height="70" fill="#000000"/>
-  <rect x="32" y="192" width="166" height="66" fill="#ffffff"/>
-  <text x="115" y="222" text-anchor="middle" class="text">Host/BMC</text>
-  <text x="115" y="245" text-anchor="middle" class="small">control and logs</text>
-
-  <rect x="330" y="90" width="210" height="120" fill="#000000"/>
-  <rect x="332" y="92" width="206" height="116" fill="#ffffff"/>
-  <text x="435" y="145" text-anchor="middle" class="compact">Device Under Test</text>
-  <text x="435" y="170" text-anchor="middle" class="small">TimeCard</text>
-
-  <rect x="700" y="40" width="170" height="70" fill="#000000"/>
-  <rect x="702" y="42" width="166" height="66" fill="#ffffff"/>
-  <text x="785" y="72" text-anchor="middle" class="compact">Counters / TIC</text>
-  <text x="785" y="95" text-anchor="middle" class="small">time interval error</text>
-
-  <rect x="700" y="190" width="170" height="70" fill="#000000"/>
-  <rect x="702" y="192" width="166" height="66" fill="#ffffff"/>
-  <text x="785" y="222" text-anchor="middle" class="text">Analyzer</text>
-  <text x="785" y="245" text-anchor="middle" class="small">ADEV, TDEV, MTIE</text>
-
-  <rect x="200" y="72" width="78" height="6" fill="#000000"/>
-  <rect x="272" y="75" width="6" height="48" fill="#000000"/>
-  <rect x="275" y="117" width="48" height="6" fill="#000000"/>
-  <polygon points="330,120 318,113 318,127" fill="#000000"/>
-  <rect x="200" y="222" width="78" height="6" fill="#000000"/>
-  <rect x="272" y="177" width="6" height="48" fill="#000000"/>
-  <rect x="275" y="177" width="48" height="6" fill="#000000"/>
-  <polygon points="330,180 318,173 318,187" fill="#000000"/>
-  <rect x="540" y="117" width="88" height="6" fill="#000000"/>
-  <rect x="622" y="75" width="6" height="48" fill="#000000"/>
-  <rect x="625" y="72" width="68" height="6" fill="#000000"/>
-  <polygon points="700,75 688,68 688,82" fill="#000000"/>
-  <rect x="540" y="177" width="88" height="6" fill="#000000"/>
-  <rect x="622" y="180" width="6" height="48" fill="#000000"/>
-  <rect x="625" y="222" width="68" height="6" fill="#000000"/>
-  <polygon points="700,225 688,218 688,232" fill="#000000"/>
-  <rect x="205" y="91" width="100" height="22" fill="#ffffff"/>
-  <rect x="205" y="159" width="100" height="22" fill="#ffffff"/>
-  <rect x="580" y="91" width="90" height="22" fill="#ffffff"/>
-  <rect x="575" y="159" width="100" height="22" fill="#ffffff"/>
-  <text x="255" y="108" text-anchor="middle" class="label">reference input</text>
-  <text x="255" y="176" text-anchor="middle" class="label">control interface</text>
-  <text x="625" y="108" text-anchor="middle" class="label">1PPS / ToD</text>
-  <text x="625" y="176" text-anchor="middle" class="label">10 MHz / logs</text>
+  <rect class="box" x="10" y="20" width="240" height="80"/>
+  <text class="title" x="130" y="53" text-anchor="middle">Applied reference</text>
+  <text class="detail" x="130" y="80" text-anchor="middle">declared source</text>
+  <rect class="box" x="690" y="20" width="300" height="80"/>
+  <text class="title" x="840" y="53" text-anchor="middle">Measurement reference</text>
+  <text class="detail" x="840" y="80" text-anchor="middle">calibration and uncertainty</text>
+  <rect class="box" x="330" y="190" width="260" height="100"/>
+  <text class="title" x="460" y="230" text-anchor="middle">TimeCard under test</text>
+  <text class="detail" x="460" y="261" text-anchor="middle">declared measurement point</text>
+  <rect class="box" x="690" y="190" width="300" height="100"/>
+  <text class="title" x="840" y="230" text-anchor="middle">Measurement instrument</text>
+  <text class="detail" x="840" y="261" text-anchor="middle">applicable timing metrics</text>
+  <rect class="box" x="10" y="210" width="240" height="80"/>
+  <text class="title" x="130" y="243" text-anchor="middle">Host or controller</text>
+  <text class="detail" x="130" y="270" text-anchor="middle">configuration and logs</text>
+  <path class="path" d="M250 60 H285 V220 H320"/>
+  <polygon points="330,220 318,213 318,227" fill="#000000"/>
+  <text class="label" x="274" y="155" text-anchor="end">input</text>
+  <path id="measurement-reference-path" class="path" d="M840 100 V180"/>
+  <polygon points="840,190 833,178 847,178" fill="#000000"/>
+  <text class="label" x="855" y="150">comparison</text>
+  <path class="path" d="M590 240 H680"/>
+  <polygon points="690,240 678,233 678,247" fill="#000000"/>
+  <text class="label" x="640" y="223" text-anchor="middle">output</text>
+  <path class="path" d="M250 250 H320"/>
+  <polygon points="330,250 318,243 318,257" fill="#000000"/>
+  <text class="label" x="290" y="278" text-anchor="middle">control</text>
+  <text class="detail" x="500" y="329" text-anchor="middle">Signal, packet, or host-interface adapters depend on the implementation.</text>
+  <text class="detail" x="500" y="352" text-anchor="middle">Identify shared references and correlated errors; no particular interface is mandatory here.</text>
 </svg>

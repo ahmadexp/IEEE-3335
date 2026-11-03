@@ -17,15 +17,21 @@ Suppliers **shall** publish performance declarations for each conforming TimeCar
 
 Each required performance declaration **shall** include at least one bounded value or limit. Typical values may be provided in addition to, but not instead of, the bounded value.
 
+A declaration using a performance class or mask **shall** identify the governing document and edition, applicable clause, class or mask identifier, parameter set, observation or averaging intervals, filtering, and acceptance rule. Incorporation by reference is permitted as specified in 4.6; it does not remove the need to identify implementation-specific conditions. Access to underlying test records is governed by 4.7 and 4.8 and is distinct from publication of the performance declaration.
+
 ## 6.2 Performance Classes
 
 This standard uses a reporting-only base performance model. A TimeCard conforms to the base performance requirements when it reports the applicable metrics in this clause using the declared measurement methods and operating conditions.
 
-Named numeric performance classes are not defined by this standard. A supplier, procurement profile, or application profile may define additional numeric classes. If an implementation claims such a class, the class **shall** identify all applicable metric limits, measurement points, operating states, and environmental conditions.
+Named numeric performance classes are not defined by this standard. A supplier, procurement profile, application profile, or external standard may define additional numeric classes. If an implementation claims such a class, the class **shall** identify all applicable metric limits, measurement points, operating states, and environmental conditions, with the reference details required by 4.6 and 6.1.
 
 ## 6.3 General Measurement Requirements
 
 Measurement results used to support conformance claims **shall** be metrologically traceable to a recognized national metrology institute or another declared reference through a documented calibration chain. Measurement methods **shall** conform to the applicable definitions in IEEE Std 1139-2022 [2], IEEE Std 1193-2022 [3], ITU-T Recommendation G.810 (08/1996) [10], or ITU-T Recommendation G.8260 (11/2022) [11] when those metrics are used.
+
+The reference arrangement **shall** be suitable for the measurand, declared limit, and uncertainty of the reported result. Suitable arrangements may include calibrated laboratory references, characterized GNSS references, or characterized GNSS simulators. A direct UTC(k) connection or measurement at a national metrology institute is not required. The report **shall** identify the reference timescale or frequency, calibration and reference relationships, and relevant uncertainty contributions. Use of GNSS or a simulator does not itself establish traceability or an absolute UTC reference.
+
+A measurement relative to an applied input reference **shall** be distinguished from an absolute time-accuracy claim relative to UTC or another external timescale. The report **shall** identify shared reference paths and account for correlated errors that can cancel in an input-to-output comparison. Evidence of relative transfer performance **shall** not be presented as evidence of absolute time accuracy without the additional reference relationship and uncertainty needed for that claim.
 
 The measurement uncertainty, instrument noise floor, measurement bandwidth, averaging configuration, sample count, data treatment, and environmental conditions **shall** be documented with the reported result. The measurement point **shall** be identified in enough detail that another laboratory can reproduce the setup.
 
@@ -82,19 +88,21 @@ Noise tolerance **shall** be stated separately from electrical noise immunity an
 
 Time stability declarations **shall** characterize variation of the TimeCard time output or timestamp stream over a defined observation interval.
 
-Suppliers **shall** report MTIE for time outputs or timestamp streams for which bounded time-error behavior is claimed. The MTIE declaration **shall** include observation intervals, measurement point, lock state, environmental conditions, and applicable limit or measured result.
+Suppliers **shall** report MTIE for time outputs or timestamp streams for which bounded time-error variation is claimed, or when required by a claimed performance class. The MTIE declaration **shall** include observation intervals, measurement point, lock state, environmental conditions, and applicable limit or measured result. MTIE **shall** not be represented as an absolute time-error bound; absolute time-error declarations are specified in 6.4.1.
 
 Suppliers should report TDEV for time outputs or timestamp streams where stochastic time deviation is operationally relevant. TDEV declarations **shall** include averaging intervals and the method used to compute the result.
 
 ## 6.6 Frequency Stability and Phase Noise
 
-Frequency stability declarations **shall** characterize the frequency output or local timing function over one or more averaging intervals.
+Frequency stability declarations **shall** characterize the frequency output or local timing function at a declared measurement point over one or more averaging intervals. Characterization of inaccessible internal components is not required independently of a claim about those components.
 
 Suppliers **shall** report frequency accuracy and temperature stability for the local timing function or for each frequency output for which a frequency-performance claim is made.
 
-Suppliers should report ADEV for frequency outputs or oscillator functions where long-term or short-term frequency stability is relevant. ADEV declarations **shall** include the averaging intervals and measurement point.
+Suppliers should report ADEV where fractional-frequency stability at the declared TimeCard measurement point is relevant to the claim. ADEV declarations **shall** include the averaging intervals and measurement point. ADEV, TDEV, and fractional-frequency offset characterize different quantities and are not interchangeable.
 
 For periodic outputs such as 10 MHz, suppliers should report phase noise as a function of offset frequency. Phase-noise declarations **shall** identify carrier frequency, offset-frequency range, measurement bandwidth, instrument configuration, and measurement point.
+
+A claimed application profile may specify time-domain jitter or wander instead of a phase-noise requirement. The supplier **shall** identify the quantity actually evaluated and the applicable method. When a result is converted between time and frequency domains, the conversion **shall** identify its assumptions, weighting or filtering, integration limits, and uncertainty. An integrated time-domain result **shall** not be represented as verification of a spectral mask unless the method establishes compliance with that mask over its specified offset-frequency range.
 
 ## 6.7 Pulse and Event Timing
 
@@ -104,9 +112,11 @@ For pulse outputs such as 1PPS, suppliers **shall** document:
 - Output polarity.
 - Pulse width range.
 - Rise and fall time measurement method.
-- RMS time jitter or another explicitly defined short-term timing variation metric.
+- Time error relative to the declared reference, including constant and dynamic components where separately estimable, and the stated bound or timing-variation statistic.
 - Peak-to-peak or bounded time variation when claimed.
 - Alignment to other providing interfaces of the same TimeCard.
+
+Pulse timing declarations **shall** identify sample interval, observation duration, measurement bandwidth, reference model, and treatment of fixed offsets and missing events. Domain-specific jitter or wander results may supplement these declarations when the applicable definition and sampling method support the reported bandwidth.
 
 For event-capture or timestamping inputs, suppliers **shall** document the event measurement point, timestamp resolution, granularity, latency, fixed corrections, and known uncertainty contributors. Any claimed TimeCard timestamp accuracy **shall** also satisfy 6.4.1.
 
@@ -120,11 +130,15 @@ For each holdover declaration, the supplier **shall** document:
 - TimeCard synchronization source and lock duration before holdover begins.
 - Minimum warm-up and stabilization conditions before holdover begins.
 - Measurement point.
-- Maximum time error or MTIE versus elapsed holdover time.
+- Bounded time error versus elapsed holdover time, reference timescale, and whether the bound is absolute or relative to the error at holdover entry.
+- Initial time error and uncertainty, or an explicit statement that the initial error is unknown and the result establishes only an initial-offset-relative bound.
+- MTIE versus observation interval when bounded time-error variation or a performance class requiring MTIE is claimed.
 - Temperature profile, sensor location, rate of change, dwell conditions, and input-voltage conditions during holdover.
 - Behavior when the reference is restored, including qualification, reacquisition, phase and frequency transients, continuity, and the condition for returning to the locked state.
 
-MTIE as defined by ITU-T Recommendation G.810 (08/1996) [10] or ITU-T Recommendation G.8260 (11/2022) [11] **shall** be used when reporting bounded holdover time error. Other holdover indicators, such as aging rate or estimated drift, may be reported in addition to MTIE.
+MTIE declarations **shall** use the definitions in ITU-T Recommendation G.810 (08/1996) [10] or ITU-T Recommendation G.8260 (11/2022) [11]. MTIE measures variation and does not include a constant initial offset; it **shall** not replace the holdover time-error envelope. An initial-offset-relative result **shall** not be described as an absolute time-error bound. Other holdover indicators, such as aging rate or estimated drift, may be reported in addition to the applicable error and stability declarations.
+
+An applicable holdover specification may supply limits and test conditions by reference under 4.6. The declaration **shall** identify any conditions or reporting fields above that the referenced specification does not cover.
 
 ## 6.9 Dynamic Operation
 
@@ -142,6 +156,8 @@ Suppliers **shall** characterize timing behavior during operational transitions 
 - A host-clock discontinuity that invalidates a host-time correlation or a sample awaiting delivery.
 
 For each transition, the supplier **shall** document whether the unified timescale remains continuous and whether a discontinuity can occur in phase or in a time derivative of phase. The documentation **shall** bound applicable phase steps, frequency steps, frequency-slope changes, kinks or corners, and recovery transients, and **shall** identify how each condition is reported through the control interface.
+
+An applicable external specification may supply transition requirements by reference under 4.6. The supplier **shall** identify its coverage and separately characterize applicable transitions not covered by it, including host and driver lifecycle transitions.
 
 ## 6.10 Environmental and host-system effects
 
@@ -161,7 +177,7 @@ When time-transfer performance is declared at a host API or software measurement
 
 ## 6.11 Performance Documentation Checklist
 
-The performance section of a datasheet or conformance statement **shall** include the following items when applicable:
+The performance section of a datasheet or conformance statement **shall** include the following items when applicable, together with the governing specification, edition, class or mask, configuration, and acceptance rule required by 6.1:
 
 | Category | Required reporting content |
 |----------|-----------------------------|
@@ -170,9 +186,9 @@ The performance section of a datasheet or conformance statement **shall** includ
 | Time stability | MTIE and applicable TDEV intervals, measurement point, state, environmental profile |
 | Frequency stability | Frequency accuracy, temperature stability, applicable ADEV intervals, measurement point |
 | Phase noise | Carrier frequency, offset-frequency range, measurement bandwidth, phase-noise curve or limits |
-| Pulse timing | Edge definition, pulse width, rise/fall time, time jitter definition, alignment to unified timescale |
+| Pulse timing | Edge definition, pulse width, rise/fall time, time-error bound and timing-variation statistic, sampling and bandwidth, alignment to unified timescale |
 | Noise transfer | Input and output measurement points, stimulus, operating state, transfer response or mask, bandwidth, uncertainty |
 | Noise tolerance | Input measurement point and nominal conditions, stimulus and duration, acceptance criteria, tolerance mask or threshold, uncertainty |
-| Holdover | Entry condition, prior lock duration, MTIE/error versus elapsed time, temperature profile |
+| Holdover | Entry condition, prior lock duration, initial error and uncertainty, absolute or initial-offset-relative error envelope, applicable MTIE intervals, temperature profile |
 | Transitions | Lock acquisition, failover, holdover exit, phase steps, reporting mechanism |
 | Environment | Temperature, voltage, vibration, airflow, and host-integration assumptions |
