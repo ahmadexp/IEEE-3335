@@ -2,6 +2,8 @@
 
 This file is the working-group action register for the Markdown draft. It is not part of the proposed standard. Status reflects the repository as of the latest editorial pass; `TBD` owners require working-group assignment.
 
+The 3 November 2026 revision applies the editorial and technical refinements from Kevin Godfrey's review. [Applied dispositions](references/KEVIN_GODFREY_FEEDBACK_20261030_DISPOSITION.md) account for each comment. [Eight WG decisions and three reference dependencies](references/KEVIN_GODFREY_WG_DECISIONS_20261103.md) are listed separately; no approval is implied by the revised PDF.
+
 ## Editorial and process basis
 
 - IEEE SA Standards Board Operations Manual, Clause 6: normative and informative material, draft-status notices, requirement words, document structure, and normative references. <https://standards.ieee.org/about/policies/opman/sect6/>
@@ -80,6 +82,7 @@ This file is the working-group action register for the Markdown draft. It is not
 | AI-029 | P1 | Closed | TBD | Close editorial traceability gaps found in the publication-readiness rescan. | Clause 1 lists every annex and applies the optional timing-flow scope through Clause 9; Clause 3 defines every baseline control status; Clauses 4 through 6 align timestamp services and declarations; conditional control objects appear in the requirements index; Annexes B and D cover control, security, and noise-response evidence. |
 | AI-030 | P0 | Source identity corrected; IEEE SA disposition needed | WG Chair / IEEE SA project editor | Resolve IPMI normative-reference eligibility. | Review the exact v2.0, Revision 1.1, E7 source and its embedded terms; record an acceptable reference or alternative technical disposition in the reference audit before ballot. |
 | AI-031 | P2 | Open | TBD | Complete per-line numbering of review tables and other non-paragraph content. | A review build provides unambiguous line references for table cells, displayed equations, and figure captions without collisions or altered normative text. |
+| AI-032 | P1 | Draft refinements applied; WG decisions open | TBD | Resolve Kevin Godfrey's review. | Confirm the implemented dispositions with the reviewer and resolve WG-K01 through WG-K08 and REF-K01 through REF-K03 in the separate decision list, including the existing P0 interface and reference dependencies. No new 1PPS numeric baseline, control object, or mandatory physical test point is adopted by the editorial pass. |
 
 ## Recommended sequence
 

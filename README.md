@@ -55,6 +55,8 @@ To generate the complete proposal:
 make
 ```
 
+To select a particular Pandoc executable, use `make PANDOC=/path/to/pandoc`. The executable and LaTeX distribution must support the host architecture. Regenerating changed SVG figures also requires ImageMagick; `FIGURE_CONVERTER` can select its executable. Up-to-date rendered figure PDFs are kept in `figures/rendered/`.
+
 This command will:
 1. Dynamically find the front matter, all `01` through `10` clauses, and all annex `README.md` files.
 2. Sort them numerically and alphabetically.
@@ -77,5 +79,7 @@ Supporting readiness artifacts:
 - `references/P3335_PAR_SCOPE_PURPOSE.md` records the public PAR scope and purpose trace used for Clause 1.
 - `references/NORMATIVE_REFERENCE_AUDIT.md` records the current Clause 2 reference audit.
 - `references/PUBLICATION_REVIEW_20260917.md` records the September 17 review, corrections, validation, and remaining decisions.
+- `references/KEVIN_GODFREY_FEEDBACK_20261030_DISPOSITION.md` records the changes following Kevin Godfrey's review and accounts for each comment.
+- `references/KEVIN_GODFREY_WG_DECISIONS_20261103.md` separates the remaining WG decisions and reference dependencies from the applied draft changes.
 - `figures/` contains source-controlled figure sources and rendered assets used by the draft.
 - `REQUIREMENTS_INDEX.md` is generated from normative clauses with `python3 scripts/requirements_index.py`.

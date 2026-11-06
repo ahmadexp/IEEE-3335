@@ -47,3 +47,9 @@ This bibliography identifies background material useful for designing, applying,
 - **[B29]** Apple Inc., *DriverKit*, Apple Developer Documentation. [<https://developer.apple.com/documentation/driverkit>].
 - **[B30]** Apple Inc., *PCIDriverKit*, Apple Developer Documentation. [<https://developer.apple.com/documentation/pcidriverkit>].
 - **[B31]** Linux kernel documentation, *PTP hardware clock infrastructure for Linux*. [<https://docs.kernel.org/driver-api/ptp.html>].
+
+## C.6 Additional timing references
+
+- **[B32]** BIPM, *Resolution 5 of the 28th CGPM (2026): On the technical actions needed to ensure the continuity of UTC*. [<https://www.bipm.org/en/cgpm-2026/resolution-5>].
+- **[B33]** ITU-T, *G.Sup92: Synchronization for data centres*, official catalog and edition history. The catalog consulted on 3 November 2026 lists the 07/2026 edition as approved and awaiting publication. This entry references the public catalog, not unavailable technical provisions. [<https://www.itu.int/rec/T-REC-G.Sup92/en>].
+- **[B34]** ITU-T Recommendation G.8272/Y.1367 (07/2025), *Timing characteristics of primary reference time clocks*, Appendix I, reference arrangements for performance testing. This dated edition supplies the informative examples cited here; later amendments are not incorporated by this entry. [<https://www.itu.int/rec/T-REC-G.8272-202507-I/en>].

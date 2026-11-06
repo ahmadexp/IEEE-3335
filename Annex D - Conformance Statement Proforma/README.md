@@ -25,6 +25,7 @@ While this document remains an unapproved draft, this proforma is available for 
 | Date of statement | To be completed |
 | Statement revision | To be completed |
 | Supporting documentation | To be completed |
+| Supporting-record revisions and access procedure | To be completed; distinguish public declarations from controlled-access evidence |
 
 ## D.3 Conformance profile claims
 
@@ -98,6 +99,8 @@ Complete this section for each baseline control mapping and each claimed managem
 
 For each applicable metric, identify the synchronization source, reference timescale, operating state, environmental range, warm-up and lock conditions, observation or averaging intervals, bandwidth, sample count or confidence basis, and measurement method required by Clause 6. Include at least one bounded value, the measurement uncertainty, and the decision rule used to evaluate the bound. Documentation references may supply these details when they identify the exact configuration and result.
 
+For each claimed class or mask, record the governing document and edition, clause, identifier, parameter set, intervals, filtering, and acceptance rule. Identify any P3335 requirements not covered by the referenced specification. For reference measurements, distinguish relative input-to-output performance from absolute time accuracy and identify shared-reference correlations. TDEV and MTIE values are expressed in seconds or labelled submultiples.
+
 | Metric | Declaration record |
 |--------|--------------------|
 | Time accuracy | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; bound: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
@@ -110,10 +113,12 @@ For each applicable metric, identify the synchronization source, reference times
 | Pulse timing variation | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; statistic and bound: \_\_\_\_\_\_\_; bandwidth and sample count: \_\_\_\_\_\_\_; uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Noise transfer | Input and output points: \_\_\_\_\_\_\_; stimulus and range: \_\_\_\_\_\_\_; state and configuration: \_\_\_\_\_\_\_; response or mask: \_\_\_\_\_\_\_; uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Noise tolerance | Input point and nominal conditions: \_\_\_\_\_\_\_; stimulus and duration: \_\_\_\_\_\_\_; acceptance criteria: \_\_\_\_\_\_\_; threshold or mask: \_\_\_\_\_\_\_; uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
-| Holdover error | Entry condition: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; bound versus elapsed time: \_\_\_\_\_\_\_; environment: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
+| Holdover error | Entry condition and initial error/uncertainty: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; absolute or initial-offset-relative envelope: \_\_\_\_\_\_\_; elapsed duration: \_\_\_\_\_\_\_; environment: \_\_\_\_\_\_\_; method and evidence: \_\_\_\_\_\_\_ |
 | Transition behavior | Transition: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; phase/frequency bound: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 
 ## D.8 Environment and lifecycle declarations
+
+Use the units in 9.1, including degrees Celsius, percent relative humidity with condensation condition, metres or labelled submultiples, pascals or decimal multiples, kilograms or submultiples, watts, and volts. Identify measurement locations and absolute or reference-relative pressure as applicable.
 
 | Category | Declaration and evidence |
 |----------|--------------------------|
@@ -128,17 +133,22 @@ For each applicable metric, identify the synchronization source, reference times
 | EMC and ESD conformity claims | Standard, edition, level, and configuration: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Reliability model or field-data basis | Metric and method: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Service-life items | Item, interval, and maintenance action: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
+| Battery or other backup energy, if included | Preserved functions and duration: \_\_\_\_\_\_\_; battery chemistry/rating: \_\_\_\_\_\_\_; service/disposal information and transport-documentation references: \_\_\_\_\_\_\_ |
 | Calibration interval or method | Interval, reference, method, and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 
 ## D.9 Test evidence and deviations
 
 Complete one record for each applicable clause, profile, or declared limit:
 
+Functional and measured-performance claims need the corresponding test evidence under 4.8. Documentary inspection alone does not demonstrate those claims. Identify representative configurations and the basis for applying their evidence to other configurations or units; distinguish qualification evidence from production screening.
+
 | Field | Supplier response |
 |-------|-------------------|
 | Applicable clause or claim | To be completed |
 | Verification method | Test / inspection / analysis / documentation |
 | Report identifier | To be completed |
+| Tested configuration and covered population | To be completed; identify the basis for extending representative evidence |
+| Evidence location, revision, and access authority | To be completed |
 | Result | Pass / fail / not applicable |
 | Deviation, waiver, or limitation | To be completed |
 

@@ -15,7 +15,7 @@ Each test record should identify:
 - Declared limit, decision rule, and treatment of uncertainty.
 - Result, retained evidence, and any deviation from the planned method.
 
-A representative arrangement is shown in Figure 3.
+A representative arrangement is shown in Figure 3. Signal and protocol adapters depend on the implemented interfaces; the illustration does not require a GNSS input, physical output, or particular analysis metric. Reference origin, such as a characterized laboratory or GNSS reference, is distinct from the interface carrying that reference. The measurement reference may be independent of the applied input reference; identify any common source and correlated error contributions.
 
 ![Representative TimeCard test fixture](figures/rendered/test-fixture.pdf)
 
@@ -26,6 +26,14 @@ The environment should be controlled and recorded at a level appropriate to the 
 The measurement system should have sufficient bandwidth, noise floor, resolution, stability, and uncertainty to distinguish the declared limit. A fixed ratio between instrument uncertainty and the declared limit is not assumed; the test report should justify the selected system and decision rule.
 
 Cable delay, connector adapters, splitters, terminations, and reference-distribution paths should be characterized when their contribution is material. Corrections should be stated with sign convention and uncertainty.
+
+When an auxiliary test point or fixture is used, document its connection, loading, safe access procedure, and calibrated relationship to the claimed measurement point. Prefer non-destructive access, including a specified fixture where ordinary probes are unsuitable. For logical interfaces, describe how independent observations verify the claimed timing behavior rather than relying solely on the device's own status or error estimate. This guidance does not require new physical test points or unimplemented signal types.
+
+### B.2.1 G.703 measurement interface context
+
+G.703 (04/2016), including Amendment 1 (05/2021) [9], distinguishes a distribution interface in 19.1 from the unbalanced 50 ohm measurement interface in 19.2. For the latter, the timing marker is the leading-edge midpoint, rise time is below 5 ns, pulse width is 100 ns to 500 ms, and the stated measurement-cable length is at most 3 m. Table 19-6 supplies voltage information; its informative status is distinct from the binding voltage limits in P3335 7.3.2.
+
+This summary does not change the P3335 profile or imply G.703 conformance. Test 7.3.2 as written, and separately evaluate any claimed G.703 conformance under 7.3.3 against the dated reference. The G.703 requirements control the G.703 claim, including qualifications not reproduced here. The measurement-cable assumption is not a universal limit on antenna cables or other distribution interfaces. The [official ITU catalog](https://www.itu.int/rec/T-REC-G.703-202105-I!Amd1/en) provides the freely available source.
 
 ## B.3 Functional verification
 
@@ -50,6 +58,9 @@ P3335 does not prescribe a universal test that proves a reference valid under ev
 | Format and epoch | Digital time output | Decode values across startup, normal operation, and a relevant boundary such as second rollover. | Format, epoch, timescale, validity, and rollover agree with the declaration. |
 | Discontinuity indication | Interface that can step or become invalid | Cause a declared failover, manual adjustment, reset, or fault. | Output behavior and validity indication agree with 7.3.4 and the supplier declaration. |
 | PTM behavior | PCIe Host Mapping profile with PTM | Negotiate PTM and compare its represented measurement point with the unified timescale. | Capability discovery, timestamps, correction model, and uncertainty agree with the declaration. |
+| PTP output | Implemented PTP providing interface | Exercise the declared protocol/profile, timestamping points, timescale fields, and validity behavior under normal operation and relevant transitions. | Behavior satisfies the claimed protocol/profile and the declared time-transfer limits. |
+| IRIG output | Implemented IRIG providing interface | Decode the claimed code, modulation, on-time marker, and status during normal operation and relevant transitions. | Format and marker agree with the claimed IRIG options and declared alignment. |
+| Other host or logical output | Implemented non-PTM host or logical timing interface | Observe timestamp delivery and its declared measurement point; exercise rollover, invalid state, and a relevant host transition. | Format, validity, latency/correction model, alignment, and continuity agree with the mapping and applicable Clause 6 declarations. |
 
 ### B.3.3 Control interfaces
 
@@ -96,6 +107,8 @@ Security tests should use controlled fixtures, test credentials, and recoverable
 
 Compare the declared output or timestamping measurement point with the declared reference timescale. For TimeCard timestamp accuracy, apply events at known instants and compare the assigned timestamps with the reference time at those instants. Record enough data to support the stated maximum, percentile, RMS, or confidence result. Include fixed-delay corrections, uncertainty between the TimeCard synchronization source and reference timescale, event-generation uncertainty, and measurement-system uncertainty. Verify that resolution and granularity are reported separately from the bounded TimeCard timestamp-accuracy result.
 
+A characterized GNSS reference or simulator may be suitable; Appendix I of the dated G.8272 (07/2025) edition [B34] illustrates reference arrangements. Document the simulator's RF-to-timing-output alignment and reference uncertainty when those paths are used. Distinguish a transfer comparison relative to the applied stimulus from an absolute UTC claim, and account for any common-reference cancellation as required by 6.3.
+
 ### B.4.2 ADEV and TDEV
 
 Acquire a continuous phase or time-error record for a duration sufficient to support the declared averaging intervals. State the sample interval, estimator, overlap, detrending, gap handling, and confidence basis. Compare the resulting curve or points with the bounded declaration.
@@ -107,6 +120,8 @@ Acquire the time-error sequence at the declared measurement point and compute MT
 ### B.4.4 Phase noise
 
 Measure the declared carrier with an analyzer configuration whose residual floor is characterized. Record offset range, resolution and measurement bandwidths, cross-correlation settings, averaging, spurs, and instrument floor. Compare the trace with the declared mask or points.
+
+If the applicable performance profile instead specifies time-domain jitter or wander, evaluate that quantity using its stated bandwidth and method. For a converted result, retain the conversion assumptions, filtering, integration limits, and uncertainty. Do not infer compliance with every point of a spectral mask from an integrated statistic alone.
 
 ### B.4.5 Pulse timing variation
 
@@ -122,7 +137,7 @@ Apply the declared timing-variation profile at the receive-interface measurement
 
 ### B.4.8 Holdover
 
-Lock the TimeCard for at least the declared preconditioning interval, record initial time and frequency error, remove all applicable references, and observe the declared holdover duration. Record the temperature and power profile. Compare time error or MTIE versus elapsed holdover time with the supplier's bound, then verify reference-restoration behavior.
+Lock the TimeCard for at least the declared preconditioning interval, record initial time and frequency error and uncertainty, remove all applicable references, and observe the declared holdover duration. Record the temperature and power profile. Compare the absolute or initial-offset-relative time-error envelope with the corresponding supplier bound. Compute MTIE separately when required by the claimed variation bound or performance class, identifying its observation intervals and the elapsed holdover record used. Do not substitute MTIE for the error envelope. Verify reference-restoration behavior and any additional conditions in a referenced holdover profile.
 
 ## B.5 Environmental and transition tests
 
@@ -132,4 +147,4 @@ Transition testing should cover each state change identified in 6.9. The record 
 
 ## B.6 Reporting
 
-The final report should include raw or losslessly transformed data, processing software and version, configuration files, plots with units and uncertainty, and a clear mapping from every conclusion to the applicable requirement and declared limit. When data cannot be shared, the report should identify the retained evidence and access authority.
+The retained evidence package should include raw or losslessly transformed data, processing software and version, configuration files, plots with units and uncertainty, and a clear mapping from every conclusion to the applicable requirement and declared limit. The report should identify these records, their revisions, and the access authority when they are retained separately or shared under confidentiality arrangements. Public availability of the conformance statement does not require public release of the entire evidence package. A restricted-access package still needs to support evaluation of the claim under 4.7 and 4.8.

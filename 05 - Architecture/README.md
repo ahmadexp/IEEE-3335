@@ -15,7 +15,7 @@ A conforming TimeCard **shall** include the following externally observable capa
 - A local timing function capable of maintaining a unified timescale.
 - At least one timing output providing interface.
 - At least one control interface.
-- Published performance, interface, environmental, and conformance information sufficient for an implementer or operator to evaluate the claimed behavior.
+- Performance, interface, environmental, and conformance information sufficient for an implementer or operator to evaluate the claimed behavior, with publication and access as specified in 4.7, 6.1, and 5.10.
 
 A TimeCard may include one or more timing receive interfaces, one or more time-transfer interfaces, one or more host interface mappings, and one or more reference-selection or ensemble algorithms.
 
@@ -51,6 +51,8 @@ The time generator produces the TimeCard's unified timescale. It may include cou
 The time generator **shall** support timestamp representations that permit unambiguous duration computation over the declared operating interval. If an implementation exposes a timescale that is not TAI, UTC, or the IEEE 1588-2019 [4] PTP timescale, the implementation **shall** document the mapping to the declared reference timescale.
 
 The implementation **shall** document the supported timestamp range, epoch, granularity, resolution, and behavior at discontinuities such as leap seconds, leap smearing, holdover entry, reference failover, or manual time steps.
+
+Timescale-conversion documentation **shall** identify the validity interval of each applied UTC offset or conversion rule and the behavior when that information is unknown, expired, or inconsistent. Historical timestamp conversion and interoperability with legacy timescale representations **shall** be distinguished from assumptions about future UTC adjustments. The continuous-UTC decision described in 10.3.4 does not remove these conversion and validity obligations.
 
 ### 5.3.3 Timestamping Facility
 
@@ -132,17 +134,17 @@ Annex E provides informative examples of applying these requirements to Windows,
 
 ## 5.7 Performance and Measurement Architecture
 
-Performance requirements in this standard are expressed as reporting and measurement requirements unless a technical clause explicitly states a numeric limit. This allows TimeCards to serve different use cases while making supplier claims comparable.
+Performance requirements in this standard are expressed as reporting and measurement requirements unless a technical clause explicitly states a numeric limit or incorporates one through a dated normative reference. Separately claimed performance classes are identified as specified in 4.6. An informative citation does not introduce a numeric requirement. This allows TimeCards to serve different use cases while making supplier claims comparable.
 
 An implementation **shall** identify the measurement point for each declared metric. Metrics **shall** be reported with enough context to reproduce or evaluate the claim, including TimeCard synchronization source, measurement bandwidth, observation interval, environmental conditions, warm-up conditions, and lock state.
 
 The following performance categories **shall** be addressed when applicable to the implemented interfaces:
 
 - Time accuracy relative to a declared reference.
-- Time stability, including MTIE and TDEV where applicable.
-- Frequency stability, including ADEV where applicable.
+- Time stability.
+- Frequency stability.
 - Phase noise for periodic frequency outputs where applicable.
-- Time jitter for pulse outputs where applicable.
+- Pulse and event time error and timing variation where applicable.
 - Noise transfer from each receive interface used for synchronization to each applicable providing interface.
 - Noise tolerance of each receive interface used for synchronization.
 - Holdover error versus elapsed time.
@@ -165,6 +167,8 @@ An implementation may include optional features or vendor-specific extensions. A
 
 Vendor-specific extensions **shall** be identified by a documented namespace, identifier range, capability, or version that distinguishes standardized P3335 behavior from implementation-specific behavior. Reserved values, register fields, message types, and identifiers **shall** not be assigned to extension behavior.
 
+A physical implementation may provide local status indicators, such as LEDs for power, reference availability, lock, or pulse activity. When indicators are provided, the supplier **shall** document their meaning, update behavior, and representation of fault or invalid state. Local indicators do not replace the required control-interface status. A pulse-activity indicator alone does not establish valid or synchronized time.
+
 ## 5.10 Documentation Requirements
 
 Suppliers **shall** provide documentation sufficient to evaluate and integrate a conforming TimeCard. The documentation **shall** include:
@@ -172,7 +176,7 @@ Suppliers **shall** provide documentation sufficient to evaluate and integrate a
 - Conformance statement required by Clause 4.
 - Interface descriptions for all receive, providing, host, and control interfaces.
 - Register maps, information models, schemas, command descriptions, or API descriptions needed to use the implemented control interfaces.
-- PLL or disciplining-loop type and bandwidth, or a statement that the implementation does not use such a loop.
+- Externally observable disciplining response, applicable bandwidth or response masks, operating modes and limitations, or a statement that no disciplining loop is used. Proprietary loop topology and algorithms are not required; a single bandwidth value is insufficient when it does not characterize the claimed response.
 - Warm-up time to first usable output and warm-up time to declared full performance.
 - Lock acquisition time, failover behavior, holdover entry and exit behavior, and recovery behavior.
 - Declared performance metrics and measurement points required by Clause 6.
@@ -180,7 +184,7 @@ Suppliers **shall** provide documentation sufficient to evaluate and integrate a
 - Reference-chain, calibration, measurement-point, and uncertainty information sufficient to support system-level traceability analysis, or an explicit statement identifying which information is unavailable.
 - All optional features claimed and all conditional requirements exercised by those claims.
 
-The conformance statement is subject to the availability requirements in 4.7. Supporting integration documentation should be publicly available for commercial products and made available to integrators for non-commercial, embedded, or custom implementations.
+The conformance statement and supporting records are subject to the publication and access provisions in 4.7; performance declarations are subject to 6.1. Supporting integration documentation should be available to prospective evaluators and integrators, either publicly or through documented controlled access. The availability policy does not alter applicable safety, regulatory, or other independently binding disclosure obligations.
 
 ## 5.11 Time-Flow Narrative (Informative)
 

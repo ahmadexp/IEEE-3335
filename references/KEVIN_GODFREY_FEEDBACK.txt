@@ -1,0 +1,181 @@
+KEVIN GODFREY FEEDBACK SUMMARY
+IEEE P3335 unofficial proposal
+Revision date: 3 November 2026
+
+51 review items: 34 applied, 6 partially addressed, and 11 deferred.
+
+Applied means incorporated into the unofficial draft, not approved by the
+Working Group (WG) or accepted by the reviewer.
+
+APPLIED (34)
+
+KG-04: Added an informative G.703 measurement-interface summary and source
+link, without changing the existing 1PPS requirements.
+
+KG-08: Clarified that backup energy is optional and distinguished retained
+configuration, RTC operation, timescale maintenance, and actual timing service.
+
+KG-09: Added battery chemistry, ratings, maintenance, disposal, and applicable
+transport-documentation requirements.
+
+KG-13: Defined gateware and distinguished it from processor-executed instructions.
+
+KG-14: Removed unused abbreviations and unit entries; added BNC.
+
+KG-15: Explained BeiDou and Galileo as constellation names, not acronyms
+requiring expansion.
+
+KG-18: Permitted precise references to external performance specifications
+while retaining uncovered P3335 declarations.
+
+KG-20: Clarified that UTC(k) identifies a reference timescale, not a transport
+interface.
+
+KG-21: Removed undefined environmental-profile examples while preserving
+mandatory environmental declarations.
+
+KG-23: Required appropriate functional and performance test evidence;
+clarified supplier evaluation and representative-configuration testing.
+
+KG-24: Updated UTC-conversion guidance to distinguish historical conversions,
+valid offsets, and future UTC policy.
+
+KG-25: Replaced ambiguous pulse-jitter wording with time error and timing
+variation, including sampling and bandwidth limitations.
+
+KG-26: Distinguished binding numeric requirements from informative references
+and separately claimed performance classes.
+
+KG-27: Simplified the performance-category list; retained detailed metrics in
+Clause 6 and Annex A.
+
+KG-28: Permitted documented local status indicators without mandating LEDs or
+replacing control-interface status.
+
+KG-29: Required externally observable disciplining behavior instead of
+disclosure of proprietary algorithms or loop topology.
+
+KG-30: Clarified laboratory, GNSS, and simulator references, traceability,
+absolute versus relative measurements, and correlated errors.
+
+KG-31: Allowed appropriate time-domain measurements while preserving
+safeguards against unsupported spectral-mask claims.
+
+KG-32: Retained ADEV and clarified its distinction from TDEV and frequency offset.
+
+KG-33: Clarified holdover-profile references and separated absolute or
+initial-offset-relative error bounds from MTIE.
+
+KG-34: Allowed referenced transition requirements while retaining uncovered
+host and driver lifecycle cases.
+
+KG-35: Required precise identification of specification editions, clauses,
+classes, masks, conditions, and acceptance rules.
+
+KG-36: Required G.703 compatibility claims to identify the specific interface
+and applicable provisions.
+
+KG-37: Added firmware, gateware, software updates, and restart to
+output-behavior declarations.
+
+KG-38: Explicitly included 50 ohm BNC connectors while retaining TNC and the
+existing connector requirements.
+
+KG-43: Specified environmental units, permitted prefixes, pressure references,
+and supplementary unit conversions.
+
+KG-44: Added relevant references to each application subsection.
+
+KG-45: Clarified identification of performance masks, parameters, observation
+intervals, filtering, and acceptance rules.
+
+KG-46: Specified seconds or clearly labelled submultiples for TDEV and MTIE.
+
+KG-47: Reworked Annex A.6 around pulse and event timing variation.
+
+KG-48: Made the test fixture interface-neutral and added the instrument's
+measurement-reference connection.
+
+KG-49: Separated reference origin and timescale from the interface carrying
+that reference.
+
+KG-50: Replaced the diagram's fixed analyzer-metric list with an
+applicable-metrics label; retained ADEV elsewhere.
+
+KG-51: Added conditional PTP, IRIG, and other host/logical output test examples
+alongside PTM.
+
+PARTIALLY ADDRESSED (6)
+
+KG-01: Added implementation examples and an applicability matrix.
+Pending: WG decision on separate documents or implementation Types.
+
+KG-02: Distinguished public declarations from controlled-access supporting
+evidence.
+Pending: Any reduction in the existing public-documentation minimum.
+
+KG-06: Clarified the scope of the G.703 measurement-cable assumption.
+Pending: Adoption as a binding P3335 profile limit.
+
+KG-12: Added the public G.Sup92 catalog reference.
+Pending: Review and technical incorporation of the unavailable 07/2026 text.
+
+KG-17: Added non-destructive fixture, loading, safety, and calibration guidance.
+Pending: Mandatory physical-access requirements.
+
+KG-22: Explicitly accommodated external performance classes.
+Pending: Identification and review of the unfinished G.FTS-Lite-clk specification.
+
+DEFERRED (11)
+
+KG-03: Adopting G.703 as the normative 1PPS baseline requires WG agreement.
+
+KG-05: Changing pulse width, rise time, and timing marker depends on the same
+baseline decision.
+
+KG-07: New receive-cable delay-compensation objects require agreed units,
+sign, range, persistence, and control semantics.
+
+KG-10: Mandatory battery telemetry and sensing require agreed applicability
+and measurement requirements.
+
+KG-11: Updating the normative G.8260 reference to 08/2026 requires authorized
+access and technical review.
+
+KG-16: Mandatory independent timing-verification access requires agreement on
+acceptable verification routes.
+
+KG-19: Mandatory physical test points for embedded implementations require a
+physical-versus-logical access decision.
+
+KG-39: Mandatory equipment serial numbers and exterior labels require scope
+and identity rules.
+
+KG-40: Mandatory power monitoring and alarms require detection, threshold,
+and reporting specifications.
+
+KG-41: Battery-health monitoring is consolidated with KG-10.
+
+KG-42: GNSS and other input-delay correction objects are consolidated with KG-07.
+
+SUPPORTING WORK
+
+- Rebuilt and visually checked the 72-page PDF.
+- Regenerated the requirements index: 587 statements derived from 384
+  normative shall occurrences.
+- Updated the fixture diagram.
+- Added regression checks; all 16 tests passed.
+- Created a separate register for eight WG decisions and three reference
+  dependencies.
+- Preserved dated footers and existing paragraph line numbering. Full table
+  and equation line-number coverage remains a separate readiness item.
+
+The manuscript changes were pushed to review/address-jmg-redline-comments
+as commit fd6ea3d448f3c8be44f33946ba6cfc18e9857a9b. As of this summary, that
+revision has not been merged into main.
+
+DETAILED RECORDS
+
+references/KEVIN_GODFREY_FEEDBACK_20261030_DISPOSITION.md
+references/KEVIN_GODFREY_WG_DECISIONS_20261103.md
+references/KEVIN_GODFREY_FEEDBACK_20261030_REVIEW.md

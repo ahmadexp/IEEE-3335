@@ -18,6 +18,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
 - **fault:** Status indicating that an operation failed or that a supported object cannot provide a meaningful value because an error condition is present.
 - **frequency accuracy:** Closeness of agreement between a TimeCard frequency and a declared reference frequency under specified conditions. A quantitative frequency-accuracy claim is expressed as fractional-frequency offset, uncertainty, or another explicitly defined frequency-error statistic.
+- **gateware:** Configuration data or a logic description that implements hardware functions in a programmable logic device, such as an FPGA. Gateware is distinct from instructions executed by a processor, although both can be included in the same update package.
 - **granularity:** Smallest step representable by an encoding or interface. Granularity does not imply an equal resolution, precision, time accuracy, frequency accuracy, or TimeCard timestamp accuracy.
 - **holdover:** Operating state in which a TimeCard maintains its timescale after loss or rejection of the external reference used for synchronization, using its local timing function and available historical information.
 - **host clock:** Clock maintained or exposed by a host system and identified by its clock domain, epoch, timescale, and adjustment behavior.
@@ -29,7 +30,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **measurement uncertainty:** Non-negative parameter characterizing the dispersion of quantity values attributed to a measurand.
 - **noise tolerance:** Level and form of timing variation at a receive interface that can be accepted without causing one or more declared loss-of-function criteria.
 - **noise transfer:** Relationship between timing variation at a receive-interface measurement point and the resulting timing variation at a providing-interface measurement point under declared operating conditions.
-- **optional feature:** Feature, interface, protocol, environmental profile, or security function not required for base conformance that becomes subject to its applicable mandatory requirements when claimed.
+- **optional feature:** Feature, interface, protocol, or security function not required for base conformance that becomes subject to its applicable mandatory requirements when claimed.
 - **phase alignment:** Specified phase relationship between corresponding timing markers on two interfaces. Alignment error is the measured difference from that relationship.
 - **precision:** Closeness of agreement among repeated indications under stated conditions.
 - **providing interface:** Outbound physical or logical interface through which a TimeCard distributes time, phase, frequency, or timestamp information.
@@ -41,7 +42,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **time accuracy:** Closeness of agreement between the time indicated by a TimeCard at a declared measurement point and the time of a declared reference timescale at the corresponding instant. A quantitative time-accuracy claim is expressed as time error and measurement uncertainty under declared conditions.
 - **time-control ownership:** Arbitration state that grants one authorized client exclusive permission to perform operations that set or discipline the unified timescale or its local timing function.
 - **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
-- **time jitter:** Short-term variation of a specified timing event from its ideal position after removal of the trend or deterministic components identified by the declared measurement method.
+- **time jitter:** Short-term variation of specified timing events from their ideal positions, characterized using the bandwidth, reference model, and statistic defined by the applicable measurement method. Pulse repetition rate alone does not define the bandwidth of the timing variations. Pulse or event time error is used when a domain-specific jitter definition does not apply.
 - **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
 - **TimeCard synchronization source:** Reference signal, internal primary reference, or selected or synthesized ensemble whose observations are available or active to initialize, discipline, or validate a TimeCard's unified timescale. The shorter phrase *synchronization source* is used when the TimeCard context is unambiguous.
 - **TimeCard timestamp accuracy:** Closeness of agreement between a timestamp assigned by a TimeCard to an event at a declared timestamping measurement point and the time of the declared reference timescale at the corresponding event instant. A quantitative claim is expressed as a bounded timestamp error and measurement uncertainty under declared conditions; timestamp resolution and granularity are separate characteristics.
@@ -49,6 +50,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **traceability:** Property of a measurement result by which the result can be related to a stated reference through a documented, unbroken chain of calibrations, each contributing to measurement uncertainty. In this standard, a TimeCard supplies declarations and evidence that support system-level traceability analysis; the term does not assert that a TimeCard alone establishes end-to-end traceability.
 - **unavailable:** Status indicating that a supported object or measurement does not currently have a valid value.
 - **unified timescale:** Single timescale maintained by a TimeCard instance from which all of that instance's providing interfaces derive their time, phase, frequency, or timestamp information.
+- **UTC(k):** Realization of UTC maintained by laboratory k. UTC(k) identifies a reference timescale, not the physical signal or protocol used to convey it.
 - **unknown:** Status or symbolic value indicating that information cannot be determined or that a received value is not recognized by the applicable mapping. `unknown` does not assert that the object or feature is unsupported.
 - **unspecified:** Status or behavior that P3335 or an applicable mapping intentionally does not constrain, leaving the selection or definition to an implementation, profile, or later specification. For an object field, it may also indicate that the mapping permits a value but the implementation has not assigned one. `unspecified` is distinct from `unknown`, `unavailable`, and `unsupported`.
 - **unsupported:** Status indicating that an object, operation, or feature is not implemented.
@@ -64,15 +66,13 @@ For the purposes of this document, the following terms and definitions apply.
 - **ASIC:** application-specific integrated circuit
 - **BAR:** base address register
 - **BMC:** baseboard management controller
-- **CFM:** cubic feet per minute
+- **BNC:** Bayonet Neill-Concelman coaxial connector
 - **CSAC:** chip-scale atomic clock
 - **cTE:** constant time error
 - **DCLS:** direct current level shift (IRIG time-code modulation)
 - **DDS:** direct digital synthesizer
-- **DMTF:** Distributed Management Task Force
 - **dTE:** dynamic time error
 - **EMC:** electromagnetic compatibility
-- **EMI:** electromagnetic interference
 - **ESD:** electrostatic discharge
 - **FPGA:** field-programmable gate array
 - **GLONASS:** Global Navigation Satellite System of the Russian Federation
@@ -90,8 +90,6 @@ For the purposes of this document, the following terms and definitions apply.
 - **IPMI:** Intelligent Platform Management Interface
 - **IRIG:** Inter-Range Instrumentation Group
 - **ITU-T:** International Telecommunication Union Telecommunication Standardization Sector
-- **LFM:** linear feet per minute
-- **LOS:** loss of signal
 - **mdeg C:** millidegrees Celsius
 - **MMIO:** memory-mapped input/output
 - **MIPI:** MIPI Alliance; originally Mobile Industry Processor Interface, but MIPI is no longer expanded as an acronym
@@ -99,11 +97,8 @@ For the purposes of this document, the following terms and definitions apply.
 - **MTIE:** maximum time interval error
 - **NC-SI:** Network Controller Sideband Interface
 - **NavIC:** Navigation with Indian Constellation
-- **NMI:** national metrology institute
 - **ns:** nanosecond
 - **NTP:** Network Time Protocol
-- **OCP:** Open Compute Project
-- **OCP TAP:** Open Compute Project Time Appliances Project
 - **OCXO:** oven-controlled crystal oscillator
 - **PCI:** Peripheral Component Interconnect
 - **PCIe:** Peripheral Component Interconnect Express
@@ -123,18 +118,17 @@ For the purposes of this document, the following terms and definitions apply.
 - **SMBus:** System Management Bus
 - **SNMP:** Simple Network Management Protocol
 - **TAI:** International Atomic Time
-- **TAP:** Time Appliances Project
 - **TCXO:** temperature-compensated crystal oscillator
 - **TDEV:** time deviation
 - **TIC:** time interval counter
-- **TIE:** time interval error
-- **TLS:** Transport Layer Security
 - **TNC:** Threaded Neill-Concelman coaxial connector
 - **ToD:** time of day
 - **Type-N:** Type-N coaxial connector
-- **µs:** microsecond
 - **USB:** Universal Serial Bus
 - **UTC:** Coordinated Universal Time
 - **UTF-8:** Unicode Transformation Format, 8-bit
-- **WR:** White Rabbit
 - **WWVB:** United States long-wave time-signal station WWVB
+
+### 3.2.1 Constellation names
+
+The GNSS control identifiers in 8.10.7 include the constellation names **BeiDou** and **Galileo**, as well as GPS, GLONASS, QZSS, and NavIC. BeiDou and Galileo are names rather than abbreviations; they do not require acronym expansions. Listing an identifier does not require an implementation to support that constellation.
