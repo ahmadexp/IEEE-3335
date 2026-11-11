@@ -4,6 +4,8 @@ This clause defines the performance reporting and characterization requirements 
 
 ## 6.1 Performance Declaration Model
 
+The declaration describes the particular implementation; it does not establish application or industry performance targets. Limits from an existing profile can be cited under 4.6. Where no class is claimed, the supplier reports a bound for the applicable metric under stated conditions, without creating a new class.
+
 Suppliers **shall** publish performance declarations for each conforming TimeCard implementation. Each declared value **shall** identify:
 
 - The metric being reported.
@@ -17,27 +19,27 @@ Suppliers **shall** publish performance declarations for each conforming TimeCar
 
 Each required performance declaration **shall** include at least one bounded value or limit. Typical values may be provided in addition to, but not instead of, the bounded value.
 
-A declaration using a performance class or mask **shall** identify the governing document and edition, applicable clause, class or mask identifier, parameter set, observation or averaging intervals, filtering, and acceptance rule. Incorporation by reference is permitted as specified in 4.6; it does not remove the need to identify implementation-specific conditions. Access to underlying test records is governed by 4.7 and 4.8 and is distinct from publication of the performance declaration.
+A declaration using a performance class or mask **shall** identify the governing document and edition, applicable clause, class or mask identifier, applicable metric limits, implementation configuration, parameter set, observation or averaging intervals, filtering, and acceptance rule. Incorporation by reference is permitted as specified in 4.6; it does not remove the need to identify implementation-specific conditions. Access to underlying test records is governed by 4.7 and 4.8 and is distinct from publication of the performance declaration.
 
 ## 6.2 Performance Classes
 
 This standard uses a reporting-only base performance model. A TimeCard conforms to the base performance requirements when it reports the applicable metrics in this clause using the declared measurement methods and operating conditions.
 
-Named numeric performance classes are not defined by this standard. A supplier, procurement profile, application profile, or external standard may define additional numeric classes. If an implementation claims such a class, the class **shall** identify all applicable metric limits, measurement points, operating states, and environmental conditions, with the reference details required by 4.6 and 6.1.
+Named numeric performance classes are not defined by this standard. A supplier, procurement profile, application profile, or external standard may define additional classes. The declaration of a claimed class is governed by 4.6 and 6.1.
 
-## 6.3 General Measurement Requirements
+## 6.3 Evidence for performance claims
 
-Measurement results used to support conformance claims **shall** be metrologically traceable to a recognized national metrology institute or another declared reference through a documented calibration chain. Measurement methods **shall** conform to the applicable definitions in IEEE Std 1139-2022 [2], IEEE Std 1193-2022 [3], ITU-T Recommendation G.810 (08/1996) [10], or ITU-T Recommendation G.8260 (11/2022) [11] when those metrics are used.
+The TimeCard characteristics being evaluated are specified in 6.4 through 6.10. This subclause applies to the measurement evidence supporting a claim (see 4.8). It does not specify a class of conforming test equipment. Annex B gives examples of equipment and reference arrangements.
 
-The reference arrangement **shall** be suitable for the measurand, declared limit, and uncertainty of the reported result. Suitable arrangements may include calibrated laboratory references, characterized GNSS references, or characterized GNSS simulators. A direct UTC(k) connection or measurement at a national metrology institute is not required. The report **shall** identify the reference timescale or frequency, calibration and reference relationships, and relevant uncertainty contributions. Use of GNSS or a simulator does not itself establish traceability or an absolute UTC reference.
+For each measured claim, the evaluator's report **shall** identify the measurand, declared limit, measurement point, reference timescale or frequency, and documented calibration chain to a recognized national metrology institute or another declared reference. The report **shall** identify the applicable metric definition and measurement method in IEEE Std 1139-2022 [2], IEEE Std 1193-2022 [3], ITU-T Recommendation G.810 (08/1996) [10], or ITU-T Recommendation G.8260 (11/2022) [11] when using those metrics. The evaluation **shall** use that definition and method.
 
-A measurement relative to an applied input reference **shall** be distinguished from an absolute time-accuracy claim relative to UTC or another external timescale. The report **shall** identify shared reference paths and account for correlated errors that can cancel in an input-to-output comparison. Evidence of relative transfer performance **shall** not be presented as evidence of absolute time accuracy without the additional reference relationship and uncertainty needed for that claim.
+The report **shall** identify the setup, reference relationships, measurement uncertainty (including relevant reference uncertainty), instrument noise floor, bandwidth, averaging configuration, sample count, data treatment, and environmental conditions. A direct connection to UTC(k) is not required.
 
-The measurement uncertainty, instrument noise floor, measurement bandwidth, averaging configuration, sample count, data treatment, and environmental conditions **shall** be documented with the reported result. The measurement point **shall** be identified in enough detail that another laboratory can reproduce the setup.
+For an input-to-output comparison, the evaluator **shall** identify the two measurement points and account for shared reference paths and correlated errors. For example, an input 100 ns late relative to UTC and an output also 100 ns late yield zero input-to-output error. That result alone says nothing about the common 100 ns offset. A claim relative to UTC or another external timescale **shall** be supported by a reference relationship and uncertainty for that timescale.
 
-When a measured result is compared with a declared limit, the test report **shall** state the decision rule and treatment of measurement uncertainty. A pass/fail conclusion **shall** not silently treat an uncertainty interval that crosses the limit as an unqualified pass.
+When comparing a measured result with a declared limit, the evaluator **shall** state the decision rule, including how measurement uncertainty affects the conclusion when the uncertainty interval crosses the limit.
 
-If the term **jitter** is used, the implementation documentation **shall** define the exact jitter metric, measurement bandwidth, sample population, and statistical calculation. Constant time error, dynamic time error, phase noise, MTIE, TDEV, ADEV, noise transfer, and noise tolerance **shall** not be used interchangeably.
+If time jitter is reported, the supplier **shall** identify the jitter metric, measurement bandwidth, sample population, and statistical calculation. Constant time error, dynamic time error, phase noise, MTIE, TDEV, ADEV, noise transfer, and noise tolerance describe different quantities.
 
 ## 6.4 Time Error and Noise Response
 
@@ -54,7 +56,7 @@ For each time accuracy declaration, the supplier **shall** document:
 - Constant time error and dynamic time error components when they can be separately estimated under the declared method.
 - Valid temperature range and environmental profile.
 - Minimum lock time before the declaration applies.
-- Relationship between the declared reference timescale and UTC or TAI, if the declared timescale is not itself UTC or TAI.
+- Relationship to UTC or TAI if known; otherwise, an explicit statement that the claim is relative only to the declared reference timescale.
 
 If an implementation reports IEEE 1588-2019 [4] `clockAccuracy` values, the values **shall** correspond to the measured or declared time-accuracy range for the applicable operating mode.
 
@@ -98,7 +100,7 @@ Frequency stability declarations **shall** characterize the frequency output or 
 
 Suppliers **shall** report frequency accuracy and temperature stability for the local timing function or for each frequency output for which a frequency-performance claim is made.
 
-Suppliers should report ADEV where fractional-frequency stability at the declared TimeCard measurement point is relevant to the claim. ADEV declarations **shall** include the averaging intervals and measurement point. ADEV, TDEV, and fractional-frequency offset characterize different quantities and are not interchangeable.
+Base conformance does not require an Allan deviation (ADEV) result. If ADEV is reported or required by a claimed profile, its declaration **shall** include the averaging intervals and measurement point. ADEV, TDEV, and fractional-frequency offset characterize different quantities and are not interchangeable.
 
 For periodic outputs such as 10 MHz, suppliers should report phase noise as a function of offset frequency. Phase-noise declarations **shall** identify carrier frequency, offset-frequency range, measurement bandwidth, instrument configuration, and measurement point.
 
@@ -177,7 +179,7 @@ When time-transfer performance is declared at a host API or software measurement
 
 ## 6.11 Performance Documentation Checklist
 
-The performance section of a datasheet or conformance statement **shall** include the following items when applicable, together with the governing specification, edition, class or mask, configuration, and acceptance rule required by 6.1:
+The following checklist summarizes 6.1 through 6.10 for use in a datasheet or conformance statement. Each entry applies only under the conditions in its controlling subclause.
 
 | Category | Required reporting content |
 |----------|-----------------------------|

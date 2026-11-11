@@ -155,5 +155,35 @@ class KevinRevisionChecks(unittest.TestCase):
                          [f"REF-K{i:02d}" for i in range(1, 4)])
 
 
+class RodneyRevisionChecks(unittest.TestCase):
+    def test_overview_preserves_approved_par_fields(self):
+        overview = check_draft.MANUSCRIPT_FILES[1].read_text()
+        trace = (check_draft.ROOT / "references/P3335_PAR_SCOPE_PURPOSE.md").read_text()
+        for index, title in enumerate(("Scope", "Purpose", "Need"), 1):
+            with self.subTest(field=title):
+                actual = overview.split(f"## 1.{index} {title}\n", 1)[1].split("\n## ", 1)[0]
+                expected = trace.split(f"## {title}\n", 1)[1].split("\n## ", 1)[0]
+                self.assertEqual(actual.split(), expected.split())
+
+    def test_required_objects_still_indexed_after_consolidation(self):
+        control = "08 - Control Interfaces/README.md"
+        source = (check_draft.ROOT / control).read_text()
+        table = source.split("### 8.10.2 ", 1)[1].split("### 8.10.3 ", 1)[0]
+        objects = re.findall(r"^\| `([A-Z0-9_]+)` \|", table, re.M)
+        indexed, _ = requirements_index.extract_requirements(control)
+        self.assertGreater(len(objects), 0)
+        for name in objects:
+            with self.subTest(object=name):
+                self.assertTrue(any(f"`{name}`;" in row.text for row in indexed))
+
+    def test_rodney_dispositions_cover_original_rows_and_flags(self):
+        path = check_draft.ROOT / "references/RODNEY_CUMMINGS_V8_DISPOSITION_20261110.md"
+        rows = re.findall(r"^\| RC-(\d{2}) \| (\d+) \| [^|]+ \| (Yes|No) \| (Applied|Partial) \|",
+                          path.read_text(), re.M)
+        self.assertEqual([(int(i), int(row)) for i, row, _, _ in rows],
+                         [(i, i + 5) for i in range(1, 20)])
+        self.assertEqual([int(i) for i, _, flag, _ in rows if flag == "Yes"], [4, 5, 6, 10, 15])
+
+
 if __name__ == "__main__":
     unittest.main()

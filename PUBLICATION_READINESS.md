@@ -96,3 +96,4 @@ The 3 November 2026 revision applies the editorial and technical refinements fro
 ## Repeatable local checks
 
 `make check` performs active-source, document-map, placeholder, requirement-word, informative-material, normative-reference identity and numbering, reference-use, control-status-definition, duplicate-object, requirements-index freshness, regression, and Python syntax checks. The PDF build runs these checks before producing `IEEE3335.pdf` and preserves the previous output if compilation fails.
+| AI-033 | P1 | Draft changes applied; reviewer and WG review open | Clause editors and WG | Resolve Rodney Cummings's 19 v8 comments. | [Dispositions and decisions R1 through R5](references/RODNEY_CUMMINGS_V8_DISPOSITION_20261110.md): confirm the five Must items with Rodney, audit remaining requirements for testability, and record decisions on the control model, disclosure, performance reporting, 1PPS, and ADEV. |

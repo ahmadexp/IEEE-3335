@@ -4,8 +4,10 @@
 
 For the purposes of this document, the following terms and definitions apply.
 
+- **accuracy:** Closeness of agreement between a measured value and its reference value. The term does not denote a numeric limit or a resolution. For quantitative claims, see **time accuracy**, **frequency accuracy**, or **TimeCard timestamp accuracy**, according to the quantity being compared.
+
 - **command queue:** Ordered control-interface mechanism through which a producer submits commands or requests and a consumer reports completion, status, or response data according to a defined mapping.
-- **constant time error:** Constant component, denoted cTE, of the time error of a synchronized TimeCard relative to the declared reference timescale under the declared estimation method.
+- **constant time error:** Constant component of the time error of a synchronized TimeCard relative to the declared reference timescale under the declared estimation method.
 - **conformance profile:** Named set of mandatory requirements that applies when the profile is claimed by an implementation.
 - **conformance statement:** Supplier documentation identifying the P3335 clauses, profiles, optional features, interfaces, limits, and evidence for which an implementation claims conformance.
 - **control interface:** Logical or physical interface used to configure, monitor, update, or manage a TimeCard.
@@ -13,7 +15,7 @@ For the purposes of this document, the following terms and definitions apply.
 - **data plane:** Logical or physical path or set of paths that conveys time, phase, frequency, or event-timestamp information.
 - **declared:** Stated in the conformance statement or in supplier documentation referenced by that statement.
 - **disciplining:** Steering a local timing function using observations of one or more reference signals.
-- **dynamic time error:** Time-varying random-noise component, denoted dTE, of the time error of a synchronized TimeCard. Dynamic time error may be characterized using metrics such as MTIE and TDEV under a declared measurement method.
+- **dynamic time error:** Time-varying random-noise component of the time error of a synchronized TimeCard. Dynamic time error may be characterized using metrics such as MTIE and TDEV under a declared measurement method.
 - **ensemble operation:** Combination of selected reference observations to produce a synthesized reference used to discipline or validate the unified timescale.
 - **evidence:** Records, observations, calculations, test results, calibration information, or controlled documentation used to support evaluation of a conformance claim.
 - **fault:** Status indicating that an operation failed or that a supported object cannot provide a meaningful value because an error condition is present.
@@ -31,19 +33,17 @@ For the purposes of this document, the following terms and definitions apply.
 - **noise tolerance:** Level and form of timing variation at a receive interface that can be accepted without causing one or more declared loss-of-function criteria.
 - **noise transfer:** Relationship between timing variation at a receive-interface measurement point and the resulting timing variation at a providing-interface measurement point under declared operating conditions.
 - **optional feature:** Feature, interface, protocol, or security function not required for base conformance that becomes subject to its applicable mandatory requirements when claimed.
-- **phase alignment:** Specified phase relationship between corresponding timing markers on two interfaces. Alignment error is the measured difference from that relationship.
 - **precision:** Closeness of agreement among repeated indications under stated conditions.
 - **providing interface:** Outbound physical or logical interface through which a TimeCard distributes time, phase, frequency, or timestamp information.
 - **receive interface:** Inbound physical or logical interface and its defined measurement point through which a TimeCard acquires observations of an external reference signal or data stream.
 - **reference signal:** External physical signal or data stream whose defined timing marker or encoded time value can be used to initialize, discipline, validate, or monitor the unified timescale.
 - **resolution:** Smallest change in a measured quantity that causes a perceptible change in the corresponding indication.
-- **serial interface:** Control interface that transfers commands and data sequentially over a physical or virtual serial channel using framing and command syntax defined by its mapping.
 - **stale:** Status indicating that a value was valid when captured but no longer satisfies the freshness, sequence, or lifecycle conditions defined by its interface mapping.
 - **time accuracy:** Closeness of agreement between the time indicated by a TimeCard at a declared measurement point and the time of a declared reference timescale at the corresponding instant. A quantitative time-accuracy claim is expressed as time error and measurement uncertainty under declared conditions.
 - **time-control ownership:** Arbitration state that grants one authorized client exclusive permission to perform operations that set or discipline the unified timescale or its local timing function.
 - **time error:** Difference between the time indicated by the TimeCard at a specified measurement point and the time of the declared reference timescale at the corresponding instant.
 - **time jitter:** Short-term variation of specified timing events from their ideal positions, characterized using the bandwidth, reference model, and statistic defined by the applicable measurement method. Pulse repetition rate alone does not define the bandwidth of the timing variations. Pulse or event time error is used when a domain-specific jitter definition does not apply.
-- **TimeCard:** Modular timing subsystem that maintains a unified timescale and provides time, phase, frequency, or timestamp services through one or more interfaces.
+- **TimeCard:** Modular timing subsystem that maintains a unified timescale and is explicitly designed to provide time, phase, frequency, or timestamp services through one or more interfaces.
 - **TimeCard synchronization source:** Reference signal, internal primary reference, or selected or synthesized ensemble whose observations are available or active to initialize, discipline, or validate a TimeCard's unified timescale. The shorter phrase *synchronization source* is used when the TimeCard context is unambiguous.
 - **TimeCard timestamp accuracy:** Closeness of agreement between a timestamp assigned by a TimeCard to an event at a declared timestamping measurement point and the time of the declared reference timescale at the corresponding event instant. A quantitative claim is expressed as a bounded timestamp error and measurement uncertainty under declared conditions; timestamp resolution and granularity are separate characteristics.
 - **timescale:** Ordered system of time values with a defined reference, epoch, and rules for forming time intervals.
@@ -65,13 +65,10 @@ For the purposes of this document, the following terms and definitions apply.
 - **API:** application programming interface
 - **ASIC:** application-specific integrated circuit
 - **BAR:** base address register
-- **BMC:** baseboard management controller
 - **BNC:** Bayonet Neill-Concelman coaxial connector
 - **CSAC:** chip-scale atomic clock
-- **cTE:** constant time error
 - **DCLS:** direct current level shift (IRIG time-code modulation)
 - **DDS:** direct digital synthesizer
-- **dTE:** dynamic time error
 - **EMC:** electromagnetic compatibility
 - **ESD:** electrostatic discharge
 - **FPGA:** field-programmable gate array
@@ -104,7 +101,6 @@ For the purposes of this document, the following terms and definitions apply.
 - **PCIe:** Peripheral Component Interconnect Express
 - **PCI-SIG:** Peripheral Component Interconnect Special Interest Group
 - **PHC:** PTP hardware clock
-- **PLL:** phase-locked loop
 - **ps:** picosecond
 - **PPS:** pulse per second
 - **PTM:** Precision Time Measurement
@@ -120,7 +116,6 @@ For the purposes of this document, the following terms and definitions apply.
 - **TAI:** International Atomic Time
 - **TCXO:** temperature-compensated crystal oscillator
 - **TDEV:** time deviation
-- **TIC:** time interval counter
 - **TNC:** Threaded Neill-Concelman coaxial connector
 - **ToD:** time of day
 - **Type-N:** Type-N coaxial connector

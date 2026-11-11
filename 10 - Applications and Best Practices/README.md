@@ -69,7 +69,7 @@ Multi-card software should select a card using `TC_INSTANCE_ID` or `TC_SERIAL` w
 
 Software correlating TimeCard time with a host clock should preserve both host bounds, the correlation window, capture and discontinuity sequences, card state, synchronization-source validity, sample age, and the card and host timescales. A raw hardware counter should not be labeled UTC, or used to discipline a host clock, until the timescale relationship and applicable conversion information are valid for the timestamp's epoch.
 
-CGPM Resolution 5 (2026) [B32] sets continuous UTC to become effective on 20 May 2027 and increases the permitted magnitude of UT1-UTC to 3600 seconds. It does not prescribe a scheduled one-hour insertion. Implementations still need correct historical UTC/TAI conversions, valid current offsets, and declared handling of legacy protocol fields, smearing policies, and discontinuities. The policy change does not make UTC, TAI, or an arbitrary hardware counter interchangeable.
+CGPM Resolution 5 (2026) [B32] describes the policy for continuity of UTC. For a conversion offered by a TimeCard, use the rule that applies to the timestamp's epoch (see 5.3.2). For a local timescale with no claimed UTC relationship, no UTC offset can be inferred from the counter value.
 
 Only one authorized component should control time setting or discipline at a time. Monitoring applications, command-line tools, background discipline services, and host time providers should share the ownership and authorization mechanism defined by the mapping rather than applying independent steering actions.
 

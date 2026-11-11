@@ -23,6 +23,8 @@ A representative arrangement is shown in Figure 3. Signal and protocol adapters 
 
 The environment should be controlled and recorded at a level appropriate to the declared limit. The TimeCard should complete the supplier-declared warm-up and stabilization interval before a full-performance measurement begins.
 
+A calibrated laboratory reference, characterized GNSS reference, or characterized simulator can be used when its relationship to the measurand and its uncertainty are known. The instrument alone does not establish traceability of the result.
+
 The measurement system should have sufficient bandwidth, noise floor, resolution, stability, and uncertainty to distinguish the declared limit. A fixed ratio between instrument uncertainty and the declared limit is not assumed; the test report should justify the selected system and decision rule.
 
 Cable delay, connector adapters, splitters, terminations, and reference-distribution paths should be characterized when their contribution is material. Corrections should be stated with sign convention and uncertainty.
@@ -32,6 +34,8 @@ When an auxiliary test point or fixture is used, document its connection, loadin
 ### B.2.1 G.703 measurement interface context
 
 G.703 (04/2016), including Amendment 1 (05/2021) [9], distinguishes a distribution interface in 19.1 from the unbalanced 50 ohm measurement interface in 19.2. For the latter, the timing marker is the leading-edge midpoint, rise time is below 5 ns, pulse width is 100 ns to 500 ms, and the stated measurement-cable length is at most 3 m. Table 19-6 supplies voltage information; its informative status is distinct from the binding voltage limits in P3335 7.3.2.
+
+For an additional claim to Annex B of G.703, record the measurement threshold, edge characterization, cable delay correction, and termination used. That annex concerns the 50 ohm pulse measurement path, not serial Time of Day encoding. An example of an optional serial Time of Day format is G.8271/Y.1366 [B11], Annex A, A.1.3. When a companion message is offered, compare its decoded label with the designated pulse, including across a seconds rollover.
 
 This summary does not change the P3335 profile or imply G.703 conformance. Test 7.3.2 as written, and separately evaluate any claimed G.703 conformance under 7.3.3 against the dated reference. The G.703 requirements control the G.703 claim, including qualifications not reproduced here. The measurement-cable assumption is not a universal limit on antenna cables or other distribution interfaces. The [official ITU catalog](https://www.itu.int/rec/T-REC-G.703-202105-I!Amd1/en) provides the freely available source.
 

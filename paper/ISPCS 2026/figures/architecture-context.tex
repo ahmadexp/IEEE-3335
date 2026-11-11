@@ -1,0 +1,55 @@
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage{lmodern}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\sffamily\small,
+  box/.style={draw=black, line width=0.65pt, align=center},
+  flow/.style={-{Latex[length=2.1mm,width=1.4mm]}, line width=0.65pt},
+  control/.style={{Latex[length=2.1mm,width=1.4mm]}-{Latex[length=2.1mm,width=1.4mm]}, line width=0.65pt}
+]
+  % External timing references.
+  \draw[box] (0,2.05) rectangle (2.70,4.05);
+  \node[font=\sffamily\bfseries\small] at (1.35,3.68) {Time sources};
+  \node[font=\sffamily\footnotesize, align=center] at (1.35,2.90)
+    {GNSS, PTP, PPS\\10 MHz, IRIG\\NTP};
+
+  % Time Card boundary and functional interfaces.
+  \draw[box, line width=0.9pt] (4.00,0) rectangle (9.20,4.30);
+  \node[font=\sffamily\bfseries\small] at (6.60,4.00) {Time Card};
+
+  \draw[box] (4.40,2.95) rectangle (8.80,3.55);
+  \node at (6.60,3.25) {Receive interfaces};
+
+  \draw[box] (4.40,2.05) rectangle (8.80,2.65);
+  \node[font=\sffamily\bfseries\small] at (6.60,2.35) {Unified timescale};
+
+  \draw[box] (4.40,1.15) rectangle (8.80,1.75);
+  \node at (6.60,1.45) {Providing interfaces};
+
+  \draw[box] (4.40,0.25) rectangle (8.80,0.85);
+  \node at (6.60,0.55) {Control interfaces};
+
+  \draw[flow] (6.60,2.95) -- (6.60,2.65);
+  \draw[flow] (6.60,2.05) -- (6.60,1.75);
+
+  % Host system boundary.
+  \draw[box] (10.80,0.15) rectangle (13.50,3.65);
+  \node[font=\sffamily\bfseries\small] at (12.15,3.25) {Host system};
+  \node[font=\sffamily\footnotesize, align=center] at (12.15,2.35)
+    {CPU, OS, BMC\\Applications};
+
+  % External flows and their semantics.
+  \draw[flow] (2.70,3.25) -- (4.40,3.25);
+  \node[font=\sffamily\footnotesize, above] at (3.55,3.25) {references};
+
+  \draw[flow] (8.80,1.45) -- (10.80,1.45);
+  \node[font=\sffamily\footnotesize, above, align=center] at (9.80,1.45)
+    {time, phase,\\frequency};
+
+  \draw[control] (8.80,0.55) -- (10.80,0.55);
+  \node[font=\sffamily\footnotesize, above, align=center] at (9.80,0.55)
+    {control,\\telemetry};
+\end{tikzpicture}
+\end{document}

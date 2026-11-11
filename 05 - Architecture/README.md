@@ -8,14 +8,7 @@ The architecture separates timing data-plane functions from management and contr
 
 ## 5.1 Architectural Overview
 
-A TimeCard is a timing subsystem that provides time, phase, frequency, timestamp information, or a combination thereof to a host system or downstream system. The host system may be a server, telecommunications platform, industrial controller, scientific instrument, embedded system, or other system that requires a timing service with documented support for system-level traceability analysis.
-
-A conforming TimeCard **shall** include the following externally observable capabilities:
-
-- A local timing function capable of maintaining a unified timescale.
-- At least one timing output providing interface.
-- At least one control interface.
-- Performance, interface, environmental, and conformance information sufficient for an implementer or operator to evaluate the claimed behavior, with publication and access as specified in 4.7, 6.1, and 5.10.
+A TimeCard is explicitly designed to provide a timing service (see 3.1). Its implementation boundary separates that service from other functions of a host, switch, or instrument. The local timing function maintains the unified timescale specified in 5.4. Providing and control interfaces are specified in 5.3.5 and 8.10.2; the conformance roadmap is in 4.3.
 
 A TimeCard may include one or more timing receive interfaces, one or more time-transfer interfaces, one or more host interface mappings, and one or more reference-selection or ensemble algorithms.
 
@@ -23,7 +16,7 @@ A TimeCard may include one or more timing receive interfaces, one or more time-t
 
 The TimeCard implementation boundary is the set of interfaces through which the TimeCard exchanges timing signals, timestamp values, control information, status, telemetry, firmware, or power with the host system or external equipment.
 
-An implementation **shall** document its implementation boundary. The documentation **shall** identify:
+The implementation boundary declaration **shall** identify:
 
 - Host interface mappings.
 - Timing receive interfaces, if any.
@@ -40,7 +33,7 @@ A TimeCard architecture is described by the following logical blocks. An impleme
 
 ### 5.3.1 Local Timing Function
 
-The local timing function maintains the TimeCard's time, phase, and frequency state. It may be based on a quartz oscillator, OCXO, TCXO, CSAC, rubidium oscillator, atomic reference, DDS, host-provided clock, or another timing source.
+A TimeCard **shall** include a local timing function capable of maintaining the unified timescale specified in 5.4. It may be based on a quartz oscillator, OCXO, TCXO, CSAC, rubidium oscillator, atomic reference, DDS, host-provided clock, or another timing source.
 
 The implementation **shall** document the oscillator or timing-source class used for each declared performance profile. The implementation **shall** document whether the local timing function is steerable, free-running, disciplined by external references, or operated as a primary reference.
 
@@ -48,11 +41,11 @@ The implementation **shall** document the oscillator or timing-source class used
 
 The time generator produces the TimeCard's unified timescale. It may include counters, phase accumulators, timestamp interpolation, leap-second or timescale conversion logic, frequency steering, phase steering, or other timing logic.
 
-The time generator **shall** support timestamp representations that permit unambiguous duration computation over the declared operating interval. If an implementation exposes a timescale that is not TAI, UTC, or the IEEE 1588-2019 [4] PTP timescale, the implementation **shall** document the mapping to the declared reference timescale.
+The time generator **shall** support timestamp representations that permit unambiguous duration computation over the declared operating interval. An industrial or automotive implementation can use a local timescale with a declared epoch and tick rate, without a known relationship to civil time. No UTC conversion is required solely because a local timescale is used.
 
 The implementation **shall** document the supported timestamp range, epoch, granularity, resolution, and behavior at discontinuities such as leap seconds, leap smearing, holdover entry, reference failover, or manual time steps.
 
-Timescale-conversion documentation **shall** identify the validity interval of each applied UTC offset or conversion rule and the behavior when that information is unknown, expired, or inconsistent. Historical timestamp conversion and interoperability with legacy timescale representations **shall** be distinguished from assumptions about future UTC adjustments. The continuous-UTC decision described in 10.3.4 does not remove these conversion and validity obligations.
+If a conversion is provided, the supplier **shall** specify the source and target timescales, the validity interval of the conversion rule and any offset, and the behavior for unknown, expired, or inconsistent information. A claim to convert historical timestamps applies to the relevant epochs, not just the current offset.
 
 ### 5.3.3 Timestamping Facility
 
@@ -70,13 +63,13 @@ An implementation may operate without a receive interface if it is designed for 
 
 Providing interfaces distribute time, phase, frequency, or timestamp information from the TimeCard to a host system or downstream system. Providing interfaces are specified in Clause 7.
 
-At least one providing interface **shall** be implemented. All providing interfaces implemented by a single TimeCard **shall** derive from the same unified timescale.
+At least one providing interface **shall** be implemented. The common timescale for all outputs is specified in 5.4.
 
 ### 5.3.6 Control Interfaces
 
 Control interfaces provide configuration, monitoring, alarms, telemetry, firmware management, and security operations. Control interfaces are specified in Clause 8.
 
-At least one control interface **shall** be implemented. A control interface may be local, host-integrated, out-of-band, remote, or a combination thereof.
+The baseline access requirement is in 8.10.2; control capabilities are specified in 8.2.
 
 ## 5.4 Unified Timescale
 
@@ -87,7 +80,7 @@ A TimeCard **shall** generate one unified timescale for each conforming TimeCard
 The implementation **shall** document:
 
 - The reference timescale used internally or exposed externally.
-- The relationship between the unified timescale and UTC, TAI, the IEEE 1588 PTP timescale, or another declared timescale.
+- Any claimed relationship between the unified timescale and an external timescale, or an explicit indication that no such relationship is established.
 - The alignment tolerance among all providing interfaces that claim phase or time alignment.
 - The behavior during startup, warm-up, lock acquisition, reference failover, holdover entry, holdover exit, and manual time adjustment.
 

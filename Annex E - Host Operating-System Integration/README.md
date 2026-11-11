@@ -55,7 +55,7 @@ The DriverKit extension should validate the PCI identity, system-assigned BAR le
 
 A read-only control application can enumerate multiple driver services, select by `TC_INSTANCE_ID`, and display only fields marked valid. Driver activation, user-client authorization, and application signing are separate from the TimeCard information model and are best documented as platform bindings rather than encoded into the normative object vocabulary.
 
-When macOS realtime readings bracket a card read, the mapping should identify that host clock and preserve both readings. Raw card time should remain labeled with its actual or unknown timescale until a trusted card-to-host timescale relationship and conversion valid for the timestamp's epoch are available. The continuous-UTC discussion in 10.3.4 does not remove the need for historical conversions or offset-validity checks.
+When macOS realtime readings bracket a card read, the mapping should identify that host clock and preserve both readings. Raw card time should remain labeled with its actual or unknown timescale until a trusted card-to-host timescale relationship and conversion valid for the timestamp's epoch are available. See 5.3.2 for claimed conversions and 10.3.4 for deployment guidance.
 
 Sleep, wake, extension replacement, host-app removal, Thunderbolt or other tunneled-PCIe disconnection, and reconnection should be included in physical validation. Reconnection should produce a new discovery validation and discontinuity generation before time-control operations resume.
 

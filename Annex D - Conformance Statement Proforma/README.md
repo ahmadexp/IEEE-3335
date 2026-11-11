@@ -108,7 +108,7 @@ For each claimed class or mask, record the governing document and edition, claus
 | MTIE | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; bound: \_\_\_\_\_\_\_; intervals: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | TDEV | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; result or limit: \_\_\_\_\_\_\_; intervals: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Frequency accuracy | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; bound: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
-| ADEV | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; result or limit: \_\_\_\_\_\_\_; intervals: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
+| ADEV (if reported or required by claimed profile) | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; result or limit: \_\_\_\_\_\_\_; intervals: \_\_\_\_\_\_\_; conditions: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Phase noise | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; mask or points: \_\_\_\_\_\_\_; offset range: \_\_\_\_\_\_\_; method and uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Pulse timing variation | State: \_\_\_\_\_\_\_; point: \_\_\_\_\_\_\_; statistic and bound: \_\_\_\_\_\_\_; bandwidth and sample count: \_\_\_\_\_\_\_; uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
 | Noise transfer | Input and output points: \_\_\_\_\_\_\_; stimulus and range: \_\_\_\_\_\_\_; state and configuration: \_\_\_\_\_\_\_; response or mask: \_\_\_\_\_\_\_; uncertainty: \_\_\_\_\_\_\_; evidence: \_\_\_\_\_\_\_ |
