@@ -115,9 +115,14 @@ def main() -> int:
         for line_number, line in enumerate(text.splitlines(), 1):
             if PLACEHOLDER_RE.search(line):
                 errors.append(f"{relative(path)}:{line_number}: unresolved placeholder")
-            if MUST_RE.search(line) and "The term **must**" not in line:
+            usage_note = path == MANUSCRIPT_FILES[1] and line == (
+                "[^1]: The use of the word *must* is deprecated and cannot be used when stating "
+                "mandatory requirements; *must* is used only to describe unavoidable situations."
+            )
+            if MUST_RE.search(line) and not usage_note:
                 errors.append(f"{relative(path)}:{line_number}: use shall/should/may/can instead of must")
-            accuracy_text = QUALIFIED_ACCURACY_RE.sub("", line)
+            accuracy_line = line.removeprefix("- **accuracy:**") if path == MANUSCRIPT_FILES[3] else line
+            accuracy_text = QUALIFIED_ACCURACY_RE.sub("", accuracy_line)
             if ACCURACY_RE.search(accuracy_text):
                 errors.append(
                     f"{relative(path)}:{line_number}: qualify accuracy by measurement context"

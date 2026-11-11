@@ -15,7 +15,7 @@ An implementation may expose the same baseline information through more than one
 
 ## 8.2 Baseline control capabilities
 
-At least one implemented control interface **shall** provide access to the required baseline objects in 8.10.2. Collectively, the implemented control interfaces **shall** provide the following capabilities:
+The single-interface access rule and required objects are specified in 8.10.2. Collectively, the implemented control interfaces **shall** provide the following capabilities:
 
 - Read implementation identity, revision, profile, and capability information.
 - Read the unified-timescale state and an atomic time value.
@@ -95,7 +95,7 @@ If more than one independent client can issue such operations, the mapping **sha
 
 ## 8.6 Access control and security state
 
-Every control interface **shall** document its authentication, authorization, transport protection, update authorization, audit, key-storage, and sanitization capabilities. The `SECURITY_STATE` object **shall** report the mechanisms supported and their current verified or active state. If no security mechanism is implemented for a control interface, the documentation and `SECURITY_STATE` object **shall** state `none` and **shall** identify the physical-access or deployment assumptions on which that choice depends.
+The security declaration, including update authorization, is specified in 8.11.1. The `SECURITY_STATE` object **shall** report the mechanisms supported and their current verified or active state. For a control interface with no security mechanism, the object **shall** report `none` and identify the applicable physical-access or deployment assumptions.
 
 Requirements for the Managed TimeCard and Secure Infrastructure TimeCard profiles are specified in 8.11. A control interface not claiming either profile may omit authentication only when the omission is declared in the conformance statement.
 
@@ -181,7 +181,7 @@ If PCIe PTM is implemented, the TimeCard **shall** expose the standard PTM capab
 
 ## 8.10 Baseline control information model
 
-The baseline information model defines transport-neutral object names, data semantics, access modes, and units. A protocol mapping may use registers, messages, resources, attributes, or API calls, provided that it preserves these semantics and satisfies 8.4 and 8.5.
+The baseline information model defines transport-neutral object names, data semantics, access modes, and units. Conformance is evaluated through the implemented binding identified in the conformance statement, not by inspecting the abstract model alone. For example, an evaluator can read the time and its status through that binding, compare the encoding with the declared units, and check that loss of valid time is distinguishable from a valid zero value. A common binary API or wire encoding is not implied. A protocol mapping may use registers, messages, resources, attributes, or API calls, provided that it preserves these semantics and satisfies 8.4 and 8.5.
 
 ### 8.10.1 Data types and object status
 
@@ -206,7 +206,7 @@ Each mapping **shall** define the response when a value would exceed the represe
 
 ### 8.10.2 Required baseline objects
 
-The following objects **shall** be exposed through at least one control interface:
+At least one implemented control interface **shall** expose all of the following objects:
 
 | Object | Access | Type | Units | Semantics |
 |--------|--------|------|-------|-----------|
@@ -286,7 +286,7 @@ A `TIME_CONTROL_STATUS` record **shall** identify the arbitration mode, whether 
 
 `TC_STATE` **shall** distinguish at least the following states: `unknown`, `initializing`, `warming-up`, `free-running`, `acquiring`, `locked`, `holdover`, `degraded`, and `fault`.
 
-`TC_TIMESCALE` **shall** distinguish at least `unknown`, `TAI`, `UTC`, `PTP`, and `other-declared`. If `other-declared` is used, the mapping to a declared reference timescale **shall** be documented.
+`TC_TIMESCALE` **shall** distinguish at least `unknown`, `TAI`, `UTC`, `PTP`, and `other-declared`. For `other-declared`, the mapping **shall** identify the timescale and its epoch. A local timescale with no established external relationship is not a UTC indication (see 5.3.2 and 5.4).
 
 Unknown symbolic values received by a receiving implementation **shall** be preserved when forwarding and otherwise treated as unknown. A mapping that encodes symbolic values numerically **shall** document the numeric assignments and reserve an extension range.
 
@@ -313,7 +313,7 @@ Non-GNSS satellite services, including large low-Earth-orbit constellations such
 
 ### 8.11.1 Baseline security declaration
 
-All conforming implementations **shall** document the security properties of each control interface, including physical-access assumptions. The documentation **shall** state whether authentication, authorization, encrypted transport, signed update, boot integrity verification, protected key storage, anti-rollback protection, event auditing, tamper response, and sanitization are supported. This declaration requirement does not require a security mechanism unless the implementation claims a profile or feature whose applicable requirements specify that mechanism. When no security mechanism is implemented, the documentation **shall** state `none` and identify the deployment assumptions.
+All conforming implementations **shall** document the security properties of each control interface, including physical-access assumptions. The documentation **shall** state whether authentication, authorization, transport protection (including encryption), update authorization, signed update, boot integrity verification, protected key storage, anti-rollback protection, event auditing, tamper response, and sanitization are supported. This declaration requirement does not require a security mechanism unless the implementation claims a profile or feature whose applicable requirements specify that mechanism. When no security mechanism is implemented, the documentation **shall** state `none` and identify the deployment assumptions.
 
 ### 8.11.2 Managed TimeCard profile
 

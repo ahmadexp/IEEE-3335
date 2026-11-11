@@ -33,7 +33,7 @@ For each implemented receive interface, the supplier **shall** document:
 
 The following interface types may be implemented:
 
-- **PTP:** If PTP is implemented, protocol behavior **shall** conform to IEEE Std 1588-2019 [4] or IEEE Std 802.1AS-2025 [5] for the profile identified in the conformance statement.
+- **PTP:** A PTP receive interface **shall** conform to the PTP profile identified in the conformance statement, including the applicable IEEE Std 1588-2019 [4] requirements and, for a claimed IEEE 802.1AS profile, the applicable provisions of IEEE Std 802.1AS-2025 [5].
 - **NTP:** If NTP is implemented as a synchronization input, protocol behavior **shall** conform to IETF RFC 5905 [7] for the mode and options identified in the conformance statement.
 - **IRIG:** If an IRIG AM or DCLS input is implemented, its format **shall** conform to IRIG Standard 200-16 [8] for the code and options identified in the conformance statement.
 - **GNSS:** A GNSS input may include antenna RF, receiver data, 1PPS, frequency, or a combination thereof. The implementation **shall** identify the receiver protocol, supported constellations, antenna requirements, and relationship of the receiver timescale to the unified timescale.
@@ -75,7 +75,7 @@ Typical providing interfaces include pulse outputs, frequency outputs, Time of D
 
 An implementation claiming the Physical Timing Output conformance profile **shall** provide at least one 1PPS output.
 
-The 1PPS output **shall** meet the following requirements at the declared connector with a 50 ohm load:
+The following limits apply at the declared connector with a 50 ohm load:
 
 - The connector **shall** be a 50 ohm SMA, BNC, TNC, or Type-N female connector, or another mechanically retained 50 ohm coaxial female connector. For conformance testing, an implementation without an SMA female connector **shall** be supplied with or specify a mechanically retained adapter to SMA female.
 - The low level **shall** be between -0.3 V and 0.3 V.
@@ -91,15 +91,17 @@ The supplier **shall** state the maximum alignment error between the 1PPS output
 ### 7.3.3 Protocol and signal conformance
 
 - If an IRIG AM or DCLS output is implemented, its format **shall** conform to IRIG Standard 200-16 [8] for the code and options identified in the conformance statement.
-- If PTP is implemented as a providing interface, protocol behavior **shall** conform to IEEE Std 1588-2019 [4] or IEEE Std 802.1AS-2025 [5] for the profile identified in the conformance statement.
+- A PTP providing interface **shall** conform to the PTP profile identified for that interface in the conformance statement, including the applicable IEEE Std 1588-2019 [4] requirements and, for a claimed IEEE 802.1AS profile, the applicable provisions of IEEE Std 802.1AS-2025 [5].
 - If PCIe PTM is implemented, PTM behavior **shall** conform to the PCI Express Base Specification, Revision 5.0, Version 1.0 [13]. The conformance statement **shall** identify the PCIe revision implemented and the evidence used to verify the Revision 5.0 PTM requirements incorporated by this standard.
 - If a pulse or frequency output claims ITU-T G.703 conformance, the output **shall** conform to the applicable requirements of ITU-T Recommendation G.703 (04/2016), including Amendment 1 (05/2021) [9], at the declared measurement point.
+
+For a claim to the 1PPS measurement option in Annex B of G.703 [9], the applicable provisions include both 19.2 and Annex B of that Recommendation. This is distinct from the distribution interface in 19.1. A 1PPS interface does not, by itself, require a companion serial Time of Day message. If one is implemented, its encoding and the pulse to which its time label refers are part of the providing-interface declaration in 7.3.1.
 
 For a providing interface that does not claim one of these referenced formats, the supplier **shall** provide a complete signal or protocol description sufficient to interoperate with the interface.
 
 ### 7.3.4 Alignment and continuity
 
-Every providing interface **shall** derive its time, phase, frequency, or timestamp information from the unified timescale specified in 5.4.
+The common-timescale requirement is specified in 5.4.
 
 The supplier **shall** declare the maximum alignment error between each time- or phase-bearing providing interface and the unified timescale. The declaration **shall** identify the measurement points, statistic or bound, operating state, environmental conditions, and any applied correction.
 
@@ -107,7 +109,7 @@ If an interface can produce a phase step, repeated timestamp, skipped timestamp,
 
 ### 7.3.5 Event timestamping
 
-If a TimeCard provides event or packet timestamps, each timestamp **shall** derive from the unified timescale. The supplier **shall** document the capture point, timestamp format, resolution, granularity, latency, fixed correction, uncertainty, and behavior when the unified timescale is invalid or discontinuous. A claimed TimeCard timestamp accuracy **shall** be documented in accordance with 6.4.1.
+For event or packet timestamps, 5.3.3 specifies the timestamp source and capture characteristics. The supplier **shall** also document the timestamp format, granularity, uncertainty, and behavior when the unified timescale is invalid or discontinuous. TimeCard timestamp accuracy claims are governed by 6.4.1.
 
 If timestamps are transferred across a host bus or software boundary, the mapping **shall** identify which delays are included in the timestamp and which delays require correction by the receiving system.
 

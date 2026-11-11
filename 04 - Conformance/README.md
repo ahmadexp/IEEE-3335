@@ -1,21 +1,10 @@
 # 4. Conformance
 
-This clause defines the conditions under which an implementation may claim conformance to IEEE P3335. A conforming implementation **shall** satisfy the mandatory requirements in this clause and the mandatory requirements in Clauses 5 through 9 that apply to the implemented features, interfaces, and operating conditions.
+This clause identifies the subject of a conformance claim and the evidence used to evaluate it. Informative material does not add conformance requirements.
 
-Informative clauses, informative notes, and informative annexes provide explanatory material only. They do not create conformance requirements unless a normative clause explicitly references a requirement stated elsewhere.
+## 4.1 Interpreting requirements
 
-## 4.1 Requirement Terms
-
-The following terms are used as defined by IEEE SA rules for standards text:
-
-- **shall** indicates a mandatory requirement.
-- **should** indicates a recommended practice among several permissible possibilities.
-- **may** indicates a course of action permitted within the limits of this standard.
-- **can** indicates capability, possibility, or a statement of fact.
-
-The term **must** is not used as a requirement term in this standard. Where a physical or mathematical inevitability needs to be described, the text should be written as a statement of fact using **is**, **are**, or **can**.
-
-The term **unspecified** is not a requirement term. It identifies a value, behavior, or design choice that P3335 has considered but intentionally does not constrain. The choice is left to the implementation, an applicable profile, or a later specification, subject to any applicable documentation requirements.
+Word usage is specified in 1.4. The term *unspecified* is not a requirement term; its meaning as a behavior or object-field status is defined in 3.1.
 
 ## 4.2 Conformance Model
 
@@ -23,43 +12,35 @@ IEEE P3335 uses interspersed requirements with a conformance summary. Mandatory 
 
 A TimeCard implementation may be realized as a discrete add-in card, an embedded module, an FPGA or ASIC function, a system-on-chip block, or an external timing unit. The form factor does not determine conformance. Conformance is determined by the externally observable interfaces, behavior, documentation, and performance declarations of the implementation.
 
-A claim of conformance **shall** identify at least the following:
-
-- The implementation form factor and host interface mapping.
-- The timing receive and providing interfaces implemented.
-- The control interfaces implemented.
-- The optional feature sets claimed.
-- The declared operating environment and environmental limits.
-- The performance metrics, measurement points, measurement methods, and limits declared by the supplier.
+The scope, interfaces, profiles, operating limits, and supporting evidence for a claim are identified in the conformance statement specified in 4.7.
 
 ## 4.3 Base Conformance Requirements
 
-A conforming TimeCard implementation **shall** meet all of the following base requirements:
+A conforming TimeCard **shall** satisfy the applicable requirements in Clauses 4 through 9. The following list locates the controlling provisions; it does not impose a second set of requirements:
 
-- The implementation **shall** provide at least one providing interface that distributes time, phase, frequency, timestamp information, or a combination thereof to a host system or downstream system.
-- All implemented timing output providing interfaces **shall** derive from the single unified timescale specified in Clause 5.
-- The implementation **shall** provide at least one accessible control interface as specified in Clause 8.
-- The implementation **shall** document all implemented timing interfaces, control interfaces, physical connectors, protocol mappings, and optional features.
-- The implementation **shall** document the performance metrics required by Clause 6 for each applicable measurement point.
-- The implementation **shall** document the environmental limits and reliability information required by Clause 9 for the declared deployment environment.
-- The implementation **shall** define the conditions under which each declared performance value is valid, including warm-up time, lock time, TimeCard synchronization source, temperature range, and measurement bandwidth where applicable.
-- The implementation **shall** not claim support for an optional feature unless all mandatory requirements associated with that feature are satisfied.
+- Implementation boundary and local timing function: 5.2 and 5.3.1.
+- At least one providing interface and one unified timescale per instance: 5.3.5 and 5.4.
+- Performance declarations and conditions of validity: Clause 6.
+- Implemented timing receive and providing interfaces, including connector and protocol declarations: Clause 7.
+- At least one accessible control interface and its mapping: 8.2 and 8.10.2.
+- Environmental and reliability declarations: Clause 9.
+- Optional claims, conformance statement, test evidence, and integration documentation: 4.5, 4.7, 4.8, and 5.10.
 
 An implementation may conform to IEEE P3335 without implementing every optional receive interface, providing interface, host interface mapping, management protocol, or security hardening feature described in this standard. Environmental declarations remain mandatory as specified in Clause 9; this standard does not define named numeric environmental classes for particular markets.
 
 ## 4.4 Conformance Profiles
 
-This standard defines the following conformance profiles. An implementation claiming a profile **shall** satisfy the corresponding additional requirements in the following table.
+The implementation **shall** apply each profile whose applicability condition it meets. The table identifies the controlling provisions for each profile.
 
 | Profile | Applicability | Additional requirements |
 |---------|---------------|-------------------------|
-| **Base TimeCard** | All conforming implementations | Satisfy the base requirements in 4.3 and all applicable mandatory requirements in Clauses 5 through 9. |
-| **Physical Timing Output** | Implementations with externally accessible physical timing outputs | Provide a 1PPS output that satisfies 7.3.2 and document the alignment of all other physical timing outputs to that 1PPS output. |
+| **Base TimeCard** | All conforming implementations | See 4.3. |
+| **Physical Timing Output** | Implementations with externally accessible physical timing outputs | See 7.3.2. The supplier **shall** document the alignment of every other physical timing output to that 1PPS output. |
 | **PCIe Host Mapping** | Implementations claiming PCIe host integration | Satisfy the PCIe host interface profile requirements in 8.9. |
 | **Managed TimeCard** | Implementations claiming remote or fleet management | Satisfy the managed security profile in 8.11.2. |
 | **Secure Infrastructure TimeCard** | Implementations marketed or designated for secure infrastructure deployments | Satisfy the secure infrastructure profile in 8.11.3. |
 
-An embedded or logical-only TimeCard implementation may claim Base TimeCard conformance without a physical 1PPS connector if it does not expose externally accessible physical timing outputs. Such an implementation **shall** still provide at least one timing output providing interface and **shall** document the equivalent measurement point for timing-performance declarations.
+An embedded or logical-only TimeCard implementation may claim Base TimeCard conformance without a physical 1PPS connector if it does not expose externally accessible physical timing outputs. For such an implementation, the supplier **shall** document the equivalent measurement point for timing-performance declarations.
 
 ## 4.5 Optional Feature Claims
 
@@ -82,7 +63,7 @@ A reference derived from UTC(k) may be conveyed by a declared pulse, frequency, 
 
 Base conformance to this standard requires the bounded and reproducible performance reporting specified in Clause 6. It does not require a universal numeric minimum time-accuracy, frequency-stability, phase-noise, jitter, or holdover class.
 
-An implementation may claim a supplier-defined, application-defined, or externally standardized performance class. For each claimed class, the conformance statement **shall** identify the governing document and edition or revision, applicable clauses, class and mask identifiers, metric limits, measurement points, implementation configuration, and conditions under which the class applies.
+An industry or procurement profile can set the limits for its application. A supplier reports what the identified product supports; it need not design a class or set targets for an industry. If a supplier uses its own class designation, the conformance statement **shall** distinguish it from an externally specified class. The identifying details for a class or mask claim are specified in 6.1.
 
 Performance declarations may incorporate a referenced specification instead of reproducing its provisions when the exact applicable requirements and implementation conditions are identified. The supplier **shall** separately document any applicable P3335 declaration not covered by that specification. An informative reference or a document under development does not, by itself, establish a normative P3335 requirement or an approved external performance class.
 
@@ -90,7 +71,7 @@ Performance declarations may incorporate a referenced specification instead of r
 
 The supplier of a conforming implementation **shall** provide a conformance statement. The conformance statement **shall** be both publicly available and supplied with the product documentation and **shall** include, at a minimum:
 
-- Product or implementation name; hardware or implementation revision; firmware, gateware, and software revisions; and relevant configuration profile.
+- Product or implementation name and form factor; hardware or implementation revision; firmware, gateware, and software revisions; and relevant configuration profile.
 - The published edition of this standard against which conformance is claimed, together with the conformance-statement date and revision.
 - Claimed IEEE P3335 conformance scope.
 - Supported timing receive interfaces and providing interfaces.
@@ -101,9 +82,11 @@ The supplier of a conforming implementation **shall** provide a conformance stat
 - Claimed conformance profiles from 4.4.
 - Supported optional feature sets.
 - Security properties and deployment assumptions required by 8.11.1, including the claimed security profile and supported security functions.
-- Declared performance metrics and measurement points.
+- Declared performance metrics, measurement points, methods, and limits (see Clause 6).
 - Declared environmental operating and storage limits.
 - References to datasheets, register maps, interface descriptions, calibration information, and test reports needed to evaluate the claim.
+
+A datasheet can serve as the conformance statement. One identified, revision-controlled source can cover several entries; the statement can point to the relevant sections instead of repeating them, subject to the access rules below.
 
 The conformance statement should be written so that an independent test laboratory or system integrator can determine which requirements apply without relying on proprietary internal design details.
 
@@ -112,6 +95,8 @@ The public conformance statement and published performance declarations are dist
 ## 4.8 Test Evidence
 
 Conformance claims **shall** be supported by functional test evidence for applicable functional requirements and performance test evidence for applicable measured-performance requirements. Documentation review verifies documentation and declaration requirements and can evaluate supporting test records; it **shall** not substitute for evidence that the claimed functions and performance have been demonstrated.
+
+The subject of conformance is the TimeCard implementation, not the test equipment. The supplier is responsible for the evidence supporting its claim. The evaluator records how each result was obtained (see 6.3); the evaluator may be the supplier or another party. There is no separate P3335 conformance claim for an instrument or a laboratory.
 
 Functional testing verifies that the implemented interfaces, state transitions, control operations, and fault responses behave as specified. Performance testing verifies that declared timing, frequency, holdover, and environmental metrics meet the supplier's stated limits using the measurement methods declared for the implementation.
 
@@ -132,9 +117,11 @@ A deviation or waiver of a test method **shall** not waive an applicable mandato
 
 ## 4.9 Conformance Statement Proforma
 
-Annex D provides an informative proforma for organizing the conformance statement required by 4.7. Use of the proforma is optional. The requirements in this clause and the applicable technical clauses remain the controlling source for conformance.
+Annex D provides an informative proforma for organizing the conformance statement required by 4.7. Use of the proforma is optional. If Annex D conflicts with Clause 4 or an applicable technical clause, the normative clause controls.
 
 ## 4.10 Implementation examples (Informative)
+
+The examples describe timing subsystems designed to provide a timing service. A laptop or switch becoming a PTP grandmaster does not, by that fact alone, constitute a TimeCard. An identifiable timing subsystem within either product can be evaluated at its declared boundary (see 5.2).
 
 The following examples help locate applicable requirements. They are not additional conformance Types or exhaustive configurations. Every example is subject to base conformance, the implemented-feature rules, and the applicable profiles in 4.4; physical form factor alone does not select a performance class.
 
@@ -142,7 +129,7 @@ The following examples help locate applicable requirements. They are not additio
 |-----------------------|--------------------------------|--------------------------------|
 | PCIe TimeCard with GNSS reference | GNSS receive declarations in 7.2, implemented outputs in 7.3, PCIe mapping in 8.9 | Reference-to-output error, host correlation when supported, host lifecycle, and optional PTM when implemented |
 | External unit with GNSS input and PTP output | GNSS and PTP declarations in 7.2 and 7.3, implemented control mapping in Clause 8 | Receiver and packet timestamping points, reference path, output profile, and declared environmental limits |
-| TimeCard receiving and providing PTP | Receive and providing protocol/profile declarations in 7.2 and 7.3 | Input-to-output transfer, network asymmetry, reference validity, and the distinction between transfer error and absolute time accuracy |
+| Dedicated timing subsystem with PTP input and output | Receive and providing protocol/profile declarations in 7.2 and 7.3 | Input-to-output transfer, network asymmetry, reference validity, and the distinction between transfer error and absolute time accuracy |
 | Embedded timing function with a logical output | Implementation boundary in 5.2, providing-interface declarations in 7.3, implemented control mapping in Clause 8 | Declared logical measurement point, fixture or host-path effects, and equivalent measurement evidence under 4.4 |
 
 Profiles in 4.4 apply according to the implemented features, not the example name. Clauses 6 and 9 apply to each example's declared performance and environment.
