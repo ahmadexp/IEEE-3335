@@ -72,7 +72,7 @@ make clean
 
 ## Publication Readiness
 
-See `PUBLICATION_READINESS.md` for the current editorial gap matrix, remaining working-group decisions, and recommended next actions before IEEE SA publication processing.
+Read the [unofficial review PDF](IEEE3335.pdf), the [pre-ballot decision agenda](references/PRE_BALLOT_DECISIONS.md), and the [publication action register](PUBLICATION_READINESS.md). The agenda separates choices for the working group from evidence and external approvals still needed.
 
 Supporting readiness artifacts:
 
@@ -81,5 +81,6 @@ Supporting readiness artifacts:
 - `references/PUBLICATION_REVIEW_20260917.md` records the September 17 review, corrections, validation, and remaining decisions.
 - `references/KEVIN_GODFREY_FEEDBACK_20261030_DISPOSITION.md` records the changes following Kevin Godfrey's review and accounts for each comment.
 - `references/KEVIN_GODFREY_WG_DECISIONS_20261103.md` separates the remaining WG decisions and reference dependencies from the applied draft changes.
+- [Rodney Cummings's v8 dispositions](references/RODNEY_CUMMINGS_V8_DISPOSITION_20261110.md) account for all 19 comments and link to the response workbook.
 - `figures/` contains source-controlled figure sources and rendered assets used by the draft.
 - `REQUIREMENTS_INDEX.md` is generated from normative clauses with `python3 scripts/requirements_index.py`.

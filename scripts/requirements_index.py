@@ -41,8 +41,7 @@ def clause_id(relative_path: str) -> str:
 
 def normalize(text: str) -> str:
     text = re.sub(r"\s+", " ", text.strip())
-    text = re.sub(r"\*\*(shall)\*\*", r"\1", text, flags=re.IGNORECASE)
-    return text.replace("|", "\\|")
+    return re.sub(r"\*\*(shall)\*\*", r"\1", text, flags=re.IGNORECASE)
 
 
 def table_cells(line: str) -> list[str]:
@@ -84,11 +83,6 @@ def following_items(lines: list[str], start: int) -> list[tuple[int, str]]:
     return []
 
 
-def sentence_requirements(text: str) -> list[str]:
-    sentences = re.split(r"(?<=[.!?])\s+(?=[A-Z`*])", normalize(text))
-    return [sentence for sentence in sentences if SHALL_RE.search(sentence)]
-
-
 def extract_requirements(relative_path: str) -> tuple[list[Requirement], int]:
     path = ROOT / relative_path
     lines = path.read_text(encoding="utf-8").splitlines()
@@ -96,49 +90,43 @@ def extract_requirements(relative_path: str) -> tuple[list[Requirement], int]:
     source_shall_count = 0
     section = ""
 
+    def record(number: int, statement: str) -> None:
+        requirements.append(Requirement(relative_path, number, section, normalize(statement),
+                                        len(SHALL_RE.findall(statement))))
+
     for index, line in enumerate(lines):
         stripped = line.strip()
         if stripped.startswith("#"):
             section = stripped.lstrip("#").strip()
 
         occurrences = len(SHALL_RE.findall(line))
-        if not occurrences or "**shall** indicates" in line:
+        if not occurrences:
             continue
 
         source_shall_count += occurrences
-        clean_line = LIST_RE.sub(r"\1", stripped)
+        if stripped.startswith("|"):
+            cells = table_cells(stripped)
+            for cell in cells:
+                if SHALL_RE.search(cell):
+                    record(index + 1, f"{cells[0]}: {cell}" if cell != cells[0] else cell)
+            continue
 
-        if clean_line.endswith(":"):
-            items = following_items(lines, index)
-            if items:
-                synthesized = False
-                for item_line, item in items:
-                    if SHALL_RE.search(item):
-                        continue
-                    text = f"{clean_line[:-1]}: {item}"
-                    requirements.append(
-                        Requirement(
-                            source=relative_path,
-                            line=item_line,
-                            section=section,
-                            text=normalize(text),
-                            shall_occurrences=occurrences,
-                        )
-                    )
-                    synthesized = True
-                if synthesized or all(SHALL_RE.search(item) for _, item in items):
+        clean_line = normalize(LIST_RE.sub(r"\1", stripped))
+        sentences = re.split(r"(?<=[.!?])\s+(?=[A-Z`*])", clean_line)
+        for statement in sentences:
+            if not SHALL_RE.search(statement):
+                continue
+            # Only the lead-in governs implied items. Explicit child obligations
+            # are indexed on their own lines; a parent may also require inheritance.
+            if statement.endswith(":"):
+                items = following_items(lines, index)
+                implied = [(n, item) for n, item in items if not SHALL_RE.search(item)]
+                if implied:
+                    for number, item in implied:
+                        record(number, f"{statement} {item}")
+                if items and len(implied) == len(items):
                     continue
-
-        for statement in sentence_requirements(clean_line):
-            requirements.append(
-                Requirement(
-                    source=relative_path,
-                    line=index + 1,
-                    section=section,
-                    text=statement,
-                    shall_occurrences=len(SHALL_RE.findall(statement)),
-                )
-            )
+            record(index + 1, statement)
 
     return requirements, source_shall_count
 
@@ -166,9 +154,10 @@ def render() -> tuple[str, int, int]:
     ]
 
     for requirement_id, requirement in all_requirements:
+        cell_text = requirement.text.replace("|", "\\|")
         output.append(
             f"| {requirement_id} | {normalize(requirement.section)} | "
-            f"`{requirement.source}` | {requirement.line} | {normalize(requirement.text)} |"
+            f"`{requirement.source}` | {requirement.line} | {cell_text} |"
         )
 
     return "\n".join(output) + "\n", source_shall_count, len(all_requirements)

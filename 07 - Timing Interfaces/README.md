@@ -27,7 +27,7 @@ For each implemented receive interface, the supplier **shall** document:
 - Measurement point and any fixed delay, asymmetry correction, or latency correction applied by the TimeCard.
 - Signal-presence, validity, and loss-of-signal criteria, including hysteresis or debounce behavior.
 - Acquisition, rejection, and reacquisition behavior.
-- Relationship between the received reference and UTC, TAI, or another declared timescale.
+- Relationship, if known, between the received reference and UTC, TAI, or another declared timescale. Identify a phase-only or frequency-only reference as such; a pulse edge or frequency input alone does not identify a time-of-day epoch.
 
 ### 7.2.2 Recognized receive-interface types
 
@@ -73,7 +73,7 @@ Typical providing interfaces include pulse outputs, frequency outputs, Time of D
 
 ### 7.3.2 One pulse per second providing profile
 
-An implementation claiming the Physical Timing Output conformance profile **shall** provide at least one 1PPS output.
+An implementation to which the Physical Timing Output profile applies under 4.4 **shall** provide at least one 1PPS output. A logical-only implementation with no externally accessible physical timing output is outside this profile.
 
 The following limits apply at the declared connector with a 50 ohm load:
 

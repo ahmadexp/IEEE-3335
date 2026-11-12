@@ -73,7 +73,7 @@ Each control-interface mapping **shall** define:
 
 A change that removes an object, changes its units or meaning, narrows its valid range, or changes its access semantics **shall** increment the mapping major version. A backward-compatible addition **shall** increment the mapping minor version.
 
-A binary mapping **shall** carry a validated total length and mapping version in each request and response structure or in a transport envelope that unambiguously supplies the same information. A receiving implementation **shall** validate the transport length, declared length, and supported version before accessing any field. A short, oversized, internally inconsistent, or unsupported structure **shall** be rejected without performing the requested operation unless the mapping explicitly defines a backward-compatible trailing-field rule.
+A binary mapping **shall** carry a total length and mapping version in each request and response structure or in its transport envelope. Before reading the framing fields, the receiver **shall** establish that the transport supplied enough bytes for them. Before interpreting the payload, the receiver **shall** validate the declared length against the supplied extent and check that the version is supported. A truncated or internally inconsistent structure, or an unsupported version, **shall** be rejected without performing the requested operation. A longer structure of a supported version may be accepted only under the mapping's documented backward-compatible trailing-field rule.
 
 Reserved binary fields **shall** be transmitted as zero. A receiving implementation **shall** not interpret a reserved field as a capability or command. The mapping **shall** define whether a nonzero reserved field is ignored for forward compatibility or rejected as malformed.
 
@@ -292,7 +292,9 @@ Unknown symbolic values received by a receiving implementation **shall** be pres
 
 ### 8.10.7 GNSS conditional objects
 
-If a GNSS receive capability is advertised in `TC_CAPS`, the following objects **shall** be exposed:
+The read-only objects below apply to every advertised GNSS receiver. Each read/write object applies only when the corresponding configuration capability is implemented. Reporting receiver state does not require a fixed-configuration receiver to accept writes.
+
+For a GNSS receive capability advertised in `TC_CAPS`, the mapping **shall** expose each applicable object in the following table:
 
 | Object | Access | Type | Units | Semantics |
 |--------|--------|------|-------|-----------|

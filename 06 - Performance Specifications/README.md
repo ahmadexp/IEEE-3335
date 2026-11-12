@@ -1,6 +1,6 @@
 # 6. Performance Specifications (Normative)
 
-This clause defines the performance reporting and characterization requirements for TimeCard implementations. Base conformance does not define a single universal numeric performance class for all use cases. Instead, it requires performance claims to be stated using common metrics, defined measurement points, traceable methods, and declared operating conditions.
+This clause specifies how to characterize and report TimeCard performance. There is no single numeric performance class for all products; limits specified for an applicable interface or profile still apply (see 5.7). A bounded claim identifies its measurement point and operating conditions and is supported by measurement results with documented traceability.
 
 ## 6.1 Performance Declaration Model
 
@@ -13,7 +13,7 @@ Suppliers **shall** publish performance declarations for each conforming TimeCar
 - The operating mode, such as locked, holdover, free-running, warm-up, failover, or recovery.
 - The TimeCard synchronization source and reference timescale.
 - The applicable temperature range, voltage range, airflow or cooling condition, and other environmental conditions.
-- The minimum warm-up time and lock time required before the declaration applies.
+- The minimum warm-up time and, for a claim that depends on lock, the lock time required before the declaration applies. A free-running claim does not imply prior lock.
 - The observation interval, averaging time, bandwidth, sample count, or statistical confidence basis used.
 - The measurement equipment class and traceability path.
 
@@ -23,7 +23,7 @@ A declaration using a performance class or mask **shall** identify the governing
 
 ## 6.2 Performance Classes
 
-This standard uses a reporting-only base performance model. A TimeCard conforms to the base performance requirements when it reports the applicable metrics in this clause using the declared measurement methods and operating conditions.
+The base performance model is reporting-only in the sense that P3335 does not assign a universal performance class. Reporting a limit alone does not demonstrate that the implementation meets it. The declaration identifies the bound (6.1); the supplier supports the claim with measured-performance evidence (4.8), evaluated using the decision rule in 6.3.
 
 Named numeric performance classes are not defined by this standard. A supplier, procurement profile, application profile, or external standard may define additional classes. The declaration of a claimed class is governed by 4.6 and 6.1.
 

@@ -19,6 +19,8 @@ Timestamp granularity or oscillator type alone does not establish end-to-end tim
 
 ### 10.2.1 Data centers and distributed computing
 
+A host can use a TimeCard clock locally and distribute time through a separate network service. A test at the card connector or host clock does not include that service's timestamping and network path. Identify the endpoint that was measured before using a card-level bound as an application or network bound.
+
 TimeCards can serve as PTP grandmasters, host timing sources, or monitored references. Deployments commonly consider redundant references, independent failure domains, hardware timestamping, host PHC integration, monitoring at scale, and the effect of network asymmetry. The relevant time-accuracy target should be set by the application rather than inferred from the interface technology.
 
 IEEE 1588 [4] and IEEE 802.1AS [5] provide protocol context where their respective profiles are used. The ITU catalog identifies the data-centre synchronization supplement G.Sup92 [B33]; use an available, identified edition when applying its guidance rather than assuming unpublished provisions. The distributed-systems references [B23] through [B26] explain why application correctness depends on more than timestamp resolution alone.

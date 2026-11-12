@@ -46,6 +46,15 @@ class PublicationChecks(unittest.TestCase):
         self.texts[path] += "\nA test **shall** use this example.\n"
         self.assert_rejected("shall appears in informative technical material")
 
+    def test_informative_subclause_inside_normative_file(self):
+        path = check_draft.MANUSCRIPT_FILES[4]
+        self.texts[path] += "\n### 4.10.1 Additional example\n\nAn example **shall** be tested.\n"
+        self.assert_rejected("shall appears in informative technical material")
+
+    def test_undefined_reference_in_an_annex(self):
+        self.texts[check_draft.MANUSCRIPT_FILES[-1]] += "\nSee [99].\n"
+        self.assert_rejected("undefined normative reference [99]")
+
     def test_duplicate_control_object(self):
         path = check_draft.ROOT / "08 - Control Interfaces/README.md"
         self.texts[path] += "\n| `TC_TIME` | R | timestamp | s | Duplicate. |\n"
@@ -87,6 +96,34 @@ class PublicationChecks(unittest.TestCase):
                     any(f"`{name}`;" in statement for statement in indexed),
                     f"conditional object {name} is missing from the requirements index",
                 )
+
+
+class RequirementsIndexChecks(unittest.TestCase):
+    def test_roadmap_is_not_a_list_of_obligations(self):
+        rows, _ = requirements_index.extract_requirements("04 - Conformance/README.md")
+        base = [row for row in rows if row.section.startswith("4.3 ")]
+        self.assertEqual(len(base), 1)
+        self.assertNotIn("controlling provisions", base[0].text)
+        profile = next(row for row in rows if "every other physical timing output" in row.text)
+        self.assertIn("Physical Timing Output", profile.text)
+        self.assertNotIn("|", profile.text)
+
+    def test_independent_obligation_before_list_is_indexed_once(self):
+        rows, _ = requirements_index.extract_requirements("06 - Performance Specifications/README.md")
+        publish = [row for row in rows if "shall publish performance declarations" in row.text]
+        self.assertEqual(len(publish), 1)
+        self.assertNotIn("Each declared value", publish[0].text)
+        self.assertTrue(any("Each declared value shall identify: The measurement point." in row.text
+                            for row in rows))
+
+    def test_profile_inheritance_and_gnss_applicability_remain_visible(self):
+        rows, _ = requirements_index.extract_requirements("08 - Control Interfaces/README.md")
+        self.assertTrue(any("shall meet the Managed TimeCard profile" in row.text for row in rows))
+        gnss = [row.text for row in rows if "each applicable object" in row.text
+                and row.section.startswith("8.10.7 ")]
+        self.assertEqual(len(gnss), 6)
+        self.assertTrue(any("`GNSS_CONST_ENABLE`" in row and "when configuration is supported" in row
+                            for row in gnss))
 
 
 class KevinRevisionChecks(unittest.TestCase):
