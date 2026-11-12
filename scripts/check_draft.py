@@ -112,7 +112,17 @@ def main() -> int:
             errors.append(f"Clause 3 is missing control-status definition: {term}")
 
     for path, text in texts.items():
+        informative_level = None
         for line_number, line in enumerate(text.splitlines(), 1):
+            heading = re.match(r"^(#{1,6}) (.+)$", line)
+            if heading:
+                level = len(heading[1])
+                if informative_level is not None and level <= informative_level:
+                    informative_level = None
+                if informative_level is None and "(informative)" in heading[2].lower():
+                    informative_level = level
+            if (path in INFORMATIVE_TECHNICAL_FILES or informative_level is not None) and SHALL_RE.search(line):
+                errors.append(f"{relative(path)}:{line_number}: shall appears in informative technical material")
             if PLACEHOLDER_RE.search(line):
                 errors.append(f"{relative(path)}:{line_number}: unresolved placeholder")
             usage_note = path == MANUSCRIPT_FILES[1] and line == (
@@ -130,13 +140,6 @@ def main() -> int:
             if UNBOLDED_SHALL_RE.search(line):
                 errors.append(f"{relative(path)}:{line_number}: shall is not bold")
 
-    for path in INFORMATIVE_TECHNICAL_FILES:
-        for line_number, line in enumerate(texts[path].splitlines(), 1):
-            if SHALL_RE.search(line):
-                errors.append(
-                    f"{relative(path)}:{line_number}: shall appears in informative technical material"
-                )
-
     reference_entries = re.findall(
         r"^- \[(\d+)\] (.+)$", texts[MANUSCRIPT_FILES[2]], re.MULTILINE
     )
@@ -149,6 +152,10 @@ def main() -> int:
             errors.append(f"Clause 2 reference [{number}] does not match cited source: {marker}")
 
     normative_text = "\n".join(texts[path] for path in NORMATIVE_FILES)
+    for path, text in texts.items():
+        for match in re.finditer(r"\[(\d+)\]", text):
+            if int(match[1]) not in entries_by_id:
+                errors.append(f"{relative(path)}: undefined normative reference {match[0]}")
     for marker in NORMATIVE_REFERENCE_MARKERS:
         if marker not in normative_text:
             errors.append(f"Clause 2 reference is not normatively cited: {marker}")
@@ -186,7 +193,6 @@ def main() -> int:
         len(SHALL_RE.findall(line))
         for path in NORMATIVE_FILES
         for line in texts[path].splitlines()
-        if "**shall** indicates" not in line
     )
     print(
         f"Draft checks passed: {len(MANUSCRIPT_FILES)} sources, "

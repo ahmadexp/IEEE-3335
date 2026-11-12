@@ -64,11 +64,11 @@ Complete this section for each claimed host interface mapping:
 | Supported operating systems, releases, and architectures | To be completed |
 | Driver model, package, and signing or authorization status | To be completed |
 | Driver, service, host time-provider, and API or ABI revisions | To be completed |
-| P3335 discovery-descriptor locator, revision, and encoding | To be completed |
-| Supported PCI or implementation identities and board profiles | To be completed |
+| P3335 discovery-descriptor locator, revision, and encoding | PCIe Host Mapping: identify the descriptor under 8.9.1; otherwise not applicable |
+| Supported implementation identities and board profiles | To be completed; include PCI identifiers for PCIe mappings |
 | `TC_INSTANCE_ID` derivation and stability scope | To be completed |
 | `TC_SERIAL` namespace and availability | To be completed / not implemented |
-| Host clock identifier, epoch, timescale, units, and adjustment behavior | To be completed |
+| Host clock identifier, epoch, timescale, units, and adjustment behavior | To be completed when host-time correlation is supported |
 | Host-time correlation method, measurement point, and maximum window | To be completed / not implemented |
 | Sample-age, uncertainty or dispersion, and discipline-eligibility policy | To be completed / not implemented |
 | Time-control ownership, arbitration, timeout, and recovery | To be completed / not implemented |
@@ -149,7 +149,9 @@ Functional and measured-performance claims need the corresponding test evidence 
 | Report identifier | To be completed |
 | Tested configuration and covered population | To be completed; identify the basis for extending representative evidence |
 | Evidence location, revision, and access authority | To be completed |
-| Result | Pass / fail / not applicable |
+| Measured result and declared limit | To be completed for measured claims; identify the units and measurement point |
+| Measurement uncertainty and decision rule | To be completed for measured claims; identify the basis for the conclusion under 6.3 |
+| Conclusion | Pass / fail / other outcome specified by the decision rule; for a non-applicable provision, state the reason |
 | Deviation, waiver, or limitation | To be completed |
 
 Any deviation recorded in this table should distinguish a change to the verification method from failure to satisfy a requirement. A method deviation should identify its rationale and the evidence that still supports the claim. An unmet applicable mandatory requirement is a failure, regardless of a test-method waiver. An optional feature excluded from the conformance scope should be identified explicitly and should not be represented as conforming.

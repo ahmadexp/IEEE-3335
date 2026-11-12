@@ -87,11 +87,11 @@ Runtime power management, driver unbind and rebind, PCIe error recovery, hot plu
 Before a platform binding is used for a performance or conformance claim, an integrator should confirm:
 
 - The exact hardware, firmware or gateware, driver, service, API or ABI, and operating-system revisions.
-- Descriptor validation and fail-closed handling of unknown or ambiguous optional resources.
+- For the PCIe Host Mapping, descriptor validation and handling of unknown or ambiguous optional resources under 8.9.1.
 - Stable per-card selection and separation of per-card calibration and configuration.
-- Atomic TimeCard reads and bounded host-time correlations with explicit timescales.
-- Rejection of stale or discontinuous discipline samples, samples with an invalid synchronization source, and samples with an excessive correlation window.
-- Single-owner behavior for time setting and discipline.
+- Atomic TimeCard reads and, when correlation is supported, bounded host readings with explicit timescales.
+- For host discipline, rejection of stale samples and of samples that fail the declared source-validity, discontinuity, or correlation-window checks.
+- When multiple clients can control time, exclusive ownership and recovery under 8.5.
 - Bounded cancellation and resource revalidation through supported lifecycle transitions.
 - Least-privilege separation of monitoring, time control, configuration, update, and security administration.
 - Physical-card validation coverage for every claimed board profile and host connection type.

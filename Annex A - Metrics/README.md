@@ -73,7 +73,7 @@ For a pulse or event stream, time error relates the measured event to the declar
 - Statistic, such as RMS, standard deviation, peak-to-peak observed range, percentile, or bounded maximum.
 - Whether fixed offset is included or removed.
 
-Peak-to-peak observed range depends strongly on sample count and observation time. RMS and standard deviation are equivalent only under the stated centering convention. These details are therefore part of the metric definition.
+State the subtraction order: a positive arrival delay of the output edge relative to a reference edge is not the same convention as indicated clock time minus reference time. For a record in which every edge arrives 50 ns late, the RMS of the uncorrected arrival delays is 50 ns, while their standard deviation and peak-to-peak range are both zero. Removing a mean or fixed delay changes the measurand; a centered result alone does not bound the original offset. Peak-to-peak range also depends on sample count and observation time.
 
 The word *jitter* has domain-specific meanings. ITU-T G.810 [10] separates jitter and wander at a timing-variation frequency of 10 Hz. This is not a boundary defined by the pulse repetition rate. A once-per-second edge-error record does not, by itself, resolve a high-frequency jitter spectrum; the sampling, filtering, and aliasing limitations should be stated. Use time error and timing variation for general 1PPS reporting, and a specific jitter or wander definition only where the applicable method supports it.
 
@@ -116,7 +116,7 @@ where $x_0$ is time error at holdover entry, $y_0$ is initial fractional-frequen
 
 A holdover declaration should therefore identify the prior lock duration and TimeCard synchronization source, entry condition, elapsed holdover interval, temperature profile, initial error treatment, and behavior on reference restoration.
 
-An absolute envelope bounds the error relative to the declared reference timescale. An initial-offset-relative envelope bounds the change from the measured error at entry and should not be described as an absolute bound. Report initial-error uncertainty separately; if initial error is unknown, a relative result alone cannot establish absolute time accuracy. MTIE characterizes variation within the record and does not recover the missing initial offset.
+An absolute envelope bounds error relative to the declared reference timescale. An initial-offset-relative envelope bounds the change since entry. For example, if the entry and later comparisons use the same measurement reference, their difference cancels a common unknown constant offset. It does not cancel drift of that reference. Report the uncertainty of the change and, for an absolute claim, the entry offset and its uncertainty. MTIE characterizes variation within the record and does not recover a missing initial offset.
 
 ## A.10 Ensemble and correlation considerations
 
